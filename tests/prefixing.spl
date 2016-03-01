@@ -1,0 +1,15 @@
+def int prefix (int a){
+  0 :: a;
+}
+
+int a = input(0);
+
+// Tests!
+// [0] -> [7 0]
+prefix(7);
+
+// [1 2 3 4] -> [0 1 2 3 4]
+prefix(1 :: 2 :: 3 :: 4);
+
+//Program
+prefix(a);

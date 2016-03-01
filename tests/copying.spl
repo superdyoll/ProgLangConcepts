@@ -1,0 +1,9 @@
+def stream<int> copying (int a) {
+   a.a;
+}
+
+let (
+    stream<int> input = read();
+    int a = input[0];
+)
+print(copying(a));

@@ -1,0 +1,23 @@
+def int isEnd(int a) {
+    a[0] != EOF;
+}
+
+def int addAll(int a){
+    if (isEnd)
+        0;
+    } else {
+        a[0] + addAll(a[1:]);
+    }
+}
+
+def int fibonacci (int a){
+	fibHelp(a, (1 :: 0))
+}
+
+def int fibHelp(int stream, int reverseFib){
+    addAll(reverseFib + stream) :: fibHelp(stream, (addAll(reverseFib[0:1]) :: reverseFib));
+}
+
+int a = input(0);
+
+fibonacci(a);

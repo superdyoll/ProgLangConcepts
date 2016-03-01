@@ -1,0 +1,12 @@
+def int arithmetic(int a, int b) {
+    a + (loop(3) * b);
+}
+
+let (
+    stream<int> input = read();
+    int a = input[0];
+    int b = input[1];
+)
+{
+    arithmetic(a,b);
+}

@@ -1,0 +1,39 @@
+%YAML 1.2
+---
+name: river
+file_extensions: [spl]
+scope: source.spl
+
+contexts:
+  main:
+    # Keywords
+    - match: \b(def|if|let|print|loop|all|else)\b
+      scope: keyword.control.spl
+    - match: '"'
+      push: string
+    # Types
+    - match: '\b(?i)(int|stream)\b'
+      scope: storage.type.spl
+    # Comments
+    - match: '//'
+      scope: punctuation.definition.comment.spl
+      push: line_comment
+    # Numbers
+    - match: '\b(-)?[0-9]+\b'
+      scope: constant.numeric.spl
+    # Operators
+    - match: '(\:\:|\.|\+|\-|\*|\/|=|>=|<=|!=|->|<|>|<>|\?|&)'
+      scope: keyword.Operators.spl
+
+  string:
+    - meta_scope: string.quoted.double.spl
+    - match: \\.
+      scope: constant.character.escape.spl
+    - match: '"'
+      pop: true
+
+
+  line_comment:
+    - meta_scope: comment.line.spl
+    - match: $
+      pop: true
