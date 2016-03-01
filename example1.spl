@@ -1,0 +1,51 @@
+reverse(string a) {
+
+};
+
+If statements take the form of:
+if(<cond>) { <exp> } else { <exp> }
+
+`==` takes in 2 streams, returns a stream of true/falses
+
+`!=` takes in 2 streams, returns a stream of true/falses
+
+TrueAll(a == Loop(1))
+
+if (all(a == loop(1)) == true)
+
+all(loop(1)) -> 1
+all(loop(1)::2) -> False? 1? 2?
+
+!=
+
+! !=
+
+(! (== A B))
+
+(! (!= A B))
+// is equal to 
+(== A B)
+
+allTrue(== A B)
+
+
+lambda (allTrue x) {
+    if (and x (allTrue x)) {
+        true
+    } else {
+        false
+    }
+}
+
+lambda (letExample x) {
+
+}
+
+lambda (letExample x) {
+    let (
+        x = 3;
+        y = + x 2;
+    ) {
+        + x y;
+    }
+}
