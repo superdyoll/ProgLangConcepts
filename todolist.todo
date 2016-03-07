@@ -1,0 +1,9 @@
+TODO:
+
+BONUS TODOS:
+
+- `if () {} else if () {}`
+    instead of 
+   `if () {} else {if () {}}`
+
+- letrec

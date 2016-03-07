@@ -1,8 +1,8 @@
-def int accumulator(int a){
+def accumulator = int lambda (int a){
 	accumulator-acc(a,0);
 }
 
-def int accumulator-acc (int a, int pointer){
+def  accumulator-acc  = int lambda (int a, int pointer){
 	if (!endOfStream(a)){
 		addAll(a[:pointer]) :: accumulator(a, pointer++);
 	} else {
@@ -14,5 +14,5 @@ let (
     stream<int> input = read();
     int a = input[0];
 ){
-    print (accumulator(a));
+    print(accumulator(a));
 }

@@ -1,9 +1,10 @@
-def stream<int> copying (int a) {
+def copying = stream<int> lambda (int a) {
    a.a;
 }
 
 let (
     stream<int> input = read();
     int a = input[0];
-)
-print(copying(a));
+) {
+    print(copying(a));
+}

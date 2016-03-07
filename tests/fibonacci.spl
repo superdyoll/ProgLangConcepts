@@ -1,8 +1,8 @@
-def int isEnd(int a) {
+def isEnd = int lambda (int a) {
     a[0] != EOF;
 }
 
-def int addAll(int a){
+def addAll = int lambda (int a){
     if (isEnd)
         0;
     } else {
@@ -10,14 +10,16 @@ def int addAll(int a){
     }
 }
 
-def int fibonacci (int a){
-	fibHelp(a, (1 :: 0))
+def fibHelp = int lambda (int cStream, int reverseFib){
+    addAll(reverseFib + cStream) :: fibHelp(cStream, (addAll(reverseFib[0:1]) :: reverseFib));
 }
 
-def int fibHelp(int stream, int reverseFib){
-    addAll(reverseFib + stream) :: fibHelp(stream, (addAll(reverseFib[0:1]) :: reverseFib));
+def fibonacci = int lambda (int a){
+    fibHelp(a, (1 :: 0))
 }
 
-int a = input(0);
-
-fibonacci(a);
+let (
+    int a = input(0);
+){
+    print(fibonacci(a));
+}

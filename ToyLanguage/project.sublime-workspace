@@ -1,0 +1,2019 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"EVala",
+				"evaluation"
+			],
+			[
+				"curr",
+				"currentTask"
+			],
+			[
+				"get",
+				"get_fav_lang"
+			],
+			[
+				"favouri",
+				"favourite"
+			],
+			[
+				"Re",
+				"Reflexive"
+			],
+			[
+				"send",
+				"sendit"
+			],
+			[
+				"types",
+				"Types"
+			],
+			[
+				"it",
+				"interrupts"
+			],
+			[
+				"identifies",
+				"identifiers"
+			],
+			[
+				"Voln",
+				"VolunteerResource"
+			],
+			[
+				"ima",
+				"image_dir_path"
+			],
+			[
+				"LAnguage",
+				"Languages"
+			],
+			[
+				"f",
+				"filter-cps"
+			],
+			[
+				"map",
+				"map-cps"
+			],
+			[
+				"Ob",
+				"observation"
+			],
+			[
+				"ret",
+				"retrieve"
+			],
+			[
+				"publi",
+				"Publish-Subscribe"
+			],
+			[
+				"Mil",
+				"Melisandre"
+			],
+			[
+				"dis",
+				"distance-vector"
+			],
+			[
+				"tar",
+				"tar_file"
+			],
+			[
+				"cal",
+				"cal_string"
+			],
+			[
+				"get_week",
+				"get_week_spans"
+			],
+			[
+				"rec",
+				"recursions"
+			],
+			[
+				"first",
+				"first_week_number"
+			],
+			[
+				"PSPACE",
+				"PSPACE-hard"
+			],
+			[
+				"le",
+				"left-address"
+			],
+			[
+				"cor",
+				"copy-memory-core"
+			],
+			[
+				"new",
+				"new-roots"
+			],
+			[
+				"copy",
+				"copy-memory-core"
+			],
+			[
+				"par",
+				"parse-memory"
+			],
+			[
+				"subr",
+				"subtransactions"
+			],
+			[
+				"se",
+				"Serially-equivalent"
+			],
+			[
+				"cop",
+				"copy-memory-core"
+			],
+			[
+				"m",
+				"main	method (main)"
+			],
+			[
+				"con",
+				"convert-to-memory-representation"
+			],
+			[
+				"Non",
+				"Non-Deterministic"
+			],
+			[
+				"geog",
+				"geographically"
+			],
+			[
+				"IP",
+				"IPv6"
+			],
+			[
+				"ipv",
+				"ipv6"
+			],
+			[
+				"ip",
+				"ipv4"
+			],
+			[
+				"adde",
+				"addresses"
+			],
+			[
+				"ave",
+				"average_round_trip_time_2_servers"
+			],
+			[
+				"sor",
+				"sorted_data_server2"
+			],
+			[
+				"so",
+				"sorted_data_server2"
+			],
+			[
+				"ug",
+				"uglogin_data"
+			],
+			[
+				"aver",
+				"averaged_averages_v4"
+			],
+			[
+				"I",
+				"IPv6"
+			],
+			[
+				"rel",
+				"reliability_data_v6"
+			],
+			[
+				"v",
+				"v6_avg"
+			],
+			[
+				"re",
+				"reliability_data_v4"
+			],
+			[
+				"reliab",
+				"reliability_data_v4"
+			],
+			[
+				"reli",
+				"reliability_data_v4"
+			],
+			[
+				"reliability_data_v",
+				"reliability_data_v6"
+			],
+			[
+				"v4_",
+				"v4_responses"
+			],
+			[
+				"v4_re",
+				"v4_responses"
+			],
+			[
+				"urls",
+				"urls_with_www"
+			],
+			[
+				"url",
+				"urls_with_www"
+			],
+			[
+				"no",
+				"not_v4_and_not_v6"
+			],
+			[
+				"av",
+				"averaged_averages_v6"
+			],
+			[
+				"plot_",
+				"plot_v4_vs_v6_pie"
+			],
+			[
+				"averaged_a",
+				"averaged_averages_v6"
+			],
+			[
+				"plo",
+				"plot_distances"
+			],
+			[
+				"average",
+				"averaged_averages"
+			],
+			[
+				"write",
+				"write_distances"
+			],
+			[
+				"sorted",
+				"sorted_data"
+			],
+			[
+				"comme",
+				"commentitout_data"
+			],
+			[
+				"fi",
+				"filenames"
+			],
+			[
+				"daa",
+				"data_by_url_date"
+			],
+			[
+				"read",
+				"read_locations"
+			],
+			[
+				"pos",
+				"position_data"
+			],
+			[
+				"to",
+				"total_failure_percentage"
+			],
+			[
+				"sort",
+				"sorted_data"
+			],
+			[
+				"data",
+				"data_by_url_date"
+			],
+			[
+				"da",
+				"data_by_url_date"
+			],
+			[
+				"data_",
+				"data_by_url"
+			],
+			[
+				"De",
+				"Direct"
+			],
+			[
+				"sta",
+				"stats_re"
+			],
+			[
+				"ping",
+				"ping_output"
+			],
+			[
+				"trea",
+				"transmit_receive_re"
+			],
+			[
+				"tra",
+				"transmit_receive"
+			],
+			[
+				"Scheme",
+				"SchemeBoolean"
+			],
+			[
+				"collect",
+				"CollectNodes"
+			],
+			[
+				"list",
+				"listset-null"
+			],
+			[
+				"Dis",
+				"distribute"
+			],
+			[
+				"s",
+				"System"
+			],
+			[
+				"cd",
+				"cdr-depth"
+			],
+			[
+				"car",
+				"car-depth"
+			],
+			[
+				"trn",
+				"Transparency"
+			],
+			[
+				"trans",
+				"Transparency"
+			],
+			[
+				"gra",
+				"graph"
+			],
+			[
+				"graph",
+				"graph-mapper"
+			],
+			[
+				"lists",
+				"listset-contains"
+			],
+			[
+				"n",
+				"nth-value"
+			],
+			[
+				"di",
+				"display"
+			],
+			[
+				"ith",
+				"ith-value"
+			],
+			[
+				"dia",
+				"diagonal-counter"
+			],
+			[
+				"SYN",
+				"SYN-ACK"
+			],
+			[
+				"neig",
+				"neighbour"
+			],
+			[
+				"vulner",
+				"vulnerability"
+			],
+			[
+				"co",
+				"convert_to_xy"
+			],
+			[
+				"depth",
+				"depth-acc"
+			],
+			[
+				"wo",
+				"word"
+			],
+			[
+				"C",
+				"Correct"
+			],
+			[
+				"Wadl",
+				"WadlerThiemann03"
+			],
+			[
+				"length",
+				"length-iter"
+			],
+			[
+				"Fact",
+				"fact-iter"
+			],
+			[
+				"beha",
+				"behaviour"
+			],
+			[
+				"string",
+				"string-count-attributes"
+			],
+			[
+				"Heursit",
+				"Heuristic"
+			],
+			[
+				"heurs",
+				"Heuristic"
+			],
+			[
+				"star",
+				"start_time"
+			],
+			[
+				"day",
+				"day_string"
+			],
+			[
+				"mon",
+				"monday_of_first_week"
+			],
+			[
+				"get_",
+				"get_date_from_day_and_week"
+			],
+			[
+				"occu",
+				"occurances"
+			],
+			[
+				"Comple",
+				"complexity"
+			],
+			[
+				"time",
+				"time_deltas"
+			],
+			[
+				"tim",
+				"timedeltas"
+			],
+			[
+				"S-E",
+				"S-expression"
+			],
+			[
+				"Sy",
+				"Systems"
+			],
+			[
+				"CO",
+				"comp2210"
+			],
+			[
+				"glac",
+				"glacier_connection"
+			],
+			[
+				"uplo",
+				"upload_to_glacier"
+			],
+			[
+				"acc",
+				"access_key_id"
+			],
+			[
+				"file",
+				"file_name"
+			],
+			[
+				"rest",
+				"restore"
+			],
+			[
+				"lates",
+				"latest_files"
+			],
+			[
+				"latest",
+				"latest_files"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/parser.mly",
+			"settings":
+			{
+				"buffer_size": 1305,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Toy.ml",
+			"settings":
+			{
+				"buffer_size": 8856,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "lexer.mll",
+			"settings":
+			{
+				"buffer_size": 745,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/media/1TB_SSD/notes/COMP2212_programming_language_concepts/14_type_safety.mdk",
+			"settings":
+			{
+				"buffer_size": 0,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/lexer.mll",
+			"settings":
+			{
+				"buffer_size": 1344,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "Packages/User/ocaml.sublime-build",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/C++/C++ Single File.sublime-build",
+					""
+				],
+				[
+					"Packages/C++/C++ Single File.sublime-build",
+					"Run"
+				]
+			],
+			[
+				"Packages/C++/C++ Single File.sublime-build",
+				"Run"
+			]
+		],
+		[
+			[
+				[
+					"Packages/Makefile/Make.sublime-build",
+					""
+				],
+				[
+					"Packages/Makefile/Make.sublime-build",
+					"Clean"
+				]
+			],
+			[
+				"Packages/Makefile/Make.sublime-build",
+				""
+			]
+		],
+		[
+			[
+				[
+					"Packages/Python/Python.sublime-build",
+					""
+				],
+				[
+					"Packages/Python/Python.sublime-build",
+					"Syntax Check"
+				]
+			],
+			[
+				"Packages/Python/Python.sublime-build",
+				""
+			]
+		],
+		[
+			[
+				[
+					"Packages/User/bashunixcoursework.sublime-build",
+					""
+				],
+				[
+					"Packages/User/lafortuna.sublime-build",
+					""
+				],
+				[
+					"Packages/User/madoko.sublime-build",
+					""
+				],
+				[
+					"Packages/User/ocaml.sublime-build",
+					""
+				]
+			],
+			[
+				"Packages/User/ocaml.sublime-build",
+				""
+			]
+		],
+		[
+			[
+				[
+					"Packages/User/madoko.sublime-build",
+					""
+				],
+				[
+					"Packages/User/madoko.sublime-build",
+					"Enable Live Reload"
+				]
+			],
+			[
+				"Packages/User/madoko.sublime-build",
+				"Enable Live Reload"
+			]
+		],
+		[
+			[
+				[
+					"Packages/User/madoko.sublime-build",
+					""
+				],
+				[
+					"Packages/User/madoko.sublime-build",
+					"Enable Live Reload"
+				],
+				[
+					"Packages/User/madoko.sublime-build",
+					"Build html"
+				]
+			],
+			[
+				"Packages/User/madoko.sublime-build",
+				"Build html"
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"floobits",
+				"Floobits - Join Workspace"
+			],
+			[
+				"floo",
+				"Floobits - Join Recent Workspace"
+			],
+			[
+				"ssr",
+				"Set Syntax: river"
+			],
+			[
+				"foo",
+				"Floobits - Join Workspace"
+			],
+			[
+				"stat",
+				"View: Toggle Status Bar"
+			],
+			[
+				"sspy",
+				"Set Syntax: Python"
+			],
+			[
+				"ssriver",
+				"Set Syntax: river"
+			],
+			[
+				"ww",
+				"Word Wrap: Toggle"
+			],
+			[
+				"floobit",
+				"Floobits - Join Workspace"
+			],
+			[
+				"join",
+				"Floobits - Join Workspace"
+			],
+			[
+				"river",
+				"Set Syntax: river"
+			],
+			[
+				"view si",
+				"View: Toggle Side Bar"
+			],
+			[
+				"view",
+				"View: Toggle Side Bar"
+			],
+			[
+				"side",
+				"View: Toggle Side Bar"
+			],
+			[
+				"ssmadoko",
+				"Set Syntax: Madoko"
+			],
+			[
+				"ssmarkdown",
+				"Set Syntax: Markdown"
+			],
+			[
+				"ssmarkd",
+				"Set Syntax: Markdown Extended"
+			],
+			[
+				"ssmard",
+				"Set Syntax: Markdown Extended"
+			],
+			[
+				"ssmad",
+				"Set Syntax: Markdown"
+			],
+			[
+				"install ",
+				"Package Control: Install Package"
+			],
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"remove pa",
+				"Package Control: Remove Package"
+			],
+			[
+				"packa",
+				"Package Control: Remove Package"
+			],
+			[
+				"ssocmal",
+				"Set Syntax: OCamllex"
+			],
+			[
+				"tab",
+				"View: Toggle Tabs"
+			],
+			[
+				"menu",
+				"View: Toggle Menu"
+			],
+			[
+				"status",
+				"View: Toggle Status Bar"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				":w",
+				":w - Save"
+			],
+			[
+				"ssocaml",
+				"Set Syntax: OCaml"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"ssmado",
+				"Set Syntax: Madoko"
+			],
+			[
+				"ssmdk",
+				"Set Syntax: Madoko"
+			],
+			[
+				"minim",
+				"View: Toggle Minimap"
+			],
+			[
+				"sssc",
+				"Set Syntax: Scheme"
+			],
+			[
+				"sslisp",
+				"Set Syntax: Lisp"
+			],
+			[
+				"w",
+				"Word Wrap: Toggle"
+			],
+			[
+				"wwe",
+				"Word Wrap: Toggle"
+			],
+			[
+				"ssjaa",
+				"Set Syntax: Java"
+			],
+			[
+				"ssjava",
+				"Set Syntax: Java"
+			],
+			[
+				"sssche",
+				"Set Syntax: Scheme"
+			],
+			[
+				"ssschem",
+				"Set Syntax: Scheme"
+			],
+			[
+				"ssscheme",
+				"Set Syntax: Scheme"
+			],
+			[
+				"sssce",
+				"Set Syntax: Scheme"
+			],
+			[
+				"sslate",
+				"Set Syntax: LaTeX"
+			],
+			[
+				"ssma",
+				"Set Syntax: Madoko"
+			],
+			[
+				"ssshc",
+				"Set Syntax: Scheme"
+			],
+			[
+				"ssc",
+				"Set Syntax: C"
+			],
+			[
+				"html",
+				"HTMLPrettify"
+			],
+			[
+				":e",
+				":e - Revert"
+			],
+			[
+				"SSSCHEM",
+				"Set Syntax: Scheme"
+			],
+			[
+				"enabl",
+				"Package Control: Enable Package"
+			],
+			[
+				"ssxml",
+				"Set Syntax: XML"
+			],
+			[
+				"enable",
+				"Package Control: Enable Package"
+			],
+			[
+				"disab",
+				"Package Control: Disable Package"
+			],
+			[
+				"ena",
+				"Package Control: Enable Package"
+			],
+			[
+				"disa",
+				"Package Control: Disable Package"
+			],
+			[
+				"enab",
+				"Package Control: Enable Package"
+			],
+			[
+				"disable",
+				"Package Control: Disable Package"
+			],
+			[
+				"package",
+				"Package Control: Enable Package"
+			],
+			[
+				"disabl",
+				"Package Control: Disable Package"
+			],
+			[
+				"disable ",
+				"Package Control: Disable Package"
+			],
+			[
+				"linter",
+				"SublimeLinter: Disable Linter"
+			],
+			[
+				"ssmd",
+				"Set Syntax: Madoko"
+			],
+			[
+				"ssh",
+				"Set Syntax: HTML"
+			],
+			[
+				"sshtml",
+				"Set Syntax: HTML"
+			],
+			[
+				"ssm",
+				"Set Syntax: Madoko"
+			],
+			[
+				"WW",
+				"Word Wrap: Toggle"
+			],
+			[
+				"markdown",
+				"Set Syntax: Markdown"
+			],
+			[
+				"build",
+				"Build With: madoko"
+			],
+			[
+				"view menu",
+				"View: Toggle Menu"
+			],
+			[
+				"view min",
+				"View: Toggle Minimap"
+			],
+			[
+				"view status",
+				"View: Toggle Status Bar"
+			],
+			[
+				"python",
+				"Set Syntax: Python"
+			],
+			[
+				"ssjson",
+				"Set Syntax: JSON"
+			],
+			[
+				"pretty",
+				"HTMLPrettify"
+			],
+			[
+				"ssmark",
+				"Set Syntax: Markdown"
+			],
+			[
+				"view:",
+				"View: Toggle Minimap"
+			],
+			[
+				"statu",
+				"View: Toggle Status Bar"
+			],
+			[
+				"men",
+				"View: Toggle Menu"
+			],
+			[
+				"prett",
+				"HTMLPrettify"
+			],
+			[
+				"prettif",
+				"HTMLPrettify"
+			],
+			[
+				"pretti",
+				"HTMLPrettify"
+			],
+			[
+				"ss",
+				"Set Syntax: HTML"
+			],
+			[
+				"sspla",
+				"Set Syntax: Plain Text"
+			],
+			[
+				"ssyaml",
+				"Set Syntax: YAML"
+			],
+			[
+				"ssbash",
+				"Set Syntax: Shell Script (Bash)"
+			],
+			[
+				"minimap",
+				"View: Toggle Minimap"
+			],
+			[
+				"vi",
+				"View: Toggle Status Bar"
+			],
+			[
+				"VIEW ",
+				"View: Toggle Minimap"
+			],
+			[
+				"ssplain",
+				"Set Syntax: Plain Text"
+			],
+			[
+				"toggle ",
+				"View: Toggle Menu"
+			],
+			[
+				"view stat",
+				"View: Toggle Status Bar"
+			],
+			[
+				"toggle men",
+				"View: Toggle Menu"
+			],
+			[
+				"ssyamk",
+				"Set Syntax: Makefile"
+			],
+			[
+				"ssy",
+				"Set Syntax: YAML"
+			],
+			[
+				"ss pla	",
+				"Set Syntax: Plain Text"
+			],
+			[
+				"ssya	",
+				"Set Syntax: YAML"
+			],
+			[
+				"sscimp",
+				"Set Syntax: C Improved"
+			],
+			[
+				"ssc i",
+				"Set Syntax: C Improved"
+			],
+			[
+				"ss c im",
+				"Set Syntax: C Improved"
+			],
+			[
+				"ssjavasc",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"ssj",
+				"Set Syntax: Java Properties"
+			],
+			[
+				"ssjs",
+				"Set Syntax: Java Server Page (JSP)"
+			],
+			[
+				"javasc",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"java",
+				"Set Syntax: Java"
+			],
+			[
+				"toggle",
+				"View: Toggle Menu"
+			],
+			[
+				"vie",
+				"View: Toggle Menu"
+			],
+			[
+				"ssc++",
+				"Set Syntax: C++"
+			],
+			[
+				"tool",
+				"View: Toggle Open Files in Side Bar"
+			],
+			[
+				"v",
+				"View: Toggle Menu"
+			],
+			[
+				"lint",
+				"SublimeLinter: Next Error"
+			],
+			[
+				"next ",
+				"SublimeLinter: Next Error"
+			],
+			[
+				"lint this",
+				"SublimeLinter: Lint This View"
+			],
+			[
+				"lint thi",
+				"SublimeLinter: Lint This View"
+			],
+			[
+				"sublimelinter Deb",
+				"SublimeLinter: Enable Debug Mode"
+			],
+			[
+				"package instal",
+				"Package Control: Install Package"
+			],
+			[
+				"package insta",
+				"Package Control: Install Package"
+			],
+			[
+				"gutterco",
+				"Preferences: GutterColor Settings – Default"
+			],
+			[
+				"settings",
+				"Preferences: GutterColor Settings – User"
+			],
+			[
+				"b",
+				"Preferences: Browse Packages"
+			],
+			[
+				"brows",
+				"Preferences: Browse Packages"
+			],
+			[
+				"pack",
+				"Preferences: Browse Packages"
+			],
+			[
+				"ssmak",
+				"Set Syntax: Markdown"
+			],
+			[
+				"ssmar",
+				"Set Syntax: Markdown"
+			],
+			[
+				"sscpp",
+				"Set Syntax: AppleScript"
+			],
+			[
+				"sslat",
+				"Set Syntax: LaTeX"
+			]
+		],
+		"width": 449.0
+	},
+	"console":
+	{
+		"height": 117.0,
+		"history":
+		[
+			"help",
+			"ls",
+			"a",
+			"a = re.search(\"a\",\"a\")",
+			"a",
+			"a = re.search(\"a\",\"b\")",
+			"re.search(\"a\",\"b\")",
+			"import re",
+			"[\"a\", \"b\"] + [\"c\",\"d\"]",
+			"\"{}\".format(2)",
+			"\"\".format(2)",
+			"(\"\" if random.randint(0,1) else \"no\")",
+			"random.randint(0,1)",
+			"random.randint",
+			"import random",
+			"50-36",
+			"+3-1-1+3+2+2+2-1+3+5+4+2+2+2+3+3+3",
+			"45+54",
+			"14*4 + 5*7",
+			"14*4",
+			"48/8",
+			"5*4*3*2*1",
+			"5!",
+			"2**(3+1)-1",
+			"2**(2+1)-1",
+			"2**(1+1)-1",
+			"2**(0+1)-1",
+			"2**(l+1)-1",
+			"2**(3)-1",
+			"46/60",
+			"2**100",
+			"2**1000",
+			"10715086071862673209484250490600018105614048117055336074437503883703510511249361224931983788156958581275946729175531468251871452856923140435984577574698574803934567774824230985421074605062371141877954182153046474983581941267398767559165543946077062914571196477686542167660429831652624386837205668069376",
+			"2**1000",
+			"datetime.now()",
+			"from datetime import datetime",
+			"d.strftime(\"%d-%m-%y\")",
+			"d.strftime(\"%d/%m/%y\")",
+			"d = datetime.now()",
+			"datetime.now().strftime()",
+			"datetime.strftime(datetime.now())",
+			"\"{}\".format(datetime.now())",
+			"\"{}\".format(datetime.now().strftime())",
+			"\"{}\".format(datetime.now())",
+			"\"\".format(datetime.now())",
+			"datetime.now()",
+			"from datetime import datetime",
+			"from datetime import datetiem",
+			"datetime.now()",
+			"date.now()",
+			"date.date()",
+			"date.time()",
+			"date.today()",
+			"from datetime import date",
+			"datetime.today()",
+			"datetime.date()",
+			"datetime.date(()",
+			"datetime.now()",
+			"datetime.now",
+			"import datetime",
+			"view.run_command(\"screenshot\")",
+			"re.search(b\".*(Saving file )([^,]*),.*\", a, flags=re.MULTILINE).groups()",
+			"re.search(b\".*(Saving file )([^,]*),.*\", a., flags=re.MULTILINE).groups()",
+			"re.search(\".*(Saving).*\", a.decode(\"ascii\"), flags=re.MULTILINE).groups()",
+			"re.search(\".*(Savinf).*\", a.decode(\"ascii\"), flags=re.MULTILINE).groups()",
+			"re.MULTILINE",
+			"re.search(\".*(gathering).*\", a.decode(\"ascii\"), flags=re.MULTILINE).groups()",
+			"re.search(\".*(gathering).*\\n(.*)\", a.decode(\"ascii\"), flags=re.MULTILINE).groups()",
+			"re.search(\".*(gathering)\\n(.*)\", a.decode(\"ascii\"), flags=re.MULTILINE).groups()",
+			"re.search(\".*(gathering)(.*)\", a.decode(\"ascii\"), flags=re.MULTILINE).groups()",
+			"re.search(\".*(gathering).*\\n(.*\\n)\",a.decode(\"ascii\"),flags=re.MULTILINE).groups()",
+			"re.MULTILINE",
+			"re.search(\".*(gathering).*\\n(.*\\n)\",a.decode(\"ascii\"),flags=re.MULTILINE).groups()",
+			"help(re)",
+			"re.search(\".*(gathering).*\\n(.*\\n)\",a.decode(\"ascii\")).groups()",
+			"re.search(\".*(gathering).*\\n.*\\n\",a.decode(\"ascii\")).groups()",
+			"re.search(\".*(gathering).*\\n.*\",a.decode(\"ascii\")).groups()",
+			"re.search(\".*(gathering).*\\n\",a.decode(\"ascii\")).groups()",
+			"re.search(\".*(gathering).*\\n\",a.decode(\"ascii\"))",
+			"re.search(\".*(gathering\\n).*\",a.decode(\"ascii\"))",
+			"re.search(\".*(gathering).*\",a.decode(\"ascii\"))",
+			"re.search(\".*(gathering).*\",a.decode(\"ascii\")).groups()[0]",
+			"re.search(\".*(gathering).*\",a.decode(\"ascii\")).groups()[1]",
+			"re.search(\".*(gathering).*\",a.decode(\"ascii\")).groups()[0]",
+			"re.search(\".*(gathering).*\",a.decode(\"ascii\")).groups()[1]",
+			"re.search(\".*(gathering).*\",a.decode(\"ascii\")).groups()[0]",
+			"re.search(\"(.+)\",a.decode(\"ascii\")).groups()[0]",
+			"re.search(\"(\\.+)\",a.decode(\"ascii\")).groups()[0]",
+			"re.search(\"(.+)\",a.decode(\"ascii\")).groups()[0]",
+			"re.search(\".+\",a.decode(\"ascii\"))",
+			"re.match(\".+\",a.decode(\"ascii\"))",
+			"re.match(\".+\",a.decode(\"ascii\")).groups()[0]",
+			"re.match(\"(.*)\",a.decode(\"ascii\")).groups()[0]",
+			"re.match(\"[^d]*\",a.decode(\"ascii\"))",
+			"re.match(\"a\",a.decode(\"ascii\"))",
+			"re.match(\".*\",a.decode(\"ascii\"))",
+			"re.match(\"/.*.*/\",a.decode(\"ascii\"))",
+			"re.match(\"/.*S.*/\",a.decode(\"ascii\"))",
+			"re.match(/.*S.*/,a.decode(\"ascii\"))",
+			"re.match(\"/.*S.*/\",a.decode(\"ascii\"))",
+			"a.decode(\"ascii\")",
+			"a",
+			"re.match(\".*S.*\",a.decode(\"ascii\"))",
+			"re.match(\".*.*\",a.decode(\"ascii\"))",
+			"re.match(\".*x.*\",a.decode(\"ascii\"))",
+			"re.match(b\".*x.*\",a.decode(\"ascii\"))",
+			"re.match(b\".*x.*\",a.decode(\"ascii\")0",
+			"re.match(b\".*x.*\",a.decode(\"ascii\")",
+			"a",
+			"re.match(b\".*x.*\",a)",
+			"re.match(b\".*a.*\",a)",
+			"re.match(b\".*.*\",a)",
+			"re.match(b\".*a.*\",a)",
+			"re.match(b\".*S.*\",a)",
+			"re.match(b\".*Saving.*\",a)",
+			"re.match(b\".*S\",a)",
+			"re.match(b\".*Saving\",a)",
+			"re.match(b\".*\",a)",
+			"re.match(b\"Saving\",a)",
+			"re.match(\"Saving\",a)",
+			"import re",
+			"a",
+			"a = b'\\nINFO: gathering system information...\\n\\nLinux akron 3.16.0-37-generic #51-Ubuntu SMP Tue May 5 13:45:59 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux\\n\\nUbuntu 14.10 \\\\n \\\\l\\n\\n\\nGlib 1.305 \\nGtk2 1.2492 \\n\\nGlib built for 2.41.2, running with 2.42.1\\nGtk2 built for 2.24.24, running with 2.24.25\\n\\nBarrel Distortion - /usr/share/shutter/resources/system/plugins/perl/spbardistortion/spbardistortion\\nNegate - /usr/share/shutter/resources/system/plugins/perl/spnegate/spnegate\\nPolaroid - /usr/share/shutter/resources/system/plugins/perl/sppolaroid/sppolaroid\\nResize - /usr/share/shutter/resources/system/plugins/perl/spresize/spresize\\nSepia - /usr/share/shutter/resources/system/plugins/perl/spsepia/spsepia\\nHard Shadow - /usr/share/shutter/resources/system/plugins/perl/spshadow/spshadow\\nWatermark - /usr/share/shutter/resources/system/plugins/perl/spwatermark/spwatermark\\nGreyscale - /usr/share/shutter/resources/system/plugins/shell/spgrayscale/spgrayscale\\nOffset - /usr/share/shutter/resources/system/plugins/shell/spoffset/spoffset\\nRaise Border - /usr/share/shutter/resources/system/plugins/shell/spraise/spraise\\nSoft Edges - /usr/share/shutter/resources/system/plugins/shell/spsoftedges/spsoftedges\\nSunk Border - /usr/share/shutter/resources/system/plugins/shell/spsunk/spsunk\\nTorned Paper - /usr/share/shutter/resources/system/plugins/shell/sptornedpaper/sptornedpaper\\nAutocrop - /usr/share/shutter/resources/system/plugins/shell/sptrim/sptrim\\nCurrent window manager: i3\\n\\ntype_changed was emitted by widget Gtk2::ComboBox=HASH(0x10838c8)\\n\\ncursor_toggled was emitted by widget Gtk2::CheckButton=HASH(0x3f53870)\\n\\ncursor_status_toggled was emitted by widget Gtk2::CheckButton=HASH(0x3f53498)\\n\\nprogname_toggled was emitted by widget Gtk2::CheckButton=HASH(0x1075f78)\\n\\nim_colors_changed was emitted by widget Gtk2::ComboBox=HASH(0x1075f90)\\n\\nim_colors_toggled was emitted by widget Gtk2::CheckButton=HASH(0x408d918)\\n\\nthumbnail_changed was emitted by widget Gtk2::HScale=HASH(0x408d9c0)\\n\\nthumbnail_toggled was emitted by widget Gtk2::CheckButton=HASH(0x408da08)\\n\\nbordereffect_toggled was emitted by widget Gtk2::CheckButton=HASH(0x408da80)\\n\\nbordereffect_changed was emitted by widget Gtk2::SpinButton=HASH(0x408dac8)\\n\\nmenu_delay_changed was emitted by widget Gtk2::SpinButton=HASH(0x1054478)\\n\\nhide_time_changed was emitted by widget Gtk2::SpinButton=HASH(0x408e4a0)\\n\\nns_changed was emitted by widget Gtk2::ComboBox=HASH(0x40c5ad0)\\nUpdating fileinfos for key: [1] - screenshot.png\\nfile:///media/1TB_SSD/notes/comp2209-Programming-III/screenshot.png thumbnail already exists\\nfile:///media/1TB_SSD/notes/comp2209-Programming-III/screenshot.png thumbnail already exists\\nUpdating fileinfos for key: [2] - test.png\\nfile:///media/1TB_SSD/notes/comp2209-Programming-III/test.png thumbnail created\\nfile:///media/1TB_SSD/notes/comp2209-Programming-III/test.png thumbnail already exists\\nUpdating fileinfos for key: [3] - deleteme2.png\\nfile:///media/1TB_SSD/notes/deleteme2.png thumbnail already exists\\nfile:///media/1TB_SSD/notes/deleteme2.png thumbnail already exists\\n\\nselect was emitted by widget global_keybinding\\nUsing monitor: 0 - 0 - 1920 - 1080\\nParsing wildcards for /media/1TB_SSD/notes/comp2209-Programming-III/test.png\\nParsed $width and $height: /media/1TB_SSD/notes/comp2209-Programming-III/test.png\\nParsed $profile: /media/1TB_SSD/notes/comp2209-Programming-III/test.png\\nParsed $name: /media/1TB_SSD/notes/comp2209-Programming-III/test.png\\nNew uri after exists check: file:///media/1TB_SSD/notes/comp2209-Programming-III/test.png\\nAsking for filename\\n\\nfct_update_tray_menu was called by Gnome2::Wnck::Screen=HASH(0x3b6f300)\\n\\nfct_update_tray_menu was called by Gnome2::Wnck::Screen=HASH(0x3b6f300)\\nSaving file /media/1TB_SSD/notes/comp2209-Programming-III/test.png, png, 9\\nscreenshot successfully saved to /media/1TB_SSD/notes/comp2209-Programming-III/test.png, but unable to add the file to session!\\n\\nquit was emitted by widget \\n\\nfct_update_tray_menu was called by Gnome2::Wnck::Screen=HASH(0x3b6f300)\\n'",
+			"b'Hello'",
+			"view.run_command(\"screenshot\")",
+			"b'\\n'",
+			"view.run_command(\"screenshot\")",
+			"\"Hello\".startswith(\"Hello\")"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": false,
+		"show_minimap": true,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/ToyLanguage",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/tests"
+	],
+	"file_history":
+	[
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/ToyLanguage/parser.mly",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/river.sublime-syntax",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/.flooignore",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/tests/fibonacci.spl",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/tests/isSame.spl",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/tests/prefixing.spl",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/Makefile",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/lexer.mll",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/ToyLanguage/Makefile",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/prefixing.spl",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/isSame.spl",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/accumulator.spl",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/copying.spl",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/arithmetic.spl",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/fibonacci.spl",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/isTrueTest.spl",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/lambda.spl",
+		"/media/1TB_SSD/coursework/comp2211_SEG/seg4/seg4/src/main/java/Runway.java",
+		"/media/1TB_SSD/coursework/comp2211_SEG/seg4/seg4/src/main/java/RunwayCalculator.java",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/river/prog3.ol",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/river/example1.spl",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/river/lexer.mll",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/river/main",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/river/main.ml",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/river/Makefile",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/river/parser.mly",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/river/prog1.ol",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/river/prog2.ol",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/river/prog4.ol",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/river/Toy.ml",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/river/Toy.mli",
+		"/media/1TB_SSD/notes/COMP2213_interaction_design/MC Bingo:",
+		"/media/1TB_SSD/notes/COMP2213_interaction_design/5_mc_2.mdk",
+		"/home/andy/floobits/welcome.md",
+		"/media/1TB_SSD/notes/COMP2215_computer_systems_II/lecture_13_multitasking_and_scheduling.mdk",
+		"/media/1TB_SSD/notes/COMP2212_programming_language_concepts.mdk",
+		"/media/1TB_SSD/notes/COMP2212_programming_language_concepts/13_theoneididntlistentobecauseiwassubmittingseg.mdk",
+		"/media/1TB_SSD/notes/COMP2212_programming_language_concepts/9_type_checking.mdk",
+		"/media/1TB_SSD/notes/COMP2212_programming_language_concepts/14_semantics.mdk",
+		"/home/andy/.config/sublime-text-3/Packages/MarkdownEditing/README.md",
+		"/home/andy/.config/sublime-text-3/Packages/MarkdownEditing/Markdown (Standard).sublime-settings",
+		"/home/andy/.config/sublime-text-3/Packages/User/Markdown (Standard).sublime-settings",
+		"/home/andy/.config/sublime-text-3/Packages/User/Preferences.sublime-settings",
+		"/media/1TB_SSD/coursework/comp2215/cwk3/t03_main.c",
+		"/media/1TB_SSD/notes/COMP2215_computer_systems_II/lecture_16_persistent_storage.mdk",
+		"/media/1TB_SSD/Documents/Coding/CodeBoard/github_fav_lang/setup.py",
+		"/media/1TB_SSD/coursework/comp2215/cwk3/t03_sk/t03_main.c",
+		"/media/1TB_SSD/coursework/comp2215/cwk3/lcd/svgrgb565.h",
+		"/media/1TB_SSD/Documents/Coding/CodeBoard/github_fav_lang/tests/query_tests.py",
+		"/media/1TB_SSD/Documents/Coding/CodeBoard/codeoff2016/static/airlines.csv",
+		"/media/1TB_SSD/Documents/Coding/CodeBoard/codeoff2016/static/Flight_Routes.xml",
+		"/media/1TB_SSD/Documents/Coding/CodeBoard/codeoff2016/static/AIXM51export_AIRAC_02_2013_FINAL_3dp.xml",
+		"/media/1TB_SSD/Documents/Coding/CodeBoard/github_fav_lang/tests/tests.py",
+		"/media/1TB_SSD/Documents/Coding/CodeBoard/github_fav_lang/github_fav_lang/query.py",
+		"/media/1TB_SSD/Documents/Coding/CodeBoard/github_fav_lang/github_fav_lang/__init__.py",
+		"/media/1TB_SSD/Documents/Coding/CodeBoard/github_fav_lang/github_fav_lang/github_fav_lang.py",
+		"/media/1TB_SSD/Documents/Coding/CodeBoard/github_fav_lang/github_fav_lang/tests/tests.py",
+		"/media/1TB_SSD/notes/COMP2215_computer_systems_II/lecture_15_Realtime_scheduling_and_RIOS.mdk",
+		"/media/1TB_SSD/Documents/_Andrews work files/Work/github_scraper.py",
+		"/media/1TB_SSD/Documents/Coding/CodeBoard/github_scraper/setup.py",
+		"/media/1TB_SSD/notes/COMP2215_computer_systems_II/c_tips.mdk",
+		"/media/1TB_SSD/notes/COMP2215_computer_systems_II/lecture_15_multitasking.mdk",
+		"/media/1TB_SSD/notes/COMP2212_programming_language_concepts/12_Types_for_objects.mdk",
+		"/media/1TB_SSD/notes/COMP2213_interaction_design/4_erics_stuff.mdk",
+		"/tmp/L.java",
+		"/tmp/R.java",
+		"/media/1TB_SSD/notes/COMP2212_programming_language_concepts/11_subtyping.mdk",
+		"/media/1TB_SSD/notes/COMP2212_programming_language_concepts/10_structured_types.mdk",
+		"/media/1TB_SSD/coursework/comp2211_SEG/seg4/build.xml",
+		"/media/1TB_SSD/coursework/comp2215/cwk2/t02_sk/t02_sk/lcd/lcd.c",
+		"/media/1TB_SSD/coursework/comp2215/cwk2/t02_sk/t02_sk/lcd/ili934x.h",
+		"/media/1TB_SSD/coursework/comp2215/cwk2/t02_sk/t02_sk/lcd/lcd.h",
+		"/media/1TB_SSD/coursework/comp2215/cwk1/t01sk.c",
+		"/media/1TB_SSD/coursework/comp2215/cwk2/t02_sk/t02_sk/lcd/font.h",
+		"/media/1TB_SSD/coursework/comp2215/cwk2/t02_sk/t02_sk/lcd_test.c",
+		"/media/1TB_SSD/coursework/comp2215/cwk2/t02_sk/t02_sk/Makefile",
+		"/media/1TB_SSD/coursework/comp2215/cwk2/t02_sk/t02_sk/lcd/svgrgb565.h",
+		"/media/1TB_SSD/coursework/comp2215/cwk1/fb.txt",
+		"/tmp/fb.txt",
+		"/media/1TB_SSD/notes/COMP2215_computer_systems_II/lecture_14_realtime_scheduling.mdk",
+		"/media/1TB_SSD/notes/COMP2215_computer_systems_II/lecture_12_video_driver.mdk",
+		"/tmp/ctf01_helper.py",
+		"/tmp/ctf01.py",
+		"/media/1TB_SSD/notes/COMP2211_SEG/testing.mdk",
+		"/home/andy/.config/sublime-text-3/Packages/User/DictionaryAutoComplete.sublime-settings",
+		"/tmp/deleteme.mdk",
+		"/home/andy/.config/sublime-text-3/Packages/DictionaryAutoComplete/DictionaryAutoComplete.sublime-settings",
+		"/home/andy/.config/sublime-text-3/Packages/DictionaryAutoComplete/README.md",
+		"/media/1TB_SSD/notes/plugin/Screenshot/screenshot.py",
+		"/media/1TB_SSD/notes/COMP2212_programming_language_concepts/7_renameme.mdk",
+		"/media/1TB_SSD/notes/COMP2212_programming_language_concepts/8_typing_rules.mdk",
+		"/media/1TB_SSD/notes/COMP2212_programming_language_concepts/8_type_checking.mdk",
+		"/media/1TB_SSD/coursework/comp2215/cwk1/Makefile",
+		"/core",
+		"/media/1TB_SSD/coursework/comp2215/cwk1/Makefile.txt",
+		"/media/1TB_SSD/coursework/comp2215/cwk1/main.c",
+		"/media/1TB_SSD/notes/COMP2215_computer_systems_II/lecture_11_device_drivers.mdk",
+		"/media/1TB_SSD/notes/COMP2215_computer_systems_II/lecture_9_interrupt_handling_event_driven_programming.mdk",
+		"/media/1TB_SSD/notes/COMP2215_computer_systems_II/lecture_10_event_driven_programming.mdk",
+		"/media/1TB_SSD/notes/COMP2213_interaction_design/3_mc.mdk",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/labs/CalcExample/CalcExample/Makefile",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/labs/CalcExample/CalcExample/parser.mly",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/labs/99-problems.ml",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/labs/CalcExample/CalcExample/lexer.mll",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/labs/CalcExample/CalcExample/parser.mli",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/labs/CalcExample/CalcExample/lexer.mli",
+		"/media/1TB_SSD/notes/COMP2212_programming_language_concepts/7_introduction_to_types.mdk",
+		"/media/1TB_SSD/Documents/Coding/LaTeX/CV/cv.tex",
+		"/usr/share/scribus/scripts/Bullets.py",
+		"/media/1TB_SSD/notes/COMP2211_SEG/2_renameme.mdk",
+		"/media/1TB_SSD/notes/COMP2211_SEG/3_Envisioning_deliverable.mdk",
+		"/media/1TB_SSD/notes/COMP2211_SEG/3_Envisioning_2.mdk",
+		"/media/1TB_SSD/notes/COMP2215_computer_systems_II/lecture_8_lab_talk.mdk",
+		"/media/1TB_SSD/notes/COMP2215_computer_systems_II/lecture_7_memory_mapped_io.mdk",
+		"/media/1TB_SSD/notes/COMP2215_computer_systems_II/lecture_5_memory_architecture.mdk",
+		"/media/1TB_SSD/notes/COMP2215_computer_systems_II/lecture_4_la-fortuna_hardware.mdk",
+		"/media/1TB_SSD/notes/COMP2212_programming_language_concepts/6_evaluation_strategies_and_dispatch.mdk",
+		"/media/1TB_SSD/notes/COMP2212_programming_language_concepts/5_interpreters_and_compilers.mdk",
+		"/media/1TB_SSD/notes/COMP2213_interaction_design/2_mc.mdk",
+		"/home/andy/.config/sublime-text-3/Packages/User/ocaml.sublime-build",
+		"/tmp/deleteme.ml",
+		"/home/andy/.config/sublime-text-3/Packages/User/madoko.sublime-build",
+		"/tmp/deleteme.ocm",
+		"/media/1TB_SSD/notes/COMP2212_programming_language_concepts/5_renameme.mdk",
+		"/media/1TB_SSD/notes/COMP2211_SEG/1_intro.mdk",
+		"/media/1TB_SSD/garage_minutes.mdk",
+		"/media/1TB_SSD/notes/COMP2213_interaction_design/1_intro.mdk",
+		"/media/1TB_SSD/notes/COMP2212_programming_language_concepts/4_lexing_and_parsing.mdk"
+	],
+	"find":
+	{
+		"height": 40.0
+	},
+	"find_in_files":
+	{
+		"height": 108.0,
+		"where_history":
+		[
+			"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts",
+			"\"~/Documents/sr/rooster/\"",
+			"\"~/Documents/sr/rooster/\", *.py",
+			"\"/media/1TB_SSD/\", *.py",
+			"\"/media/1TB_SSD/Documents/\", *.py",
+			"\"/media/1TB_SSD/Documents/\", .py",
+			"/media/1TB_SSD/Documents/*.py",
+			"/media/1TB_SSD/Documents/_Andrews work files/University/COMP_1206/ExerciseSheet9",
+			"\\[\\1\\]",
+			"../"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"TmAbs",
+			"all",
+			"arithmetic",
+			"def",
+			"river",
+			"Scheduling",
+			"md",
+			"\\+\\+",
+			"++",
+			"PURPLE",
+			"period1",
+			"period1#",
+			"period1",
+			"LED_",
+			"LED",
+			"TickFct",
+			"TickFct = ",
+			"tasksPeriodGCD",
+			"TickFct",
+			"currenttask",
+			"tasks",
+			"tasksNum",
+			"elapsedTime",
+			"LED_INIT",
+			"Max_TASKS",
+			"idletask",
+			"idletask/",
+			"idletask",
+			"''",
+			"none",
+			"\\n\\n",
+			"^ ",
+			"^  ",
+			" +",
+			"\\n\\n",
+			"//.*",
+			" +",
+			"\\\\bar",
+			"v",
+			"{(.*)}",
+			"output",
+			"seg4.module.classpath",
+			"classpath",
+			"seg4.module.classpath",
+			"junit",
+			"xml",
+			"FIXME",
+			"orientation",
+			"Pull",
+			" +",
+			"\\n",
+			".*\\= (.*);",
+			"\\n",
+			".*\\= (.*);",
+			".*\\=",
+			"$",
+			"^",
+			"\\n",
+			".*?(\\d+)$",
+			".*(\\d+)$",
+			"71",
+			"/media/1TB_SSD/notes/COMP2212_programming_language_concepts/",
+			"means",
+			"vdash",
+			"ISR",
+			"delta",
+			"cc",
+			"\\n\\n",
+			"cpu",
+			"^.",
+			"” .*",
+			";;",
+			"^ ",
+			"hoshisato.com",
+			"volunteer",
+			"VolunteerResource",
+			"SignUpResource",
+			"slots_per_day",
+			"max_value",
+			" ",
+			",",
+			", ",
+			"  ",
+			",,",
+			"\\n",
+			"([^,])\\n",
+			" ,",
+			"and",
+			"\\.",
+			"\\n\\n+",
+			".*\\:",
+			"and",
+			"at32uc3a0128",
+			"\\n",
+			"([^,])\\n",
+			"       ",
+			".*?(\\w+@.*)",
+			"\\n",
+			"\\)$",
+			".*?(\\w+@.*)",
+			".*(\\w+@.*)",
+			"    ",
+			"run_snapshot",
+			"directory",
+			"image_path",
+			",",
+			"closure",
+			"recursive",
+			"state",
+			"\\delta",
+			"complement",
+			"^([^\\t]+)\\t([^\\t]+)$",
+			"     ",
+			"    ",
+			"^([^\\t]+)\\t([^\\t]+)$",
+			"   +",
+			"   ",
+			"    ",
+			"\\s+➜\\s+",
+			"epsilon",
+			"PDA",
+			"$(Q, \\Sigma, \\Gamma, \\delta, s, \\bot, F)$",
+			"Pushdown automata",
+			"$).\n",
+			"kleene",
+			"Step \\d: ",
+			"    ",
+			"\\t"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+			"",
+			"spl",
+			"\\n",
+			"",
+			" ",
+			"\\n",
+			"",
+			" ",
+			"",
+			"\\1",
+			" ",
+			",",
+			"\\1",
+			",",
+			"\\1",
+			")",
+			"(",
+			"+",
+			"\\1",
+			"",
+			"\\n",
+			"",
+			"\\t",
+			"commentitout.com",
+			"target_value",
+			"",
+			"\\n",
+			" ",
+			",",
+			"",
+			"\\1,\\n",
+			",",
+			"",
+			"\\n",
+			"",
+			"\\1,",
+			"",
+			"\\1",
+			",",
+			"",
+			"\\1",
+			"-   ",
+			" <= ",
+			"<=",
+			"    {\n      \"active\": true,\n      \"case\": \"Maintain\",\n      \"repA\": \"\\1\",\n      \"repB\": \"\\2\",\n      \"type\": \"Simple\"\n    },",
+			"\\t ",
+			"    {\n      \"active\": true,\n      \"case\": \"Maintain\",\n      \"repA\": \"\\1\",\n      \"repB\": \"\\2\",\n      \"type\": \"Simple\"\n    },",
+			"\\t",
+			"",
+			"    ",
+			"",
+			"\\t\\1",
+			"\\n",
+			"\\t\\1",
+			"x",
+			"c",
+			"next",
+			"    \\1",
+			"\\t",
+			"\\t\\1",
+			"000,",
+			"",
+			"B",
+			"A",
+			"+",
+			"\\1",
+			"\\2 \\1",
+			"'\\.",
+			"'.",
+			"',",
+			"' ",
+			"'",
+			"Java",
+			" IP ",
+			"`SourceInterface`",
+			"`SinkInterface`",
+			"",
+			"tracer-core",
+			"\\)",
+			"copy-memory-core",
+			" ",
+			"",
+			"\\)",
+			"",
+			"immobile",
+			"immobile cell",
+			"breadth",
+			"\\],",
+			"    \\[\"",
+			" \\[\"",
+			"[",
+			"]",
+			"\",\"",
+			"| ",
+			"\\n\\],\\[\\n",
+			"\\],\\[",
+			"",
+			"  ",
+			"   ",
+			"  \\|",
+			" \\|",
+			"\\1\\| \\|",
+			"\\| \\|",
+			"\\1",
+			" \\1\\n",
+			"",
+			"\\n",
+			"\\|    \\|",
+			"\\n",
+			"    ",
+			"breadth",
+			"C\\{0.7em\\}",
+			"C\\{0.8em\\}",
+			"C\\{1em\\}",
+			"cm\\}",
+			" ",
+			"\\\\item ",
+			"\\item",
+			"    \\[\"",
+			"],[",
+			"",
+			",",
+			"",
+			"[",
+			"]",
+			"",
+			"\"",
+			""
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 3,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/parser.mly",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1305,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1086,
+								1086
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/OCaml/OCamlyacc.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 288.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "Toy.ml",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 8856,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3948,
+								3948
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/OCaml/OCaml.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2870.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "lexer.mll",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 745,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								284,
+								284
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/OCaml/OCamllex.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/media/1TB_SSD/notes/COMP2212_programming_language_concepts/14_type_safety.mdk",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Madoko/madoko.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/lexer.mll",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1344,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								159,
+								159
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/OCaml/OCamllex.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 32.0
+	},
+	"input":
+	{
+		"height": 39.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 338.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.unsaved_changes":
+	{
+		"height": 166.0
+	},
+	"pinned_build_system": "Packages/User/madoko.sublime-build",
+	"project": "project.sublime-project",
+	"replace":
+	{
+		"height": 60.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 209.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

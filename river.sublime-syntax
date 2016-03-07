@@ -7,7 +7,7 @@ scope: source.spl
 contexts:
   main:
     # Keywords
-    - match: \b(def|if|let|print|loop|all|else)\b
+    - match: \b(def|lambda|if|let|print|loop|else)\b
       scope: keyword.control.spl
     - match: '"'
       push: string
@@ -22,7 +22,7 @@ contexts:
     - match: '\b(-)?[0-9]+\b'
       scope: constant.numeric.spl
     # Operators
-    - match: '(\:\:|\.|\+|\-|\*|\/|=|>=|<=|!=|->|<|>|<>|\?|&)'
+    - match: '(\:\:|\.|\+|\-|\*|\/|=|>=|<=|!=|<|>|\?|&)'
       scope: keyword.Operators.spl
 
   string:
