@@ -6,6 +6,10 @@ rule lexer_main = parse
       [' ' '\t' '\n']     { lexer_main lexbuf }     (* skip blanks *)
     | '-'? ['0'-'9']+ as lxm { INT(int_of_string lxm) }
     | "//" _ +  { }
+    (* Functions *)
+    | "loop"    { LOOP }
+    | "print"    { PRINT }
+    | "read"    { READ }
     (* Types *)
     | "int"     { ITYPE }
     | "stream"  { STYPE }
@@ -14,25 +18,21 @@ rule lexer_main = parse
     | "def"     { DEFINE }
     | "if"      { IF }
     | "else"    { ELSE }
-    | ';'       { SEMICOLON }
-    (* Functions *)
-    | "loop"    { LOOP }
-    | "print"    { PRINT }
-    | "read"    { READ }
     | ['a'-'z'] + as lxm { IDENT(lxm) }
+    | ';'       { SEMICOLON }
+    (* Comparison Operators *)
+    | ">="      { GEQ }
+    | "<="      { LEQ }
+    | '<'       { LT }
+    | '>'       { GT }
+    | "=="      { EQ }
+    | "!="      { NEQ }
+    | "!"       { NOT }
     (* Operators *)
     | '+'       { PLUS }
     | '-'       { MINUS }
     | '*'       { MULTIPLY }
     | '/'       { DIVIDE }
-    (* Comparison Operators *)
-    | '<'       { LT }
-    | '>'       { GT }
-    | ">="      { GEQ }
-    | "<="      { LEQ }
-    | "!"       { NOT }
-    | "=="      { EQ }
-    | "!="      { NEQ }
     (* Concatenators *)
     | "::"      { CONS }
     | '.'       { DOT }

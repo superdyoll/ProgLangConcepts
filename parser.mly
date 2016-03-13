@@ -44,19 +44,18 @@ lines: line lines | line;
 
 line: expr SEMICOLON { $1 };
 
-type_spec: ITYPE { RivInt }
-    | STYPE LT type_spec GT {RivStream($3)}
-    | type_spec LTYPE LPAREN comma_sep RPAREN {RivLambda($1, $4)}
-    | LPAREN type_spec RPAREN {$2}
+/* List of type_specs */
+type_spec_list: type_spec { $1 }
+    | type_spec COMMA type_spec_list { $1 :: $3 }
 ;
 
-comma_sep: type_spec { $1 }
-    | type_spec COMMA comma_sep { $1 :: $3 }
+type_spec: ITYPE { RivInt }
+    | STYPE LT type_spec GT {RivStream($3)}
+    | type_spec LTYPE LPAREN type_spec_list RPAREN {RivLambda($1, $4)}
 ;
 
 expr: INT                      { RmNum $1 }
  | IDENT                       { RmVar $1 }
- | LET LPAREN IDENT COLON type_spec RPAREN EQUALS expr IN expr { RmLet ($3, $5, $8, $10) }
  | expr LPAREN expr RPAREN     { RmApp ($1, $3) }
  | expr PLUS expr              { RmPlus ($1, $3) }
  | expr MINUS expr             { RmMinus ($1, $3) }
@@ -70,10 +69,20 @@ expr: INT                      { RmNum $1 }
  | expr EQ expr                { RmEqualTo ($1, $3) }
  | expr CONS expr              { RmCons ($1, $3) } /* :: (INT * INT -> STREAM<INT>) */
  | expr DOT expr               { RmAppend($1, $3) } /* . (INT * INT -> INT) */
- | IDENT LSQ expr RSQ           { RmIndex($1, $3) }
+ | IDENT LSQ expr RSQ          { RmIndex($1, $3) }
  | IDENT LSQ COLON INT RSQ     { RmSection($1, 0, $4) }
  | IDENT LSQ INT COLON RSQ     { RmSectionEnd($1, $3) }
  | IDENT LSQ INT COLON INT RSQ { RmSection($1, $3, $5) }
+ | let                         { $1 }  
+
+ assigns: assign assigns {$1 :: $3}
+ | assign {$1}
+/* Controversial empty Assign */
+/*  | {$1}*/
+
+ assign: type_spec IDENT ASSIGN expr SEMICOLON {RmAssign ($1, $2, $4)}
+
+ let: LET LPAREN assigns RPAREN LBRACE lines RBRACE { RmLet ($3, $6) }
  /* Predefined Function */
  | 
  | type_spec IDENT ASSIGN expr { RmSet ($2, $4)}

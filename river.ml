@@ -10,7 +10,7 @@ open Printf;;
 (* Types of the language *)
 type rivType = RivInt | RivStream | RivFun of rivType * rivType
 
-(* Grammar of the languge *)
+(* Grammar of the language *)
 type rivTerm = 
 	  TmNum of int
 	| TmStream of stream
