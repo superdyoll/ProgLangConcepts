@@ -1,0 +1,9 @@
+parser.cmi :
+River.cmo :
+River.cmx :
+lexer.cmo : parser.cmi
+lexer.cmx : parser.cmx
+main.cmo : River.cmo parser.cmi lexer.cmo
+main.cmx : River.cmx parser.cmx lexer.cmx
+parser.cmo : River.cmo parser.cmi
+parser.cmx : River.cmx parser.cmi

@@ -1,6 +1,4 @@
-(* Exceptions
 exception LookupError ;;
-*)
 
 open Printf;;
 
@@ -12,7 +10,7 @@ type rivTerm =
     RmNum of int
   | RmVar of string
   (* TODO:  maybe make the below a tuple? Benefit of doing so?*)
-  | RmLet of  [string * rivTerm] * rivTerm
+  | RmLet of  (string * rivTerm) list * rivTerm
   | RmApp of  rivTerm * rivTerm
   | RmPlus of  rivTerm * rivTerm
   | RmMinus of  rivTerm * rivTerm
@@ -29,12 +27,12 @@ type rivTerm =
   | RmIndex of rivTerm * rivTerm
   | RmSection of rivTerm * rivTerm * rivTerm
   | RmSectionEnd of rivTerm * rivTerm
-  | RmSection of rivTerm * rivTerm * rivTerm
-
+  | RmIf of rivTerm * rivTerm
 
 let rec isValue e = match e with
   | RmNum(n) -> true
-  | RmAbs(x,tT,e') -> true
+  (* TODO add applications *)
+  (*| RmAbs(x,tT,e') -> true*)
   | _ -> false
 ;;
 
@@ -169,37 +167,46 @@ let typeProg e = typeOf (Env []) e ;;
 *)
 (* End of type Checker *)
 
-(* Checks if a name is free *)
+(* Return True if the variable is used in e *)
 let rec free e x = match e with
   RmVar(y) -> (x=y)
   |RmNum(n) -> false
-  |RmBool(b) -> false
   |RmIf(t1,t2,t3) -> (free t1 x) || (free t2 x) || (free t3 x)
   |RmLessThan(e1,e2) -> (free e1 x) || (free e2 x)
   |RmPlus(e1,e2) -> (free e1 x) || (free e2 x)
   |RmApp(e1,e2) -> (free e1 x) || (free e2 x)
-  |RmAbs(y,tT,e1) when (x=y) -> false
-  |RmAbs(y,tT,e1)            -> (free e1 x)
+  (* TODO: Implement ABS*)
+ (* |RmAbs(y,tT,e1) when (x=y) -> false
+  |RmAbs(y,tT,e1)            -> (free e1 x)*)
   |RmLet(y,tT,e1,e2) when (x=y) -> (free e1 x)
   |RmLet(y,tT,e1,e2)            -> (free e1 x) || (free e2 x)
 ;;
 
 let rename (s:string) = s^"'";;
 
+(* Substitute e1 as 'x' in e2 *)
 let rec subst e1 x e2 = match e2 with
   RmVar(y) when (x=y) -> e1
-  | RmVar(y)            -> RmVar(y)
+  | RmVar(y) -> RmVar(y)
   | RmNum(n) -> RmNum(n)
-  | RmBool(b) -> RmBool(b)
+  (* Substitute all the parameters *)
   | RmIf(b,e21,e22) -> RmIf( (subst e1 x b) , (subst e1 x e21) , (subst e1 x e22) )
   | RmLessThan (e21, e22) -> RmLessThan( (subst e1 x e21) , (subst e1 x e22) )
   | RmPlus(e21, e22) -> RmPlus( (subst e1 x e21) , (subst e1 x e22) )
   | RmApp(e21, e22) -> RmApp( (subst e1 x e21) , (subst e1 x e22) )
-  | RmAbs(y,tT,e21) when (x=y) -> RmAbs(y,tT,e21)
+
+(* TODO Implement abs *)
+(*  |  RmAbs(y,tT,e21) when (x=y) -> RmAbs(y,tT,e21) 
+
+  (*if the variable passed into the lambda is the value, substitute it*)
   | RmAbs(y,tT,e21) when (not (free e1 y)) -> RmAbs(y,tT,subst e1 x e21)
+
+  (* Rename if it isn't free *)
   | RmAbs(y,tT,e21) when (free e1 y) -> let yy = rename y in subst e1 x (RmAbs(yy,tT, (subst (RmVar(yy)) y e21)))
+*)
   | RmLet(y,tT,e21,e22) when (x=y) -> RmLet(y,tT,e21,e22)
   | RmLet(y,tT,e21,e22) when (not(free e1 y)) -> RmLet(y,tT, subst e1 x e21 , subst e1 x e22)
+  (* Rename a variable if it isn't free *)
   | RmLet(y,tT,e21,e22) when ((free e1 y)) -> let yy = rename y in subst e1 x ( RmLet(yy, tT, subst (RmVar(yy)) y e21 , subst (RmVar(yy)) y e22) )
 ;;
 
@@ -207,26 +214,28 @@ let rec eval1S e = match e with
   | (RmVar x) -> raise Terminated
   | (RmNum n) -> raise Terminated
   | (RmBool b) -> raise Terminated
-  | (RmAbs(x,tT,e')) -> raise Terminated
+  (* TODO: Implement ABS*)
+  (* | (RmAbs(x,tT,e')) -> raise Terminated *)
 
-  | (RmLessThan(RmNum(n),RmNum(m))) -> RmBool( n < m )
-  | (RmLessThan(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmLessThan(RmNum(n),e2')
+  | (RmLessThan(RmNum(n),RmNum(m))) -> print_string "[*"; print_int n; print_string "<"; print_int m; print_string "*]";
+  | (RmLessThan(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmLessThan(RmNum(n),e2'),env')
   | (RmLessThan(e1, e2))            -> let e1' = (eval1S e1) in RmLessThan(e1',e2)
 
-  | (RmPlus(RmNum(n),RmNum(m))) -> RmNum( n + m )
+  | (RmPlus(RmNum(n),RmNum(m))) -> print_string "[*"; print_int n; print_string " + "; print_int m; print_string "*]";
   | (RmPlus(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmPlus(RmNum(n),e2')
   | (RmPlus(e1, e2))            -> let e1' = (eval1S e1) in RmPlus(e1', e2)
 
-  | (RmIf(RmBool(true),e1,e2))    -> e1
-  | (RmIf(RmBool(false),e1,e2))   -> e2
-  | (RmIf(b,e1,e2))               -> let b' = (eval1S b) in RmIf(b',e1,e2)
+ (* TODO eval A or B (not both) *)
+  | (RmIf(RmNum(n),e2,e3))              -> print_string "[* if "; print_int n; print_string " == 0 then"; print_int (eval1S e2); print_string "else"; print_int(eval1S e3)
+  | (RmIf(e1,e2,e3))              -> let e1' = (eval1S e1) in RmIf(e1',e2,e3)
 
-  | (RmLet(x,tT,e1,e2)) when (isValue(e1)) ->  subst e1 x e2
+  | (RmLet(x,tT,e1,e2)) when (isValue(e1)) -> print_string "[* let "; print_string x; print_string " be "; (eval1S tT) ; print_string " in "; print_int subst e1 x e2; print_string "*]"
   | (RmLet(x,tT,e1,e2))                    -> let e1' = (eval1S e1) in RmLet(x,tT,e1',e2)
-
-  | (RmApp(RmAbs(x,tT,e), e2)) when (isValue(e2)) -> subst e2 x e
+(* TODO: Implement ABS*)
+(*
+  | (RmApp(RmAbs(x,tT,e), e2)) when (isValue(e2)) -> print_string "[* Call: Substitute "; print_string tT; print_string " with "; print_int e;  print_int subst e2 x e
   | (RmApp(RmAbs(x,tT,e), e2))                    -> let e2' = (eval1S e2) in RmApp( RmAbs(x,tT,e) , e2')
-  | (RmApp(e1,e2))                                -> let e1' = (eval1S e1) in RmApp(e1',e2)
+  | (RmApp(e1,e2))                                -> let e1' = (eval1S e1) in RmApp(e1',e2) *)
 
   | _ -> raise Terminated ;;
 
@@ -237,12 +246,14 @@ let evalProg e = evalloop e ;;
 
 let rec type_to_string tT = match tT with
   | RivInt -> "Int"
-  (* TODO: Functions) (* | RivFun(tT1,tT2) -> "( "^type_to_string(tT1)^" -> "^type_to_string(tT2)^" )" *)
+  (* TODO: Functions*) (* | RivFun(tT1,tT2) -> "( "^type_to_string(tT1)^" -> "^type_to_string(tT2)^" )" *)
 ;;
 
 let print_res res = match res with
   | (RmNum i) -> print_int i ; print_string " : Int"
   | (RmBool b) -> print_string (if b then "true" else "false") ; print_string " : Bool"
-  | (RmAbs(x,tT,e)) -> print_string("Function : "^type_to_string( typeProg (res) ))
+  (* TODO: Implement ABS*)
+  (*
+  | (RmAbs(x,tT,e)) -> print_string("Function : "^type_to_string( typeProg (res) )) *)
   | _ -> raise NonBaseTypeResult
 ;;
