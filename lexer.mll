@@ -5,11 +5,11 @@ open Parser        (* The type token is defined in parser.mli *)
 rule lexer_main = parse
       [' ' '\t' '\n']     { lexer_main lexbuf }     (* skip blanks *)
     | '-'? ['0'-'9']+ as lxm { INT(int_of_string lxm) }
-    | "//" _ +  { COMMENT }
+    | "//" _ +  { }
     (* Types *)
     | "int"     { ITYPE }
-    | "<"       { GSTART }
-    | ">"       { GEND }
+    | "stream"  { STYPE }
+    | "lambda"  { LTYPE }
     | "let"     { LET }
     | "def"     { DEFINE }
     | "if"      { IF }
@@ -38,6 +38,7 @@ rule lexer_main = parse
     | '.'       { DOT }
     (* Assignment *)
     | '='       { ASSIGN }
+    | ','       { COMMA }
     (* Bracketing *)
     | '('       { LPAREN }
     | ')'       { RPAREN }

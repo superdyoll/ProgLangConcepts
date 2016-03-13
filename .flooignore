@@ -1,6 +1,8 @@
 #*
 *.o
 *.pyc
+.gitignore
+*.git
 *~
 extern/
 node_modules/

@@ -1,5 +1,5 @@
 def copying = stream<int> lambda (int a) {
-   a.a;
+   a . a;
 }
 
 let (

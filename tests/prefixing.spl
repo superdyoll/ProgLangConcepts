@@ -1,5 +1,5 @@
 def prefix = int lambda (int a){
-  0 :: a;
+  0 . a;
 }
 
 let
@@ -13,7 +13,7 @@ let
     prefix(7);
 
     // [1 2 3 4] -> [0 1 2 3 4]
-    prefix(1 :: 2 :: 3 :: 4);
+    prefix(1 . 2 . 3 . 4);
 
     //Program
     prefix(a);
