@@ -34,7 +34,6 @@
 %left PLUS MINUS
 %left MULTIPLY DIVIDE
 %right LT GT GEQ LEQ NEQ EQ
-%nonassoc UMINUS
 /* Highest Precedence */
 %start parser_main
 %type <River.rivTerm> parser_main
@@ -80,4 +79,5 @@ expr:
  | LPAREN expr RPAREN          { $2 }
  | IDENT                       { RmVar $1 }
  | INT                      { RmNum $1 }
+ | MINUS expr             { RmUMinus ($2) }
 ;

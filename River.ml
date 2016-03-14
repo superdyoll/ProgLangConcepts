@@ -6,6 +6,11 @@ exception StuckTerm ;;
 exception NonBaseTypeResult;;
 
 open Printf;;
+(* 
+type 'a stream = Stream of 'a * ( () -> 'a stream)
+let hd : 'a stream -> 'a = function Stream (a, _) -> a
+let tl : 'a stream -> 'a stream = function Stream (_, s) -> s ()
+let add : 'a stream = function Stream () *)
 
 (* Types of the language *)
 type rivType =  RivInt | RivBool | RivFun of rivType * rivType | RivStream of rivType 
@@ -14,9 +19,10 @@ type rivType =  RivInt | RivBool | RivFun of rivType * rivType | RivStream of ri
 type rivTerm =
     RmNum of int
   | RmVar of string
+  | RmUMinus of rivTerm
+  | RmMinus of rivTerm * rivTerm
   | RmApp of rivTerm * rivTerm
   | RmPlus of rivTerm * rivTerm
-  | RmMinus of rivTerm * rivTerm
   | RmMultiply of rivTerm * rivTerm
   | RmDivide of rivTerm * rivTerm 
   | RmLessThan of rivTerm * rivTerm
@@ -75,6 +81,10 @@ let rec free e x = match e with
   |RmGreaterEqualTo(e1,e2) -> (free e1 x) || (free e2 x)
   |RmEqualTo(e1,e2) -> (free e1 x) || (free e2 x)
   |RmPlus(e1,e2) -> (free e1 x) || (free e2 x)
+  |RmMinus(e1,e2) -> (free e1 x) || (free e2 x)
+  |RmMultiply(e1,e2) -> (free e1 x) || (free e2 x)
+  |RmDivide(e1,e2) -> (free e1 x) || (free e2 x)
+  |RmUMinus(e1) -> (free e1 x)
   |RmApp(e1,e2) -> (free e1 x) || (free e2 x)
   |RmLbd(rT,tT,y,e1) when (x=y) -> false
   |RmLbd(rT,tT,y,e1)            -> (free e1 x)
@@ -92,7 +102,16 @@ let rec subst e1 x e2 = match e2 with
   (* Substitute all the parameters *)
   | RmIf(b,e21,e22) -> RmIf( (subst e1 x b) , (subst e1 x e21) , (subst e1 x e22) )
   | RmLessThan(e21, e22) -> RmLessThan( (subst e1 x e21) , (subst e1 x e22) )
+  | RmLessEqualTo(e21, e22) -> RmLessEqualTo( (subst e1 x e21) , (subst e1 x e22) )
+  | RmGreaterThan(e21, e22) -> RmGreaterThan( (subst e1 x e21) , (subst e1 x e22) )
+  | RmGreaterEqualTo(e21, e22) -> RmLessEqualTo( (subst e1 x e21) , (subst e1 x e22) )
+  | RmEqualTo(e21, e22) -> RmEqualTo( (subst e1 x e21) , (subst e1 x e22) )
+  | RmNotEqualTo(e21, e22) -> RmNotEqualTo( (subst e1 x e21) , (subst e1 x e22) )
   | RmPlus(e21, e22) -> RmPlus( (subst e1 x e21) , (subst e1 x e22) )
+  | RmMinus(e21, e22) -> RmMinus( (subst e1 x e21) , (subst e1 x e22) )
+  | RmMultiply(e21, e22) -> RmMultiply( (subst e1 x e21) , (subst e1 x e22) )
+  | RmDivide(e21, e22) -> RmDivide( (subst e1 x e21) , (subst e1 x e22) )
+  | RmUMinus(e21) -> RmUMinus( (subst e1 x e21) )
   | RmApp(e21, e22) -> RmApp( (subst e1 x e21) , (subst e1 x e22) )
 
   | RmLbd(rT,tT,y,e21) when (x=y) -> RmLbd(rT,tT,y,e21)
@@ -119,25 +138,26 @@ let rec eval1S e = match e with
   | (RmLessThan(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmLessThan(RmNum(n),e2')
   | (RmLessThan(e1, e2))            -> let e1' = (eval1S e1) in RmLessThan(e1',e2)
 
-  | (RmGreaterThan(RmNum(n),RmNum(m))) -> if n>m then RmNum(1) else RmNum(0);
-  | (RmGreaterThan(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmGreaterThan(RmNum(n),e2')
-  | (RmGreaterThan(e1, e2))            -> let e1' = (eval1S e1) in RmGreaterThan(e1',e2)
-
   | (RmLessEqualTo(RmNum(n),RmNum(m))) -> if n<=m then RmNum(1) else RmNum(0);
   | (RmLessEqualTo(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmLessEqualTo(RmNum(n),e2')
   | (RmLessEqualTo(e1, e2))            -> let e1' = (eval1S e1) in RmLessEqualTo(e1',e2)
 
+  | (RmGreaterThan(RmNum(n),RmNum(m))) -> if n>m then RmNum(1) else RmNum(0);
+  | (RmGreaterThan(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmGreaterThan(RmNum(n),e2')
+  | (RmGreaterThan(e1, e2))            -> let e1' = (eval1S e1) in RmGreaterThan(e1',e2)
+
+
   | (RmGreaterEqualTo(RmNum(n),RmNum(m))) -> if n>=m then RmNum(1) else RmNum(0);
   | (RmGreaterEqualTo(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmGreaterEqualTo(RmNum(n),e2')
   | (RmGreaterEqualTo(e1, e2))            -> let e1' = (eval1S e1) in RmGreaterEqualTo(e1',e2)
+ 
+  | (RmEqualTo(RmNum(n),RmNum(m))) -> print_string "EQUAL TO IS TOTALLY RUNNING\n"; if n=m then RmNum(1) else RmNum(0);
+  | (RmEqualTo(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmEqualTo(RmNum(n),e2')
+  | (RmEqualTo(e1, e2))            -> let e1' = (eval1S e1) in RmEqualTo(e1',e2) 
 
   | (RmNotEqualTo(RmNum(n),RmNum(m))) -> if n<>m then RmNum(1) else RmNum(0);
   | (RmNotEqualTo(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmNotEqualTo(RmNum(n),e2')
   | (RmNotEqualTo(e1, e2))            -> let e1' = (eval1S e1) in RmNotEqualTo(e1',e2)
- 
-  | (RmEqualTo(RmNum(n),RmNum(m))) -> if n=m then RmNum(1) else RmNum(0);
-  | (RmEqualTo(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmEqualTo(RmNum(n),e2')
-  | (RmEqualTo(e1, e2))            -> let e1' = (eval1S e1) in RmEqualTo(e1',e2) 
 
   (* Operators *)
   | (RmPlus(RmNum(n),RmNum(m))) -> RmNum(n+m)
@@ -155,6 +175,9 @@ let rec eval1S e = match e with
   | (RmDivide(RmNum(n),RmNum(m))) -> RmNum(n/m)
   | (RmDivide(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmDivide(RmNum(n),e2')
   | (RmDivide(e1, e2))            -> let e1' = (eval1S e1) in RmDivide(e1', e2)
+
+  | (RmUMinus(RmNum(n))) -> RmNum(-n)
+  | (RmUMinus(e1))      -> let e1' = (eval1S e1) in RmUMinus(e1')
 
  (*TODO (Lloyd) MAKE EVERYTHING RETURN VALUES*)
 
