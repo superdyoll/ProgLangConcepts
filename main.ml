@@ -10,6 +10,7 @@ let parseProgram c =
     with Parsing.Parse_error -> failwith "Parse failure!" ;;
 
 
+Parsing.setTrace true;
 let arg = ref stdin in
 let setProg p = arg := open_in p in
 let usage = "./main PROGRAM_FILE" in

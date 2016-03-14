@@ -27,11 +27,12 @@ type rivTerm =
   | RmEqualTo of rivTerm * rivTerm
   | RmCons of rivTerm  * rivTerm
   | RmAppend of rivTerm * rivTerm
-  | RmIndex of rivTerm * rivTerm
-  | RmSection of rivTerm * rivTerm * rivTerm
-  | RmSectionEnd of rivTerm * rivTerm
+  | RmIndex of string * rivTerm
+  | RmSection of string * rivTerm * rivTerm
+  | RmSectionStart of string * rivTerm
+  | RmSectionEnd of string * rivTerm
   | RmIf of rivTerm * rivTerm * rivTerm
-  (* Let: item Type * item Name * Lambda Expression * Expression *)
+  (* Let: item Type * item Name * Expression for the item * Expression *)
   | RmLet of rivType * string * rivTerm * rivTerm
   (* Lambda: Return Type * Parameter Type * Parameter Name * Expression *)
   | RmLbd of rivType * rivType * string * rivTerm
@@ -226,32 +227,32 @@ let rec eval1S e = match e with
   (*FIXME make it return actual less than values *)
 
   (* Conditionals *)
-  | (RmLessThan(RmNum(n),RmNum(m))) -> print_string "[*"; print_int n; print_string "<"; print_int m; print_string "*]"; if n<m then RmNum(1) else RmNum(0);
+  | (RmLessThan(RmNum(n),RmNum(m))) -> if n<m then RmNum(1) else RmNum(0);
   | (RmLessThan(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmLessThan(RmNum(n),e2')
   | (RmLessThan(e1, e2))            -> let e1' = (eval1S e1) in RmLessThan(e1',e2)
 
-  | (RmGreaterThan(RmNum(n),RmNum(m))) -> print_string "[*"; print_int n; print_string ">"; print_int m; print_string "*]"; if n>m then RmNum(1) else RmNum(0);
+  | (RmGreaterThan(RmNum(n),RmNum(m))) -> if n>m then RmNum(1) else RmNum(0);
   | (RmGreaterThan(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmGreaterThan(RmNum(n),e2')
   | (RmGreaterThan(e1, e2))            -> let e1' = (eval1S e1) in RmGreaterThan(e1',e2)
 
-  | (RmLessEqualTo(RmNum(n),RmNum(m))) -> print_string "[*"; print_int n; print_string "<="; print_int m; print_string "*]"; if n<=m then RmNum(1) else RmNum(0);
+  | (RmLessEqualTo(RmNum(n),RmNum(m))) -> if n<=m then RmNum(1) else RmNum(0);
   | (RmLessEqualTo(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmLessEqualTo(RmNum(n),e2')
   | (RmLessEqualTo(e1, e2))            -> let e1' = (eval1S e1) in RmLessEqualTo(e1',e2)
 
-  | (RmGreaterEqualTo(RmNum(n),RmNum(m))) -> print_string "[*"; print_int n; print_string ">="; print_int m; print_string "*]"; if n>=m then RmNum(1) else RmNum(0);
+  | (RmGreaterEqualTo(RmNum(n),RmNum(m))) -> if n>=m then RmNum(1) else RmNum(0);
   | (RmGreaterEqualTo(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmGreaterEqualTo(RmNum(n),e2')
   | (RmGreaterEqualTo(e1, e2))            -> let e1' = (eval1S e1) in RmGreaterEqualTo(e1',e2)
 
-  | (RmNotEqualTo(RmNum(n),RmNum(m))) -> print_string "[*"; print_int n; print_string "<>"; print_int m; print_string "*]"; if n<>m then RmNum(1) else RmNum(0);
+  | (RmNotEqualTo(RmNum(n),RmNum(m))) -> if n<>m then RmNum(1) else RmNum(0);
   | (RmNotEqualTo(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmNotEqualTo(RmNum(n),e2')
   | (RmNotEqualTo(e1, e2))            -> let e1' = (eval1S e1) in RmNotEqualTo(e1',e2)
  
-  | (RmEqualTo(RmNum(n),RmNum(m))) -> print_string "[*"; print_int n; print_string "="; print_int m; print_string "*]"; if n=m then RmNum(1) else RmNum(0);
+  | (RmEqualTo(RmNum(n),RmNum(m))) -> if n=m then RmNum(1) else RmNum(0);
   | (RmEqualTo(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmEqualTo(RmNum(n),e2')
   | (RmEqualTo(e1, e2))            -> let e1' = (eval1S e1) in RmEqualTo(e1',e2) 
 
   (* Operators *)
-  | (RmPlus(RmNum(n),RmNum(m))) -> print_string "[*"; print_int n; print_string " + "; print_int m; print_string "*]"; RmNum(n+m)
+  | (RmPlus(RmNum(n),RmNum(m))) -> RmNum(n+m)
   | (RmPlus(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmPlus(RmNum(n),e2')
   | (RmPlus(e1, e2))            -> let e1' = (eval1S e1) in RmPlus(e1', e2)
 
@@ -270,16 +271,15 @@ let rec eval1S e = match e with
  (*TODO (Lloyd) MAKE EVERYTHING RETURN VALUES*)
 
  (* TODO eval A or B (not both) *)
-  | (RmIf(RmNum(n),e2,e3))              -> (*print_string "[* if "; print_int n; print_string " == 0 then"; print_int (eval1S e2); print_string "else"; print_int(eval1S e3);*) if n == 0 then (eval1S e2) else (eval1S e3)
+  | (RmIf(RmNum(n),e2,e3))        -> if n = 0 then (eval1S e2) else (eval1S e3)
   | (RmIf(e1,e2,e3))              -> let e1' = (eval1S e1) in RmIf(e1',e2,e3)
-(*
-  | (RmLet(tT,x,e1,e2)) when (isValue(e1)) -> print_string "[* let "; print_string x; print_string " be "; (eval1S tT) ; print_string " in "; print_int subst e1 x e2; print_string "*]";
+
+  | (RmLet(tT,x,e1,e2)) when (isValue(e1)) -> subst e1 x e2
   | (RmLet(tT,x,e1,e2))                    -> let e1' = (eval1S e1) in RmLet(tT,x,e1',e2)
 
-  | (RmApp(RmLbd(rT,tT,x,e), e2)) when (isValue(e2)) -> print_string "[* Call: Substitute "; print_string tT; print_string " with "; print_int e;  print_int subst e2 x e
+  | (RmApp(RmLbd(rT,tT,x,e), e2)) when (isValue(e2)) -> subst e2 x e
   | (RmApp(RmLbd(rT,tT,x,e), e2))                    -> let e2' = (eval1S e2) in RmApp( RmLbd(rT,tT,x,e) , e2')
   | (RmApp(e1,e2))                                -> let e1' = (eval1S e1) in RmApp(e1',e2) 
-*)
   | _ -> raise Terminated ;;
 
 
@@ -296,7 +296,7 @@ let rec type_to_string tT = match tT with
 (*
 let print_res res = match res with
   | (RmNum i) -> print_int i ; print_string " : Int"
-  | (RmLbd(rT,tT,x,e)) -> print_string("Function : "^type_to_string( typeProg (res) ))
+  | (RmLbd(rT,tT,x,e)) -> print_string("Function : " ^ type_to_string( typeProg (res) ))
   | _ -> raise NonBaseTypeResult
 ;;
 *)

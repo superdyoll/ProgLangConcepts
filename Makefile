@@ -13,7 +13,7 @@
 
 # These are the object files needed to rebuild the main executable file
 #
-OBJS = River.cmo parser.cmo lexer.cmo main.cmo 
+OBJS = parser.cmo lexer.cmo main.cmo River.cmo
 
 COMMONOBJS = str.cma
 

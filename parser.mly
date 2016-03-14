@@ -49,12 +49,8 @@ line: expr SEMICOLON { $1 };
 
 type_spec: ITYPE { RivInt }
     | STYPE LT type_spec GT {RivStream($3)}
-    | type_spec LTYPE LPAREN comma_sep RPAREN {RivLambda($1, $4)}
+    | type_spec LTYPE LPAREN type_spec RPAREN { RivFun($1, $4) }
     | LPAREN type_spec RPAREN {$2}
-;
-
-comma_sep: type_spec { $1 }
-    | type_spec COMMA comma_sep { $1 :: $3 }
 ;
 
 expr: INT                      { RmNum $1 }
@@ -73,12 +69,11 @@ expr: INT                      { RmNum $1 }
  | expr EQ expr                { RmEqualTo ($1, $3) }
  | expr CONS expr              { RmCons ($1, $3) } /* :: (INT * INT -> STREAM<INT>) */
  | expr DOT expr               { RmAppend($1, $3) } /* . (INT * INT -> INT) */
- | IDENT LSQ expr RSQ           { RmIndex($1, $3) }
- | IDENT LSQ COLON INT RSQ     { RmSection($1, 0, $4) }
- | IDENT LSQ INT COLON RSQ     { RmSectionEnd($1, $3) }
- | IDENT LSQ INT COLON INT RSQ { RmSection($1, $3, $5) }
- /* Predefined Functions */ 
- | type_spec IDENT ASSIGN expr { RmSet ($2, $4)}
+ | IDENT LSQ COLON expr RSQ     { RmSectionStart($1, $4) }
+ | IDENT LSQ expr COLON RSQ     { RmSectionEnd($1, $3) }
+ | IDENT LSQ expr RSQ          { RmIndex($1, $3) }
+ | IDENT LSQ expr COLON expr RSQ { RmSection($1, $3, $5) }
+ /* Predefined Functions */
  | IF LPAREN expr RPAREN LBRACE expr RBRACE ELSE LBRACE expr RBRACE  { RmIf ($3, $6, $10) }
  | IF LPAREN expr RPAREN LBRACE expr RBRACE { RmIf ($3, $6) }
  /* Lambda */
