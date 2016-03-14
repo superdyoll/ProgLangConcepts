@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"print",
+				"print_string"
+			],
+			[
+				"pri",
+				"print_int"
+			],
+			[
+				"type",
+				"type_spec"
+			],
+			[
 				"EVala",
 				"evaluation"
 			],
@@ -502,28 +514,16 @@
 			[
 				"file",
 				"file_name"
-			],
-			[
-				"rest",
-				"restore"
-			],
-			[
-				"lates",
-				"latest_files"
-			],
-			[
-				"latest",
-				"latest_files"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/parser.mly",
+			"file": "/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/River.ml",
 			"settings":
 			{
-				"buffer_size": 1305,
+				"buffer_size": 8284,
 				"line_ending": "Unix"
 			}
 		},
@@ -532,30 +532,6 @@
 			"settings":
 			{
 				"buffer_size": 8856,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "lexer.mll",
-			"settings":
-			{
-				"buffer_size": 745,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/media/1TB_SSD/notes/COMP2212_programming_language_concepts/14_type_safety.mdk",
-			"settings":
-			{
-				"buffer_size": 0,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/lexer.mll",
-			"settings":
-			{
-				"buffer_size": 1344,
 				"line_ending": "Unix"
 			}
 		}
@@ -675,17 +651,49 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 392.0,
-		"last_filter": "",
+		"height": 201.0,
+		"last_filter": "ww",
 		"selected_items":
 		[
 			[
-				"floobits",
-				"Floobits - Join Workspace"
+				"ww",
+				"Word Wrap: Toggle"
+			],
+			[
+				"side",
+				"View: Toggle Side Bar"
+			],
+			[
+				"floobits recent",
+				"Floobits - Join Recent Workspace"
+			],
+			[
+				"floobits work",
+				"Floobits - Leave Workspace"
 			],
 			[
 				"floo",
 				"Floobits - Join Recent Workspace"
+			],
+			[
+				"ssocamlyacc",
+				"Set Syntax: OCamlyacc"
+			],
+			[
+				"ssocaml",
+				"Set Syntax: OCamllex"
+			],
+			[
+				"ssmly",
+				"Set Syntax: OCamlyacc"
+			],
+			[
+				"floobit",
+				"Floobits - Join Recent Workspace"
+			],
+			[
+				"floobits",
+				"Floobits - Join Workspace"
 			],
 			[
 				"ssr",
@@ -708,14 +716,6 @@
 				"Set Syntax: river"
 			],
 			[
-				"ww",
-				"Word Wrap: Toggle"
-			],
-			[
-				"floobit",
-				"Floobits - Join Workspace"
-			],
-			[
 				"join",
 				"Floobits - Join Workspace"
 			],
@@ -729,10 +729,6 @@
 			],
 			[
 				"view",
-				"View: Toggle Side Bar"
-			],
-			[
-				"side",
 				"View: Toggle Side Bar"
 			],
 			[
@@ -798,10 +794,6 @@
 			[
 				":w",
 				":w - Save"
-			],
-			[
-				"ssocaml",
-				"Set Syntax: OCaml"
 			],
 			[
 				"install",
@@ -1174,22 +1166,6 @@
 			[
 				"pack",
 				"Preferences: Browse Packages"
-			],
-			[
-				"ssmak",
-				"Set Syntax: Markdown"
-			],
-			[
-				"ssmar",
-				"Set Syntax: Markdown"
-			],
-			[
-				"sscpp",
-				"Set Syntax: AppleScript"
-			],
-			[
-				"sslat",
-				"Set Syntax: LaTeX"
 			]
 		],
 		"width": 449.0
@@ -1341,19 +1317,40 @@
 	"expanded_folders":
 	[
 		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts",
-		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/ToyLanguage",
-		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/tests"
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/ToyLanguage"
 	],
 	"file_history":
 	[
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/ToyLanguage/prog3.ol",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/ToyLanguage/lexer.mll",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/Makefile",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/ToyLanguage/Toy.mli",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/parser.ml",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/River.ml",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/parser.mly",
 		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/ToyLanguage/parser.mly",
-		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/river.sublime-syntax",
-		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/.flooignore",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/lexer.mll",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/lexer.ml",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/river_parsertest.ml",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/ToyLanguage/Toy.ml",
+		"/media/1TB_SSD/notes/COMP2212_programming_language_concepts/16_threads_races_and_hardware.mdk",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/main.ml",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/river.ml",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/ToyLanguage/main.ml",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/tests/copying.spl",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/tests/prefixing.spl",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/tests/arithmetic.spl",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/todolist.todo",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/tests/accumulator.spl",
 		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/tests/fibonacci.spl",
 		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/tests/isSame.spl",
-		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/tests/prefixing.spl",
-		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/Makefile",
-		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/lexer.mll",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/river.sublime-syntax",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/list_of_all_words.deleteme",
+		"/media/1TB_SSD/notes/COMP2212_programming_language_concepts/4_lexing_and_parsing.mdk",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/ToyLanguage/README",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/ToyLanguage/example1.spl",
+		"/media/1TB_SSD/notes/COMP2212_programming_language_concepts/14_type_safety.mdk",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/.flooignore",
 		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/ToyLanguage/Makefile",
 		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/prefixing.spl",
 		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/isSame.spl",
@@ -1451,39 +1448,18 @@
 		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/labs/99-problems.ml",
 		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/labs/CalcExample/CalcExample/lexer.mll",
 		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/labs/CalcExample/CalcExample/parser.mli",
-		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/labs/CalcExample/CalcExample/lexer.mli",
-		"/media/1TB_SSD/notes/COMP2212_programming_language_concepts/7_introduction_to_types.mdk",
-		"/media/1TB_SSD/Documents/Coding/LaTeX/CV/cv.tex",
-		"/usr/share/scribus/scripts/Bullets.py",
-		"/media/1TB_SSD/notes/COMP2211_SEG/2_renameme.mdk",
-		"/media/1TB_SSD/notes/COMP2211_SEG/3_Envisioning_deliverable.mdk",
-		"/media/1TB_SSD/notes/COMP2211_SEG/3_Envisioning_2.mdk",
-		"/media/1TB_SSD/notes/COMP2215_computer_systems_II/lecture_8_lab_talk.mdk",
-		"/media/1TB_SSD/notes/COMP2215_computer_systems_II/lecture_7_memory_mapped_io.mdk",
-		"/media/1TB_SSD/notes/COMP2215_computer_systems_II/lecture_5_memory_architecture.mdk",
-		"/media/1TB_SSD/notes/COMP2215_computer_systems_II/lecture_4_la-fortuna_hardware.mdk",
-		"/media/1TB_SSD/notes/COMP2212_programming_language_concepts/6_evaluation_strategies_and_dispatch.mdk",
-		"/media/1TB_SSD/notes/COMP2212_programming_language_concepts/5_interpreters_and_compilers.mdk",
-		"/media/1TB_SSD/notes/COMP2213_interaction_design/2_mc.mdk",
-		"/home/andy/.config/sublime-text-3/Packages/User/ocaml.sublime-build",
-		"/tmp/deleteme.ml",
-		"/home/andy/.config/sublime-text-3/Packages/User/madoko.sublime-build",
-		"/tmp/deleteme.ocm",
-		"/media/1TB_SSD/notes/COMP2212_programming_language_concepts/5_renameme.mdk",
-		"/media/1TB_SSD/notes/COMP2211_SEG/1_intro.mdk",
-		"/media/1TB_SSD/garage_minutes.mdk",
-		"/media/1TB_SSD/notes/COMP2213_interaction_design/1_intro.mdk",
-		"/media/1TB_SSD/notes/COMP2212_programming_language_concepts/4_lexing_and_parsing.mdk"
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/labs/CalcExample/CalcExample/lexer.mli"
 	],
 	"find":
 	{
-		"height": 40.0
+		"height": 38.0
 	},
 	"find_in_files":
 	{
 		"height": 108.0,
 		"where_history":
 		[
+			"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/",
 			"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts",
 			"\"~/Documents/sr/rooster/\"",
 			"\"~/Documents/sr/rooster/\", *.py",
@@ -1501,6 +1477,61 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"rmlet",
+			"rmLet",
+			"RmAbs",
+			"rivTerm",
+			"RMIf",
+			"type_spec",
+			"in",
+			"EQUALS",
+			"Rename",
+			"==",
+			"subst",
+			"evalloop",
+			"evalProg",
+			"lines",
+			"typeProg",
+			"print_string",
+			"print",
+			"free",
+			"abs",
+			"free",
+			"abs",
+			"isValue",
+			"isvalue",
+			"int",
+			" +$",
+			"toy",
+			"comma_sep",
+			"^",
+			"\\$\\d",
+			"$1",
+			"\\$\\d",
+			"\\)",
+			"\\(",
+			", ",
+			"(\\w+) ",
+			"(\\w+ )",
+			".*{ (.*) }.*",
+			"Tm",
+			"TmApp",
+			"Program Evaluated using",
+			"\"",
+			"eval1M",
+			"eval1b",
+			"line",
+			"ToyInt",
+			"RivInt",
+			"RMLET",
+			"RmApp",
+			"rmapp",
+			"^",
+			"^ ",
+			" \\n",
+			".*\\(.*\\n",
+			".*\\{(.*?)\\}.*",
+			"\\{(.*?)\\}",
 			"TmAbs",
 			"all",
 			"arithmetic",
@@ -1573,62 +1604,7 @@
 			"^.",
 			"” .*",
 			";;",
-			"^ ",
-			"hoshisato.com",
-			"volunteer",
-			"VolunteerResource",
-			"SignUpResource",
-			"slots_per_day",
-			"max_value",
-			" ",
-			",",
-			", ",
-			"  ",
-			",,",
-			"\\n",
-			"([^,])\\n",
-			" ,",
-			"and",
-			"\\.",
-			"\\n\\n+",
-			".*\\:",
-			"and",
-			"at32uc3a0128",
-			"\\n",
-			"([^,])\\n",
-			"       ",
-			".*?(\\w+@.*)",
-			"\\n",
-			"\\)$",
-			".*?(\\w+@.*)",
-			".*(\\w+@.*)",
-			"    ",
-			"run_snapshot",
-			"directory",
-			"image_path",
-			",",
-			"closure",
-			"recursive",
-			"state",
-			"\\delta",
-			"complement",
-			"^([^\\t]+)\\t([^\\t]+)$",
-			"     ",
-			"    ",
-			"^([^\\t]+)\\t([^\\t]+)$",
-			"   +",
-			"   ",
-			"    ",
-			"\\s+➜\\s+",
-			"epsilon",
-			"PDA",
-			"$(Q, \\Sigma, \\Gamma, \\delta, s, \\bot, F)$",
-			"Pushdown automata",
-			"$).\n",
-			"kleene",
-			"Step \\d: ",
-			"    ",
-			"\\t"
+			"^ "
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1636,6 +1612,26 @@
 		"regex": true,
 		"replace_history":
 		[
+			"RmLbd",
+			"riverTerm",
+			"",
+			"river",
+			"type_spec_list",
+			"  | ",
+			"CHANGEME ",
+			" ",
+			" * ",
+			"*",
+			"\\1 of ",
+			"\\1",
+			"Rm",
+			" Rm",
+			"lines",
+			"%token ",
+			"",
+			"\\n",
+			"",
+			"\\1",
 			"",
 			"spl",
 			"\\n",
@@ -1743,27 +1739,7 @@
 			" \\1\\n",
 			"",
 			"\\n",
-			"\\|    \\|",
-			"\\n",
-			"    ",
-			"breadth",
-			"C\\{0.7em\\}",
-			"C\\{0.8em\\}",
-			"C\\{1em\\}",
-			"cm\\}",
-			" ",
-			"\\\\item ",
-			"\\item",
-			"    \\[\"",
-			"],[",
-			"",
-			",",
-			"",
-			"[",
-			"]",
-			"",
-			"\"",
-			""
+			"\\|    \\|"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -1774,52 +1750,24 @@
 	"groups":
 	[
 		{
-			"selected": 3,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/parser.mly",
+					"file": "/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/River.ml",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1305,
+						"buffer_size": 8284,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1086,
-								1086
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/OCaml/OCamlyacc.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 288.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "Toy.ml",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 8856,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3948,
-								3948
+								4741,
+								4741
 							]
 						],
 						"settings":
@@ -1829,98 +1777,40 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2870.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "lexer.mll",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 745,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								284,
-								284
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/OCaml/OCamllex.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "/media/1TB_SSD/notes/COMP2212_programming_language_concepts/14_type_safety.mdk",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 0,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Madoko/madoko.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 3652.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 4,
-					"file": "/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/lexer.mll",
-					"semi_transient": false,
+					"buffer": 1,
+					"file": "Toy.ml",
+					"semi_transient": true,
 					"settings":
 					{
-						"buffer_size": 1344,
+						"buffer_size": 8856,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								159,
-								159
+								4863,
+								4863
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/OCaml/OCamllex.tmLanguage",
-							"tab_size": 4,
+							"syntax": "Packages/OCaml/OCaml.tmLanguage",
+							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 3401.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 1,
 					"type": "text"
 				}
 			]
@@ -1928,7 +1818,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 32.0
+		"height": 38.0
 	},
 	"input":
 	{
@@ -1973,7 +1863,7 @@
 	"project": "project.sublime-project",
 	"replace":
 	{
-		"height": 60.0
+		"height": 70.0
 	},
 	"save_all_on_build": true,
 	"select_file":

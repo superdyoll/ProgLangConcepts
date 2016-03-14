@@ -81,6 +81,6 @@ expr: INT                      { RmNum $1 }
  | type_spec IDENT ASSIGN expr { RmSet ($2, $4)}
  | IF LPAREN expr RPAREN LBRACE expr RBRACE ELSE LBRACE expr RBRACE  { RmIf ($3, $6, $10) }
  | IF LPAREN expr RPAREN LBRACE expr RBRACE { RmIf ($3, $6) }
- | type_spec LTYPE LPAREN type_spec IDENT RPAREN LBRACE expr RBRACE {RmAbs ($1, $4, $8) }
+ | type_spec LTYPE LPAREN type_spec IDENT RPAREN LBRACE expr RBRACE {RmLbd ($1, $4, $8) }
  | LPAREN expr RPAREN          { $2 }
 ;
