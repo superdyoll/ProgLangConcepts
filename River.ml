@@ -220,6 +220,8 @@ let rec eval1S e = match e with
   | (RmLbd(rT,tT,y,e')) -> raise Terminated
 
   (*FIXME make it return actual less than values *)
+
+  (* Conditionals *)
   | (RmLessThan(RmNum(n),RmNum(m))) -> print_string "[*"; print_int n; print_string "<"; print_int m; print_string "*]"; if n<m then RmNum(1) else RmNum(0);
   | (RmLessThan(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmLessThan(RmNum(n),e2')
   | (RmLessThan(e1, e2))            -> let e1' = (eval1S e1) in RmLessThan(e1',e2)
@@ -236,6 +238,15 @@ let rec eval1S e = match e with
   | (RmGreaterEqualTo(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmGreaterEqualTo(RmNum(n),e2')
   | (RmGreaterEqualTo(e1, e2))            -> let e1' = (eval1S e1) in RmGreaterEqualTo(e1',e2)
 
+  | (RmNotEqualTo(RmNum(n),RmNum(m))) -> print_string "[*"; print_int n; print_string "<>"; print_int m; print_string "*]"; if n<>m then RmNum(1) else RmNum(0);
+  | (RmNotEqualTo(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmNotEqualTo(RmNum(n),e2')
+  | (RmNotEqualTo(e1, e2))            -> let e1' = (eval1S e1) in RmNotEqualTo(e1',e2)
+ 
+  | (RmEqualTo(RmNum(n),RmNum(m))) -> print_string "[*"; print_int n; print_string "="; print_int m; print_string "*]"; if n=m then RmNum(1) else RmNum(0);
+  | (RmEqualTo(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmEqualTo(RmNum(n),e2')
+  | (RmEqualTo(e1, e2))            -> let e1' = (eval1S e1) in RmEqualTo(e1',e2) 
+
+  (* Operators *)
   | (RmPlus(RmNum(n),RmNum(m))) -> print_string "[*"; print_int n; print_string " + "; print_int m; print_string "*]"; RmNum(n+m)
   | (RmPlus(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmPlus(RmNum(n),e2')
   | (RmPlus(e1, e2))            -> let e1' = (eval1S e1) in RmPlus(e1', e2)
