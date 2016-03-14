@@ -220,9 +220,21 @@ let rec eval1S e = match e with
   | (RmLbd(rT,tT,y,e')) -> raise Terminated
 
   (*FIXME make it return actual less than values *)
-  | (RmLessThan(RmNum(n),RmNum(m))) -> print_string "[*"; print_int n; print_string "<"; print_int m; print_string "*]"; RmNum(n);
+  | (RmLessThan(RmNum(n),RmNum(m))) -> print_string "[*"; print_int n; print_string "<"; print_int m; print_string "*]"; if n<m then RmNum(1) else RmNum(0);
   | (RmLessThan(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmLessThan(RmNum(n),e2')
   | (RmLessThan(e1, e2))            -> let e1' = (eval1S e1) in RmLessThan(e1',e2)
+
+  | (RmGreaterThan(RmNum(n),RmNum(m))) -> print_string "[*"; print_int n; print_string ">"; print_int m; print_string "*]"; if n>m then RmNum(1) else RmNum(0);
+  | (RmGreaterThan(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmGreaterThan(RmNum(n),e2')
+  | (RmGreaterThan(e1, e2))            -> let e1' = (eval1S e1) in RmGreaterThan(e1',e2)
+
+  | (RmLessEqualTo(RmNum(n),RmNum(m))) -> print_string "[*"; print_int n; print_string "<="; print_int m; print_string "*]"; if n<=m then RmNum(1) else RmNum(0);
+  | (RmLessEqualTo(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmLessEqualTo(RmNum(n),e2')
+  | (RmLessEqualTo(e1, e2))            -> let e1' = (eval1S e1) in RmLessEqualTo(e1',e2)
+
+  | (RmGreaterEqualTo(RmNum(n),RmNum(m))) -> print_string "[*"; print_int n; print_string ">="; print_int m; print_string "*]"; if n>=m then RmNum(1) else RmNum(0);
+  | (RmGreaterEqualTo(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmGreaterEqualTo(RmNum(n),e2')
+  | (RmGreaterEqualTo(e1, e2))            -> let e1' = (eval1S e1) in RmGreaterEqualTo(e1',e2)
 
   | (RmPlus(RmNum(n),RmNum(m))) -> print_string "[*"; print_int n; print_string " + "; print_int m; print_string "*]"; RmNum(n+m)
   | (RmPlus(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmPlus(RmNum(n),e2')
@@ -231,7 +243,7 @@ let rec eval1S e = match e with
  (*TODO (Lloyd) MAKE EVERYTHING RETURN VALUES*)
 
  (* TODO eval A or B (not both) *)
-  | (RmIf(RmNum(n),e2,e3))              -> print_string "[* if "; print_int n; print_string " == 0 then"; print_int (eval1S e2); print_string "else"; print_int(eval1S e3)
+  | (RmIf(RmNum(n),e2,e3))              -> (*print_string "[* if "; print_int n; print_string " == 0 then"; print_int (eval1S e2); print_string "else"; print_int(eval1S e3);*) if n == 0 then RmNum((eval1S e2)) else RmNum((eval1S e3))
   | (RmIf(e1,e2,e3))              -> let e1' = (eval1S e1) in RmIf(e1',e2,e3)
 
   | (RmLet(tT,x,e1,e2)) when (isValue(e1)) -> print_string "[* let "; print_string x; print_string " be "; (eval1S tT) ; print_string " in "; print_int subst e1 x e2; print_string "*]"
