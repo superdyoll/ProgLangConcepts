@@ -42,20 +42,28 @@
 %%
 parser_main: line EOF { $1 };
 
-lines: line lines { $1 }
-    | line { $1 };
-
 line: expr SEMICOLON { $1 };
 
-type_spec: ITYPE { RivInt }
+type_spec: 
+    | ITYPE { RivInt }
     | STYPE LT type_spec GT {RivStream($3)}
     | type_spec LTYPE LPAREN type_spec RPAREN { RivFun($1, $4) }
     | LPAREN type_spec RPAREN {$2}
 ;
 
-expr: INT                      { RmNum $1 }
- | IDENT                       { RmVar $1 }
- | LET LPAREN type_spec IDENT EQUALS expr RPAREN LBRACE expr RBRACE { RmLet ($3, $4, $6, $9) }
+expr: 
+/* Let Statements */
+ | LET LPAREN type_spec IDENT ASSIGN expr RPAREN LBRACE expr RBRACE { RmLet ($3, $4, $6, $9) }
+/* If statements */
+ | IF LPAREN expr RPAREN LBRACE expr RBRACE ELSE LBRACE expr RBRACE  { RmIf ($3, $6, $10) }
+ /* Lambdas */
+ | type_spec LTYPE LPAREN type_spec IDENT RPAREN LBRACE expr RBRACE {RmLbd ($1, $4, $5, $8) }
+/* Sections */
+| IDENT LSQ COLON expr RSQ     { RmSectionStart($1, $4) }
+ | IDENT LSQ expr COLON expr RSQ { RmSection($1, $3, $5) }
+ | IDENT LSQ expr COLON RSQ     { RmSectionEnd($1, $3) }
+ | IDENT LSQ expr RSQ          { RmIndex($1, $3) }
+/* Apply */
  | expr LPAREN expr RPAREN     { RmApp ($1, $3) }
  | expr PLUS expr              { RmPlus ($1, $3) }
  | expr MINUS expr             { RmMinus ($1, $3) }
@@ -69,13 +77,7 @@ expr: INT                      { RmNum $1 }
  | expr EQ expr                { RmEqualTo ($1, $3) }
  | expr CONS expr              { RmCons ($1, $3) } /* :: (INT * INT -> STREAM<INT>) */
  | expr DOT expr               { RmAppend($1, $3) } /* . (INT * INT -> INT) */
- | IDENT LSQ COLON expr RSQ     { RmSectionStart($1, $4) }
- | IDENT LSQ expr COLON RSQ     { RmSectionEnd($1, $3) }
- | IDENT LSQ expr RSQ          { RmIndex($1, $3) }
- | IDENT LSQ expr COLON expr RSQ { RmSection($1, $3, $5) }
- /* Predefined Functions */
- | IF LPAREN expr RPAREN LBRACE expr RBRACE ELSE LBRACE expr RBRACE  { RmIf ($3, $6, $10) }
- /* Lambda */
- | type_spec LTYPE LPAREN type_spec IDENT RPAREN LBRACE expr RBRACE {RmLbd ($1, $4, $5, $8) }
  | LPAREN expr RPAREN          { $2 }
+ | IDENT                       { RmVar $1 }
+ | INT                      { RmNum $1 }
 ;
