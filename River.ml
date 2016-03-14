@@ -240,13 +240,25 @@ let rec eval1S e = match e with
   | (RmPlus(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmPlus(RmNum(n),e2')
   | (RmPlus(e1, e2))            -> let e1' = (eval1S e1) in RmPlus(e1', e2)
 
+  | (RmMinus(RmNum(n),RmNum(m))) -> print_string "[*"; print_int n; print_string " - "; print_int m; print_string "*]"; RmNum(n-m)
+  | (RmMinus(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmMinus(RmNum(n),e2')
+  | (RmMinus(e1, e2))            -> let e1' = (eval1S e1) in RmMinus(e1', e2)
+
+  | (RmMultiply(RmNum(n),RmNum(m))) -> print_string "[*"; print_int n; print_string " * "; print_int m; print_string "*]"; RmNum(n*m)
+  | (RmMultiply(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmMultiply(RmNum(n),e2')
+  | (RmMultiply(e1, e2))            -> let e1' = (eval1S e1) in RmMultiply(e1', e2)
+
+  | (RmDivide(RmNum(n),RmNum(m))) -> print_string "[*"; print_int n; print_string " / "; print_int m; print_string "*]"; RmNum(n/m)
+  | (RmDivide(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmDivide(RmNum(n),e2')
+  | (RmDivide(e1, e2))            -> let e1' = (eval1S e1) in RmDivide(e1', e2)
+
  (*TODO (Lloyd) MAKE EVERYTHING RETURN VALUES*)
 
  (* TODO eval A or B (not both) *)
-  | (RmIf(RmNum(n),e2,e3))              -> (*print_string "[* if "; print_int n; print_string " == 0 then"; print_int (eval1S e2); print_string "else"; print_int(eval1S e3);*) if n == 0 then RmNum((eval1S e2)) else RmNum((eval1S e3))
+  | (RmIf(RmNum(n),e2,e3))              -> (*print_string "[* if "; print_int n; print_string " == 0 then"; print_int (eval1S e2); print_string "else"; print_int(eval1S e3);*) if n == 0 then (eval1S e2) else (eval1S e3)
   | (RmIf(e1,e2,e3))              -> let e1' = (eval1S e1) in RmIf(e1',e2,e3)
 
-  | (RmLet(tT,x,e1,e2)) when (isValue(e1)) -> print_string "[* let "; print_string x; print_string " be "; (eval1S tT) ; print_string " in "; print_int subst e1 x e2; print_string "*]"
+  | (RmLet(tT,x,e1,e2)) when (isValue(e1)) -> print_string "[* let "; print_string x; print_string " be "; (eval1S tT) ; print_string " in "; print_int subst e1 x e2; print_string "*]";
   | (RmLet(tT,x,e1,e2))                    -> let e1' = (eval1S e1) in RmLet(tT,x,e1',e2)
 
   | (RmApp(RmLbd(rT,tT,x,e), e2)) when (isValue(e2)) -> print_string "[* Call: Substitute "; print_string tT; print_string " with "; print_int e;  print_int subst e2 x e
