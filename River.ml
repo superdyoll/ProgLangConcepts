@@ -1,4 +1,5 @@
 exception LookupError ;;
+exception Terminated ;;
 
 open Printf;;
 
@@ -9,30 +10,31 @@ type rivType =  RivInt | RivBool | RivFun of rivType * rivType
 type rivTerm =
     RmNum of int
   | RmVar of string
-  (* let (rivType : string = rivTerm) { rivTerm }*)
-  | RmLet of  (rivType * string * rivTerm) list * rivTerm
-  | RmApp of  rivTerm * rivTerm
-  | RmPlus of  rivTerm * rivTerm
-  | RmMinus of  rivTerm * rivTerm
-  | RmMultiply of  rivTerm * rivTerm
-  | RmDivide of  rivTerm * rivTerm 
-  | RmLessThan of  rivTerm * rivTerm
-  | RmGreaterThan of  rivTerm * rivTerm
-  | RmGreaterEqualTo of  rivTerm * rivTerm
-  | RmLessEqualTo of  rivTerm * rivTerm
-  | RmNotEqualTo of  rivTerm * rivTerm
-  | RmEqualTo of  rivTerm * rivTerm
-  | RmCons of  rivTerm  * rivTerm
+  | RmApp of rivTerm * rivTerm
+  | RmPlus of rivTerm * rivTerm
+  | RmMinus of rivTerm * rivTerm
+  | RmMultiply of rivTerm * rivTerm
+  | RmDivide of rivTerm * rivTerm 
+  | RmLessThan of rivTerm * rivTerm
+  | RmGreaterThan of rivTerm * rivTerm
+  | RmGreaterEqualTo of rivTerm * rivTerm
+  | RmLessEqualTo of rivTerm * rivTerm
+  | RmNotEqualTo of rivTerm * rivTerm
+  | RmEqualTo of rivTerm * rivTerm
+  | RmCons of rivTerm  * rivTerm
   | RmAppend of rivTerm * rivTerm
   | RmIndex of rivTerm * rivTerm
   | RmSection of rivTerm * rivTerm * rivTerm
   | RmSectionEnd of rivTerm * rivTerm
   | RmIf of rivTerm * rivTerm * rivTerm
-  | RmLbd of rivTerm * rivTerm * rivTerm
+  (* Let: item Type * item Name * Lambda Expression * Expression *)
+  | RmLet of rivType * string * rivTerm * rivTerm
+  (* Lambda: Return Type * Parameter Type * Parameter Name * Expression *)
+  | RmLbd of rivType * rivType * string * rivTerm
 
 let rec isValue e = match e with
   | RmNum(n) -> true
-  | RmLbd(x,tT,e') -> true
+  | RmLbd(rT,tT,x,e') -> true
   | _ -> false
 ;;
 
@@ -44,7 +46,7 @@ type valContext = rivTerm context
 
 (* Function to look up the type of a string name variable in a type environment *)
 let rec lookup env str = match env with
-  |Env [] -> raise LookupError
+   Env [] -> raise LookupError
   |Env ((name,thing) :: gs) ->
   (
     match (name = str) with
@@ -74,13 +76,13 @@ let rec typeOf env e = match e with
     | _ -> raise TypeError
   )
 
-  |RmLessThanEqualTo (e1,e2) ->
+  |RmLessEqualTo (e1,e2) ->
   ( match (typeOf env e1) , (typeOf env e2) with
     RivInt, RivInt -> RivBool
     | _ -> raise TypeError
   )
 
-  |RmGreaterThanEqualTo (e1,e2) ->
+  |RmGreaterEqualTo (e1,e2) ->
   ( match (typeOf env e1) , (typeOf env e2) with
     RivInt, RivInt -> RivBool
     | _ -> raise TypeError
@@ -173,16 +175,17 @@ let rec free e x = match e with
   |RmNum(n) -> false
   |RmIf(t1,t2,t3) -> (free t1 x) || (free t2 x) || (free t3 x)
   |RmLessThan(e1,e2) -> (free e1 x) || (free e2 x)
+  |RmLessEqualTo(e1,e2) -> (free e1 x) || (free e2 x)
+  |RmGreaterThan(e1,e2) -> (free e1 x) || (free e2 x)
+  |RmGreaterEqualTo(e1,e2) -> (free e1 x) || (free e2 x)
+  |RmEqualTo(e1,e2) -> (free e1 x) || (free e2 x)
   |RmPlus(e1,e2) -> (free e1 x) || (free e2 x)
   |RmApp(e1,e2) -> (free e1 x) || (free e2 x)
-  |RmLbd(y,tT,e1) when (x=y) -> false
-  |RmLbd(y,tT,e1)            -> (free e1 x)
-  (* e2 will be checked a billion times with a billion let parameters, (oh well...) *)
-  |RmLet(h::t,e2) -> (free RmLet(h,e2) x) || (free RmLet(t,e2) x)
-  |RmLet((name,type,exp),e2) when (x=name) -> (free exp x)
-  |RmLet((name,type,exp),e2) -> (free exp x) || (free e2 x)
+  |RmLbd(rT,tT,y,e1) when (x=y) -> false
+  |RmLbd(rT,tT,y,e1)            -> (free e1 x)
+  |RmLet(tT,y,e1,e2) when (x=y) -> (free e1 x) 
+  |RmLet(tT,y,e1,e2)            -> (free e1 x) || (free e2 x)
 ;;
-(* TODO(ANDY TOMORROW), Continue implementing the Lets with multiple types *)
 
 let rename (s:string) = s^"'";;
 
@@ -193,47 +196,49 @@ let rec subst e1 x e2 = match e2 with
   | RmNum(n) -> RmNum(n)
   (* Substitute all the parameters *)
   | RmIf(b,e21,e22) -> RmIf( (subst e1 x b) , (subst e1 x e21) , (subst e1 x e22) )
-  | RmLessThan (e21, e22) -> RmLessThan( (subst e1 x e21) , (subst e1 x e22) )
+  | RmLessThan(e21, e22) -> RmLessThan( (subst e1 x e21) , (subst e1 x e22) )
   | RmPlus(e21, e22) -> RmPlus( (subst e1 x e21) , (subst e1 x e22) )
   | RmApp(e21, e22) -> RmApp( (subst e1 x e21) , (subst e1 x e22) )
 
-  |  RmLbd(y,tT,e21) when (x=y) -> RmLbd(y,tT,e21) 
+  | RmLbd(rT,tT,y,e21) when (x=y) -> RmLbd(rT,tT,y,e21)
 
   (*if the variable passed into the lambda is the value, substitute it*)
-  | RmLbd(y,tT,e21) when (not (free e1 y)) -> RmLbd(y,tT,subst e1 x e21)
+  | RmLbd(rT,tT,y,e21) when (not (free e1 y)) -> RmLbd(rT,tT,y,subst e1 x e21)
 
   (* Rename if it isn't free *)
-  | RmLbd(y,tT,e21) when (free e1 y) -> let yy = rename y in subst e1 x (RmLbd(yy,tT, (subst (RmVar(yy)) y e21)))
+  | RmLbd(rT,tT,y,e21) when (free e1 y) -> let yy = rename y in subst e1 x (RmLbd(rT, tT, yy, (subst (RmVar(yy)) y e21)))
 
-  | RmLet(y,tT,e21,e22) when (x=y) -> RmLet(y,tT,e21,e22)
-  | RmLet(y,tT,e21,e22) when (not(free e1 y)) -> RmLet(y,tT, subst e1 x e21 , subst e1 x e22)
+  | RmLet(tT,y,e21,e22) when (x=y) -> RmLet(tT,y,e21,e22)
+  | RmLet(tT,y,e21,e22) when (not(free e1 y)) -> RmLet(tT, y, subst e1 x e21 , subst e1 x e22)
   (* Rename a variable if it isn't free *)
-  | RmLet(y,tT,e21,e22) when ((free e1 y)) -> let yy = rename y in subst e1 x ( RmLet(yy, tT, subst (RmVar(yy)) y e21 , subst (RmVar(yy)) y e22) )
+  | RmLet(tT,y,e21,e22) when ((free e1 y)) -> let yy = rename y in subst e1 x ( RmLet(tT, yy, subst (RmVar(yy)) y e21 , subst (RmVar(yy)) y e22) )
 ;;
 
 let rec eval1S e = match e with
   | (RmVar x) -> raise Terminated
   | (RmNum n) -> raise Terminated
-  | (RmBool b) -> raise Terminated
-  | (RmLbd(x,tT,e')) -> raise Terminated
+  | (RmLbd(rT,tT,y,e')) -> raise Terminated
 
-  | (RmLessThan(RmNum(n),RmNum(m))) -> print_string "[*"; print_int n; print_string "<"; print_int m; print_string "*]";
-  | (RmLessThan(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmLessThan(RmNum(n),e2'),env')
+  (*FIXME make it return actual less than values *)
+  | (RmLessThan(RmNum(n),RmNum(m))) -> print_string "[*"; print_int n; print_string "<"; print_int m; print_string "*]"; RmNum(n);
+  | (RmLessThan(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmLessThan(RmNum(n),e2')
   | (RmLessThan(e1, e2))            -> let e1' = (eval1S e1) in RmLessThan(e1',e2)
 
-  | (RmPlus(RmNum(n),RmNum(m))) -> print_string "[*"; print_int n; print_string " + "; print_int m; print_string "*]";
+  | (RmPlus(RmNum(n),RmNum(m))) -> print_string "[*"; print_int n; print_string " + "; print_int m; print_string "*]"; RmNum(n+m)
   | (RmPlus(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmPlus(RmNum(n),e2')
   | (RmPlus(e1, e2))            -> let e1' = (eval1S e1) in RmPlus(e1', e2)
+
+ (*TODO (Lloyd) MAKE EVERYTHING RETURN VALUES*)
 
  (* TODO eval A or B (not both) *)
   | (RmIf(RmNum(n),e2,e3))              -> print_string "[* if "; print_int n; print_string " == 0 then"; print_int (eval1S e2); print_string "else"; print_int(eval1S e3)
   | (RmIf(e1,e2,e3))              -> let e1' = (eval1S e1) in RmIf(e1',e2,e3)
 
-  | (RmLet(x,tT,e1,e2)) when (isValue(e1)) -> print_string "[* let "; print_string x; print_string " be "; (eval1S tT) ; print_string " in "; print_int subst e1 x e2; print_string "*]"
-  | (RmLet(x,tT,e1,e2))                    -> let e1' = (eval1S e1) in RmLet(x,tT,e1',e2)
+  | (RmLet(tT,x,e1,e2)) when (isValue(e1)) -> print_string "[* let "; print_string x; print_string " be "; (eval1S tT) ; print_string " in "; print_int subst e1 x e2; print_string "*]"
+  | (RmLet(tT,x,e1,e2))                    -> let e1' = (eval1S e1) in RmLet(tT,x,e1',e2)
 
-  | (RmApp(RmLbd(x,tT,e), e2)) when (isValue(e2)) -> print_string "[* Call: Substitute "; print_string tT; print_string " with "; print_int e;  print_int subst e2 x e
-  | (RmApp(RmLbd(x,tT,e), e2))                    -> let e2' = (eval1S e2) in RmApp( RmLbd(x,tT,e) , e2')
+  | (RmApp(RmLbd(rT,tT,x,e), e2)) when (isValue(e2)) -> print_string "[* Call: Substitute "; print_string tT; print_string " with "; print_int e;  print_int subst e2 x e
+  | (RmApp(RmLbd(rT,tT,x,e), e2))                    -> let e2' = (eval1S e2) in RmApp( RmLbd(rT,tT,x,e) , e2')
   | (RmApp(e1,e2))                                -> let e1' = (eval1S e1) in RmApp(e1',e2) 
 
   | _ -> raise Terminated ;;
@@ -250,7 +255,6 @@ let rec type_to_string tT = match tT with
 
 let print_res res = match res with
   | (RmNum i) -> print_int i ; print_string " : Int"
-  | (RmBool b) -> print_string (if b then "true" else "false") ; print_string " : Bool"
-  | (RmLbd(x,tT,e)) -> print_string("Function : "^type_to_string( typeProg (res) ))
+  | (RmLbd(rT,tT,x,e)) -> print_string("Function : "^type_to_string( typeProg (res) ))
   | _ -> raise NonBaseTypeResult
 ;;

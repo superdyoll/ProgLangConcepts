@@ -13,7 +13,7 @@
 
 # These are the object files needed to rebuild the main executable file
 #
-OBJS = parser.cmo lexer.cmo Toy.cmo main.cmo 
+OBJS = River.cmo parser.cmo lexer.cmo main.cmo 
 
 COMMONOBJS = str.cma
 
@@ -27,10 +27,6 @@ all: $(DEPEND) $(OBJS) main
 # Include an automatically generated list of dependencies between source files
 include .depend
 
-
-chmod:
-	chmod +x parser.*
-	chmod +x lexer.*
 
 # Build an executable typechecker
 main: $(OBJS) main.cmo 
@@ -49,13 +45,13 @@ main: $(OBJS) main.cmo
 parser.ml parser.mli: parser.mly
 	@rm -f parser.ml parser.mli
 	ocamlyacc -v parser.mly
-	#@chmod -w parser.ml parser.mli
+	@chmod -w parser.ml parser.mli
 
 # Generate ML files from a lexer definition file
 %.ml %.mli: %.mll
 	@rm -f $@
 	ocamllex $<
-	#@chmod -w $@
+	@chmod -w $@
 
 # Clean up the directory
 clean::

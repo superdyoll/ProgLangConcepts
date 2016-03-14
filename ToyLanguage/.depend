@@ -1,0 +1,9 @@
+parser.cmi : Toy.cmo
+Toy.cmo :
+Toy.cmx :
+lexer.cmo : parser.cmi
+lexer.cmx : parser.cmx
+main.cmo : Toy.cmo parser.cmi lexer.cmo
+main.cmx : Toy.cmx parser.cmx lexer.cmx
+parser.cmo : Toy.cmo parser.cmi
+parser.cmx : Toy.cmx parser.cmi

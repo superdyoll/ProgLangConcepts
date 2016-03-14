@@ -520,18 +520,61 @@
 	"buffers":
 	[
 		{
-			"file": "/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/River.ml",
-			"settings":
-			{
-				"buffer_size": 8284,
-				"line_ending": "Unix"
-			}
-		},
-		{
 			"file": "Toy.ml",
 			"settings":
 			{
 				"buffer_size": 8856,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "0(* File lexer.mll *)\n{\nopen Parser        (* The type token is defined in parser.mli *)\n}\nrule lexer_main = parse\n      [' ' '\\t' '\\n']     { lexer_main lexbuf }     (* skip blanks *)\n    | '-'? ['0'-'9']+ as lxm { INT(int_of_string lxm) }\n    | \"//\" _ +  { }\n    (* Functions *)\n    | \"loop\"    { LOOP }\n    | \"print\"    { PRINT }\n    | \"read\"    { READ }\n    (* Types *)\n    | \"int\"     { ITYPE }\n    | \"stream\"  { STYPE }\n    | \"lambda\"  { LTYPE }\n    | \"let\"     { LET }\n    | \"def\"     { DEFINE }\n    | \"if\"      { IF }\n    | \"else\"    { ELSE }\n    | ['a'-'z'] + as lxm { IDENT(lxm) }\n    | ';'       { SEMICOLON }\n    (* Comparison Operators *)\n    | \">=\"      { GEQ }\n    | \"<=\"      { LEQ }\n    | '<'       { LT }\n    | '>'       { GT }\n    | \"==\"      { EQ }\n    | \"!=\"      { NEQ }\n    | \"!\"       { NOT }\n    (* Operators *)\n    | '+'       { PLUS }\n    | '-'       { MINUS }\n    | '*'       { MULTIPLY }\n    | '/'       { DIVIDE }\n    (* Concatenators *)\n    | \"::\"      { CONS }\n    | '.'       { DOT }\n    (* Assignment *)\n    | '='       { ASSIGN }\n    | ','       { COMMA }\n    (* Bracketing *)\n    | '('       { LPAREN }\n    | ')'       { RPAREN }\n    | '{'       { LBRACE }\n    | '}'       { RBRACE }\n    (* Indexing *)\n    | '['       { LSQ }\n    | ']'       { RSQ }\n    | ':'       { COLON }\n    | eof       { EOF }",
+			"file": "/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/lexer.mll",
+			"file_size": 1335,
+			"file_write_time": 131024350895276501,
+			"settings":
+			{
+				"buffer_size": 1336,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/main.ml",
+			"settings":
+			{
+				"buffer_size": 721,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/parser.mly",
+			"settings":
+			{
+				"buffer_size": 2644,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/Makefile",
+			"settings":
+			{
+				"buffer_size": 1800,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/todolist.todo",
+			"settings":
+			{
+				"buffer_size": 179,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/tests/fibonacci.spl",
+			"settings":
+			{
+				"buffer_size": 440,
 				"line_ending": "Unix"
 			}
 		}
@@ -651,17 +694,25 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 201.0,
-		"last_filter": "ww",
+		"height": 392.0,
+		"last_filter": "si",
 		"selected_items":
 		[
 			[
-				"ww",
-				"Word Wrap: Toggle"
+				"si",
+				"View: Toggle Side Bar"
+			],
+			[
+				"sideba",
+				"View: Toggle Side Bar"
 			],
 			[
 				"side",
 				"View: Toggle Side Bar"
+			],
+			[
+				"ww",
+				"Word Wrap: Toggle"
 			],
 			[
 				"floobits recent",
@@ -1158,14 +1209,6 @@
 			[
 				"b",
 				"Preferences: Browse Packages"
-			],
-			[
-				"brows",
-				"Preferences: Browse Packages"
-			],
-			[
-				"pack",
-				"Preferences: Browse Packages"
 			]
 		],
 		"width": 449.0
@@ -1317,16 +1360,20 @@
 	"expanded_folders":
 	[
 		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts",
-		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/ToyLanguage"
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/ToyLanguage",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/tests"
 	],
 	"file_history":
 	[
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/River.ml",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/River.mli",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/todolist.todo",
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/.gitignore",
 		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/ToyLanguage/prog3.ol",
 		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/ToyLanguage/lexer.mll",
 		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/Makefile",
 		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/ToyLanguage/Toy.mli",
 		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/parser.ml",
-		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/River.ml",
 		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/parser.mly",
 		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/ToyLanguage/parser.mly",
 		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/lexer.mll",
@@ -1340,7 +1387,6 @@
 		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/tests/copying.spl",
 		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/tests/prefixing.spl",
 		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/tests/arithmetic.spl",
-		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/todolist.todo",
 		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/tests/accumulator.spl",
 		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/tests/fibonacci.spl",
 		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/tests/isSame.spl",
@@ -1446,9 +1492,7 @@
 		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/labs/CalcExample/CalcExample/Makefile",
 		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/labs/CalcExample/CalcExample/parser.mly",
 		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/labs/99-problems.ml",
-		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/labs/CalcExample/CalcExample/lexer.mll",
-		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/labs/CalcExample/CalcExample/parser.mli",
-		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/labs/CalcExample/CalcExample/lexer.mli"
+		"/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/labs/CalcExample/CalcExample/lexer.mll"
 	],
 	"find":
 	{
@@ -1477,6 +1521,26 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"print_int.*?;",
+			"print_string.*?;",
+			"RmLessThan",
+			"RmLessThanEqualTo",
+			"rmlet",
+			"tmlet",
+			"let",
+			"RMLessThan",
+			"rmlessthan",
+			"RmLet",
+			"rmLbd",
+			"RMLet",
+			"let",
+			"rmlet",
+			"rivterm",
+			"let",
+			"tmabs",
+			"rmlet",
+			"of  ",
+			"type",
 			"rmlet",
 			"rmLet",
 			"RmAbs",
@@ -1584,27 +1648,7 @@
 			" +",
 			"\\n",
 			".*\\= (.*);",
-			"\\n",
-			".*\\= (.*);",
-			".*\\=",
-			"$",
-			"^",
-			"\\n",
-			".*?(\\d+)$",
-			".*(\\d+)$",
-			"71",
-			"/media/1TB_SSD/notes/COMP2212_programming_language_concepts/",
-			"means",
-			"vdash",
-			"ISR",
-			"delta",
-			"cc",
-			"\\n\\n",
-			"cpu",
-			"^.",
-			"” .*",
-			";;",
-			"^ "
+			"\\n"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1612,6 +1656,8 @@
 		"regex": true,
 		"replace_history":
 		[
+			"",
+			"of ",
 			"RmLbd",
 			"riverTerm",
 			"",
@@ -1737,9 +1783,7 @@
 			"\\| \\|",
 			"\\1",
 			" \\1\\n",
-			"",
-			"\\n",
-			"\\|    \\|"
+			""
 		],
 		"reverse": false,
 		"show_context": true,
@@ -1755,38 +1799,8 @@
 			[
 				{
 					"buffer": 0,
-					"file": "/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/River.ml",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 8284,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								4741,
-								4741
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/OCaml/OCaml.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 3652.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
 					"file": "Toy.ml",
-					"semi_transient": true,
+					"semi_transient": false,
 					"settings":
 					{
 						"buffer_size": 8856,
@@ -1796,23 +1810,202 @@
 						"selection":
 						[
 							[
-								4863,
-								4863
+								6426,
+								6426
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/OCaml/OCaml.tmLanguage",
 							"tab_size": 2,
+							"translate_tabs_to_spaces": true,
+							"word_wrap": false
+						},
+						"translation.x": 100.0,
+						"translation.y": 3916.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/lexer.mll",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1336,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1,
+								1
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/OCaml/OCamllex.tmLanguage",
+							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 3401.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/main.ml",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 721,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								482,
+								482
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/OCaml/OCaml.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
 					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/parser.mly",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2644,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2509,
+								2509
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/OCaml/OCamlyacc.tmLanguage",
+							"word_wrap": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1385.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/Makefile",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1800,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1800,
+								1800
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Makefile/Makefile.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1298.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/todolist.todo",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 179,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								104,
+								104
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "/media/1TB_SSD/coursework/COMP2212_Programming_Language_Concepts/Programming_Language_Concepts/tests/fibonacci.spl",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 440,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/User/river.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
 				}
+			]
+		},
+		{
+			"sheets":
+			[
 			]
 		}
 	],
@@ -1833,11 +2026,18 @@
 				0,
 				1,
 				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
 			]
 		],
 		"cols":
 		[
 			0.0,
+			0.45675043834,
 			1.0
 		],
 		"rows":
@@ -1893,14 +2093,14 @@
 		],
 		"width": 0.0
 	},
-	"selected_group": 0,
+	"selected_group": 1,
 	"settings":
 	{
 	},
 	"show_minimap": true,
 	"show_open_files": true,
 	"show_tabs": true,
-	"side_bar_visible": true,
+	"side_bar_visible": false,
 	"side_bar_width": 209.0,
 	"status_bar_visible": true,
 	"template_settings":

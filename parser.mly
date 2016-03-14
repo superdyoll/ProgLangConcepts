@@ -59,7 +59,7 @@ comma_sep: type_spec { $1 }
 
 expr: INT                      { RmNum $1 }
  | IDENT                       { RmVar $1 }
- | LET LPAREN IDENT COLON type_spec RPAREN EQUALS expr LBRACE expr RBRACE { RmLet ($3, $5, $8, $10) }
+ | LET LPAREN type_spec IDENT EQUALS expr RPAREN LBRACE expr RBRACE { RmLet ($3, $4, $6, $9) }
  | expr LPAREN expr RPAREN     { RmApp ($1, $3) }
  | expr PLUS expr              { RmPlus ($1, $3) }
  | expr MINUS expr             { RmMinus ($1, $3) }
@@ -77,10 +77,11 @@ expr: INT                      { RmNum $1 }
  | IDENT LSQ COLON INT RSQ     { RmSection($1, 0, $4) }
  | IDENT LSQ INT COLON RSQ     { RmSectionEnd($1, $3) }
  | IDENT LSQ INT COLON INT RSQ { RmSection($1, $3, $5) }
- /* Predefined Function */ 
+ /* Predefined Functions */ 
  | type_spec IDENT ASSIGN expr { RmSet ($2, $4)}
  | IF LPAREN expr RPAREN LBRACE expr RBRACE ELSE LBRACE expr RBRACE  { RmIf ($3, $6, $10) }
  | IF LPAREN expr RPAREN LBRACE expr RBRACE { RmIf ($3, $6) }
- | type_spec LTYPE LPAREN type_spec IDENT RPAREN LBRACE expr RBRACE {RmLbd ($1, $4, $8) }
+ /* Lambda */
+ | type_spec LTYPE LPAREN type_spec IDENT RPAREN LBRACE expr RBRACE {RmLbd ($1, $4, $5, $8) }
  | LPAREN expr RPAREN          { $2 }
 ;

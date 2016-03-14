@@ -6,4 +6,6 @@ BONUS TODOS:
     instead of 
    `if () {} else {if () {}}`
 
-- letrec
+- lets with multiple values in one let.
+
+- Lambdas that take in more than 1 variable
