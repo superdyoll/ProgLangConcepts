@@ -37,8 +37,8 @@
 %nonassoc UMINUS
 /* Highest Precedence */
 %start parser_main
-%type <Riv.rivTerm> parser_main
-%type <Riv.rivType> type_spec
+%type <River.rivTerm> parser_main
+%type <River.rivType> type_spec
 %%
 parser_main: line EOF { $1 };
 

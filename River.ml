@@ -1,10 +1,14 @@
 exception LookupError ;;
+exception TypeError ;;
+exception UnboundVariableError;;
 exception Terminated ;;
+exception StuckTerm ;;
+exception NonBaseTypeResult;;
 
 open Printf;;
 
 (* Types of the language *)
-type rivType =  RivInt | RivBool | RivFun of rivType * rivType
+type rivType =  RivInt | RivBool | RivFun of rivType * rivType | RivStream of rivType 
 
 (* Grammar of the language *)
 type rivTerm =
@@ -268,14 +272,14 @@ let rec eval1S e = match e with
  (* TODO eval A or B (not both) *)
   | (RmIf(RmNum(n),e2,e3))              -> (*print_string "[* if "; print_int n; print_string " == 0 then"; print_int (eval1S e2); print_string "else"; print_int(eval1S e3);*) if n == 0 then (eval1S e2) else (eval1S e3)
   | (RmIf(e1,e2,e3))              -> let e1' = (eval1S e1) in RmIf(e1',e2,e3)
-
+(*
   | (RmLet(tT,x,e1,e2)) when (isValue(e1)) -> print_string "[* let "; print_string x; print_string " be "; (eval1S tT) ; print_string " in "; print_int subst e1 x e2; print_string "*]";
   | (RmLet(tT,x,e1,e2))                    -> let e1' = (eval1S e1) in RmLet(tT,x,e1',e2)
 
   | (RmApp(RmLbd(rT,tT,x,e), e2)) when (isValue(e2)) -> print_string "[* Call: Substitute "; print_string tT; print_string " with "; print_int e;  print_int subst e2 x e
   | (RmApp(RmLbd(rT,tT,x,e), e2))                    -> let e2' = (eval1S e2) in RmApp( RmLbd(rT,tT,x,e) , e2')
   | (RmApp(e1,e2))                                -> let e1' = (eval1S e1) in RmApp(e1',e2) 
-
+*)
   | _ -> raise Terminated ;;
 
 
@@ -288,8 +292,11 @@ let rec type_to_string tT = match tT with
   | RivFun(tT1,tT2) -> "( "^type_to_string(tT1)^" -> "^type_to_string(tT2)^" )" 
 ;;
 
+(* FIXME When type checker working make this print out streams *)
+(*
 let print_res res = match res with
   | (RmNum i) -> print_int i ; print_string " : Int"
   | (RmLbd(rT,tT,x,e)) -> print_string("Function : "^type_to_string( typeProg (res) ))
   | _ -> raise NonBaseTypeResult
 ;;
+*)
