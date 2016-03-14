@@ -75,7 +75,6 @@ expr: INT                      { RmNum $1 }
  | IDENT LSQ expr COLON expr RSQ { RmSection($1, $3, $5) }
  /* Predefined Functions */
  | IF LPAREN expr RPAREN LBRACE expr RBRACE ELSE LBRACE expr RBRACE  { RmIf ($3, $6, $10) }
- | IF LPAREN expr RPAREN LBRACE expr RBRACE { RmIf ($3, $6) }
  /* Lambda */
  | type_spec LTYPE LPAREN type_spec IDENT RPAREN LBRACE expr RBRACE {RmLbd ($1, $4, $5, $8) }
  | LPAREN expr RPAREN          { $2 }

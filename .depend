@@ -1,4 +1,4 @@
-parser.cmi :
+parser.cmi : River.cmo
 River.cmo :
 River.cmx :
 lexer.cmo : parser.cmi

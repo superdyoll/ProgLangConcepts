@@ -5,7 +5,7 @@ open Parser        (* The type token is defined in parser.mli *)
 rule lexer_main = parse
       [' ' '\t' '\n']     { lexer_main lexbuf }     (* skip blanks *)
     | '-'? ['0'-'9']+ as lxm { INT(int_of_string lxm) }
-    | "//" _ +  { }
+    | "//" _ +  { COMMENT }
     (* Functions *)
     | "loop"    { LOOP }
     | "print"    { PRINT }
