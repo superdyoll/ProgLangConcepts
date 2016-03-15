@@ -6,11 +6,12 @@ exception StuckTerm ;;
 exception NonBaseTypeResult;;
 
 open Printf;;
-(* 
-type 'a stream = Stream of 'a * ( () -> 'a stream)
-let hd : 'a stream -> 'a = function Stream (a, _) -> a
-let tl : 'a stream -> 'a stream = function Stream (_, s) -> s ()
-let add : 'a stream = function Stream () *)
+
+(* Stream implementation *)
+type 'a stream = Stream of 'a * (unit -> 'a stream) | StreamEnd of 'a;;
+let hd : 'a stream -> 'a = function Stream (a, _) -> a;;
+let tl : 'a stream -> 'a stream = function Stream (_, s) -> s ();;
+
 
 (* Types of the language *)
 type rivType =  RivInt | RivBool | RivFun of rivType * rivType | RivStream of rivType 
@@ -43,8 +44,8 @@ type rivTerm =
   (* Lambda: Return Type * Parameter Type * Parameter Name * Expression *)
   | RmLbd of rivType * rivType * string * rivTerm
 
-let rec isValue e = match e with
-  | RmNum(n) -> true
+let rec isValue e = print_string "isValue called\n"; match e with
+  | RmNum(s) -> true
   | RmLbd(rT,tT,x,e') -> true
   | _ -> false
 ;;
@@ -72,7 +73,7 @@ Env(gs) -> Env ( (str, thing) :: gs ) ;;
 (* Return True if the variable x is used in e *)
 let rec free e x = match e with
   RmVar(y) -> (x=y)
-  |RmNum(n) -> false
+  |RmNum(s) -> false
   |RmIf(t1,t2,t3) -> (free t1 x) || (free t2 x) || (free t3 x)
   |RmLessThan(e1,e2) -> (free e1 x) || (free e2 x)
   |RmLessEqualTo(e1,e2) -> (free e1 x) || (free e2 x)
@@ -95,9 +96,9 @@ let rename (s:string) = s^"'";;
 
 (* Substitute e1 as 'x' in e2 *)
 let rec subst e1 x e2 = match e2 with
-  RmVar(y) when (x=y) -> e1
+  | RmVar(y) when (x=y) -> e1
   | RmVar(y) -> RmVar(y)
-  | RmNum(n) -> RmNum(n)
+  | RmNum(s) -> RmNum(s)
   (* Substitute all the parameters *)
   | RmIf(b,e21,e22) -> RmIf( (subst e1 x b) , (subst e1 x e21) , (subst e1 x e22) )
   | RmLessThan(e21, e22) -> RmLessThan( (subst e1 x e21) , (subst e1 x e22) )
@@ -141,16 +142,13 @@ let rec eval1M env e = match e with
   | (RmLessEqualTo(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmLessEqualTo(RmNum(n),e2'),env')
   | (RmLessEqualTo(e1, e2))            -> let (e1',env') = (eval1M env e1) in (RmLessEqualTo(e1',e2),env')
 
-
   | (RmGreaterThan(RmNum(n),RmNum(m))) -> ((if n>m then RmNum(1) else RmNum(0)), env)
   | (RmGreaterThan(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmGreaterThan(RmNum(n),e2'),env')
   | (RmGreaterThan(e1, e2))            -> let (e1',env') = (eval1M env e1) in (RmGreaterThan(e1',e2),env')
 
-
   | (RmGreaterEqualTo(RmNum(n),RmNum(m))) -> ((if n>m then RmNum(1) else RmNum(0)), env)
   | (RmGreaterEqualTo(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmGreaterEqualTo(RmNum(n),e2'),env')
   | (RmGreaterEqualTo(e1, e2))            -> let (e1',env') = (eval1M env e1) in (RmGreaterEqualTo(e1',e2),env')
-
 
   | (RmEqualTo(RmNum(n),RmNum(m))) -> ((if n=m then RmNum(1) else RmNum(0)), env)
   | (RmEqualTo(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmEqualTo(RmNum(n),e2'),env')
@@ -207,7 +205,7 @@ let rec type_to_string tT = match tT with
 (* FIXME When type checker working make this print out streams *)
 
 let print_res res = match res with
-  | (RmNum i) -> print_int i ; print_string " : Int"
+  | RmNum (i) -> print_int i ; print_string " : Int"
   (* | (RmLbd(rT,tT,x,e)) -> print_string("Function : " ^ type_to_string( typeProg (res) )) *)
   | _ -> raise NonBaseTypeResult
 ;;
