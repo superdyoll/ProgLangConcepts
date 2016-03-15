@@ -127,75 +127,76 @@ let rec subst e1 x e2 = match e2 with
   | RmLet(tT,y,e21,e22) when ((free e1 y)) -> let yy = rename y in subst e1 x ( RmLet(tT, yy, subst (RmVar(yy)) y e21 , subst (RmVar(yy)) y e22) )
 ;;
 
-let rec eval1S e = match e with
-  | (RmVar x) -> print_string "VARIABLE: "; print_string x; print_string "\n"; raise Terminated
+let rec eval1M env e = match e with
+  | (RmVar x) -> print_string "VARIABLE: "; print_string x; print_string "\n"; (try ((lookup env x), env) with LookupError -> raise UnboundVariableError)
   | (RmNum n) -> print_string "NUMBER: "; print_int n; print_string "\n"; raise Terminated
   | (RmLbd(rT,tT,y,e')) -> raise Terminated
 
   (* Conditionals *)
-  | (RmLessThan(RmNum(n),RmNum(m))) -> if n<m then RmNum(1) else RmNum(0);
-  | (RmLessThan(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmLessThan(RmNum(n),e2')
-  | (RmLessThan(e1, e2))            -> let e1' = (eval1S e1) in RmLessThan(e1',e2)
+  | (RmLessThan(RmNum(n),RmNum(m))) -> ((if n<m then RmNum(1) else RmNum(0)), env)
+  | (RmLessThan(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmLessThan(RmNum(n),e2'),env')
+  | (RmLessThan(e1, e2))            -> let (e1',env') = (eval1M env e1) in (RmLessThan(e1',e2),env')
 
-  | (RmLessEqualTo(RmNum(n),RmNum(m))) -> if n<=m then RmNum(1) else RmNum(0);
-  | (RmLessEqualTo(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmLessEqualTo(RmNum(n),e2')
-  | (RmLessEqualTo(e1, e2))            -> let e1' = (eval1S e1) in RmLessEqualTo(e1',e2)
-
-  | (RmGreaterThan(RmNum(n),RmNum(m))) -> if n>m then RmNum(1) else RmNum(0);
-  | (RmGreaterThan(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmGreaterThan(RmNum(n),e2')
-  | (RmGreaterThan(e1, e2))            -> let e1' = (eval1S e1) in RmGreaterThan(e1',e2)
+  | (RmLessEqualTo(RmNum(n),RmNum(m))) -> ((if n<=m then RmNum(1) else RmNum(0)), env)
+  | (RmLessEqualTo(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmLessEqualTo(RmNum(n),e2'),env')
+  | (RmLessEqualTo(e1, e2))            -> let (e1',env') = (eval1M env e1) in (RmLessEqualTo(e1',e2),env')
 
 
-  | (RmGreaterEqualTo(RmNum(n),RmNum(m))) -> if n>=m then RmNum(1) else RmNum(0);
-  | (RmGreaterEqualTo(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmGreaterEqualTo(RmNum(n),e2')
-  | (RmGreaterEqualTo(e1, e2))            -> let e1' = (eval1S e1) in RmGreaterEqualTo(e1',e2)
- 
-  | (RmEqualTo(RmNum(n),RmNum(m))) -> print_string "EQUAL TO IS TOTALLY RUNNING\n"; if n=m then RmNum(1) else RmNum(0);
-  | (RmEqualTo(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmEqualTo(RmNum(n),e2')
-  | (RmEqualTo(e1, e2))            -> let e1' = (eval1S e1) in RmEqualTo(e1',e2) 
+  | (RmGreaterThan(RmNum(n),RmNum(m))) -> ((if n>m then RmNum(1) else RmNum(0)), env)
+  | (RmGreaterThan(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmGreaterThan(RmNum(n),e2'),env')
+  | (RmGreaterThan(e1, e2))            -> let (e1',env') = (eval1M env e1) in (RmGreaterThan(e1',e2),env')
 
-  | (RmNotEqualTo(RmNum(n),RmNum(m))) -> if n<>m then RmNum(1) else RmNum(0);
-  | (RmNotEqualTo(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmNotEqualTo(RmNum(n),e2')
-  | (RmNotEqualTo(e1, e2))            -> let e1' = (eval1S e1) in RmNotEqualTo(e1',e2)
+
+  | (RmGreaterEqualTo(RmNum(n),RmNum(m))) -> ((if n>m then RmNum(1) else RmNum(0)), env)
+  | (RmGreaterEqualTo(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmGreaterEqualTo(RmNum(n),e2'),env')
+  | (RmGreaterEqualTo(e1, e2))            -> let (e1',env') = (eval1M env e1) in (RmGreaterEqualTo(e1',e2),env')
+
+
+  | (RmEqualTo(RmNum(n),RmNum(m))) -> ((if n=m then RmNum(1) else RmNum(0)), env)
+  | (RmEqualTo(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmEqualTo(RmNum(n),e2'),env')
+  | (RmEqualTo(e1, e2))            -> let (e1',env') = (eval1M env e1) in (RmEqualTo(e1',e2),env')
+
+  | (RmNotEqualTo(RmNum(n),RmNum(m))) -> ((if n<>m then RmNum(1) else RmNum(0)), env)
+  | (RmNotEqualTo(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmNotEqualTo(RmNum(n),e2'),env')
+  | (RmNotEqualTo(e1, e2))            -> let (e1',env') = (eval1M env e1) in (RmNotEqualTo(e1',e2),env')
 
   (* Operators *)
-  | (RmPlus(RmNum(n),RmNum(m))) -> RmNum(n+m)
-  | (RmPlus(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmPlus(RmNum(n),e2')
-  | (RmPlus(e1, e2))            -> let e1' = (eval1S e1) in RmPlus(e1', e2)
+  | (RmPlus(RmNum(n),RmNum(m))) -> (RmNum(n+m) , env)
+  | (RmPlus(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmPlus(RmNum(n),e2'), env')
+  | (RmPlus(e1, e2))            -> let (e1',env') = (eval1M env e1) in (RmPlus(e1', e2), env')
 
-  | (RmMinus(RmNum(n),RmNum(m))) -> RmNum(n-m)
-  | (RmMinus(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmMinus(RmNum(n),e2')
-  | (RmMinus(e1, e2))            -> let e1' = (eval1S e1) in RmMinus(e1', e2)
+  | (RmMinus(RmNum(n),RmNum(m))) -> (RmNum(n-m) , env)
+  | (RmMinus(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmMinus(RmNum(n),e2'), env')
+  | (RmMinus(e1, e2))            -> let (e1',env') = (eval1M env e1) in (RmMinus(e1', e2), env')
 
-  | (RmMultiply(RmNum(n),RmNum(m))) -> RmNum(n*m)
-  | (RmMultiply(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmMultiply(RmNum(n),e2')
-  | (RmMultiply(e1, e2))            -> let e1' = (eval1S e1) in RmMultiply(e1', e2)
+  | (RmMultiply(RmNum(n),RmNum(m))) -> (RmNum(n*m) , env)
+  | (RmMultiply(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmMultiply(RmNum(n),e2'), env')
+  | (RmMultiply(e1, e2))            -> let (e1',env') = (eval1M env e1) in (RmMultiply(e1', e2), env')
 
-  | (RmDivide(RmNum(n),RmNum(m))) -> RmNum(n/m)
-  | (RmDivide(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmDivide(RmNum(n),e2')
-  | (RmDivide(e1, e2))            -> let e1' = (eval1S e1) in RmDivide(e1', e2)
+  | (RmDivide(RmNum(n),RmNum(m))) -> (RmNum(n/m) , env)
+  | (RmDivide(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmDivide(RmNum(n),e2'), env')
+  | (RmDivide(e1, e2))            -> let (e1',env') = (eval1M env e1) in (RmDivide(e1', e2), env')
 
-  | (RmUMinus(RmNum(n))) -> RmNum(-n)
-  | (RmUMinus(e1))      -> let e1' = (eval1S e1) in RmUMinus(e1')
+  | (RmUMinus(RmNum(n))) -> (RmNum(-n), env)
+  | (RmUMinus(e1))      -> let (e1',env') = (eval1M env e1) in (RmUMinus(e1'), env')
 
- (*TODO (Lloyd) MAKE EVERYTHING RETURN VALUES*)
+  (* Tenary *)
+  | (RmIf(RmNum(1),e1,e2))        -> (e1, env)
+  | (RmIf(RmNum(0),e1,e2))        -> (e2, env)
+  | (RmIf(b,e1,e2))               -> let (b',env') = (eval1M env b) in (RmIf(b',e1,e2), env')
 
- (* TODO eval A or B (not both) *)
-  | (RmIf(RmNum(n),e2,e3))        -> print_string "IF TEST: "; if n = 0 then e3 else e2
-  | (RmIf(e1,e2,e3))              -> print_string "IF SIMPLIFY\n"; let e1' = (eval1S e1) in RmIf(e1',e2,e3)
+  | (RmLet(tT,x,e1,e2)) when (isValue(e1)) -> (e2, addBinding env x e1)
+  | (RmLet(tT,x,e1,e2))                    -> let (e1', env') = (eval1M env e1) in (RmLet(tT,x,e1',e2), env')
 
-  | (RmLet(tT,x,e1,e2)) when (isValue(e1)) -> subst e1 x e2
-  | (RmLet(tT,x,e1,e2))                    -> let e1' = (eval1S e1) in RmLet(tT,x,e1',e2)
-
-  | (RmApp(RmLbd(rT,tT,x,e), e2)) when (isValue(e2)) -> subst e2 x e
-  | (RmApp(RmLbd(rT,tT,x,e), e2))                    -> let e2' = (eval1S e2) in RmApp( RmLbd(rT,tT,x,e) , e2')
-  | (RmApp(e1,e2))                                -> let e1' = (eval1S e1) in RmApp(e1',e2) 
+  | (RmApp(RmLbd(rT,tT,x,e), e2)) when (isValue(e2)) -> (e, addBinding env x e2)
+  | (RmApp(RmLbd(rT,tT,x,e), e2))                    -> let (e2',env') = (eval1M env e2) in (RmApp( RmLbd(rT,tT,x,e) , e2'), env')
+  | (RmApp(e1,e2))                                -> let (e1',env') = (eval1M env e1) in (RmApp(e1',e2), env') 
 
   | _ -> print_string "NO MATCH, RAISING TERMINATED\n";raise Terminated ;;
 
 
-let rec evalloop e = try ( let e' = eval1S e in evalloop e') with Terminated -> if (isValue e) then e else raise StuckTerm ;;
-let evalProg e = evalloop e ;;
+let rec evalloop env e = try ( let (e',env') = (eval1M env e) in (evalloop env' e')) with Terminated -> if (isValue e) then e else raise StuckTerm ;;
+let evalProg e = evalloop (Env[]) e ;;
 
 
 let rec type_to_string tT = match tT with
