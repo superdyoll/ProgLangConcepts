@@ -1,2 +1,8 @@
 *.floo
 *.flooignore
+*.cmi
+*.cmo
+*.ml
+*.mli
+*.output
+main

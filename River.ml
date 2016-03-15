@@ -50,7 +50,6 @@ let rec isValue e = match e with
 ;;
 
 (* Type of Environments *)
-
 type 'a context = Env of (string * 'a) list
 type typeContext = rivType context
 type valContext = rivTerm context
