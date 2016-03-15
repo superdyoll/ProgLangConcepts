@@ -1,0 +1,9 @@
+let(int a = 2+2){
+	let(int b = 5/2){
+		if(a>b){
+			a
+		}else{
+			b
+		}
+	}
+};

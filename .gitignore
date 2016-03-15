@@ -7,3 +7,4 @@ parser.ml
 *.mli
 *.output
 main
+*.sublime-workspace
