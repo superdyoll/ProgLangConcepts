@@ -2,7 +2,8 @@
 *.flooignore
 *.cmi
 *.cmo
-*.ml
+lexer.ml
+parser.ml
 *.mli
 *.output
 main
