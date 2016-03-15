@@ -78,6 +78,6 @@ expr:
  | expr DOT expr               { RmAppend($1, $3) } /* . (INT * INT -> INT) */
  | LPAREN expr RPAREN          { $2 }
  | IDENT                       { RmVar $1 }
- | INT                      { RmNum $1 }
+ | INT                      { RmNum($1) }
  | MINUS expr             { RmUMinus ($2) }
 ;
