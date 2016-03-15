@@ -69,6 +69,152 @@ let rec lookup env str = match env with
 let addBinding env str thing = match env with
 Env(gs) -> Env ( (str, thing) :: gs ) ;;
 
+(* The type checking function itself *) 
+let rec typeOf env e = match e with 
+   RmNum (n) -> RivInt
+
+  |RmVar (x) ->  (try lookup env x with LookupError -> raise TypeError)
+
+  |RmUMinus (e1) -> 
+    ( match (typeOf env e1) with
+	RivInt -> RivInt
+      | _ -> raise TypeError
+    )
+
+  |RmMinus(e1,e2) -> 
+    (
+     match (typeOf env e1) , (typeOf env e2) with 
+             RivInt, RivInt -> RivInt 
+                    |_ -> raise TypeError
+    )
+
+  |RmPlus(e1,e2) -> 
+    (
+     match (typeOf env e1) , (typeOf env e2) with 
+             RivInt, RivInt -> RivInt 
+                    |_ -> raise TypeError
+    )
+
+  |RmMultiply(e1,e2) -> 
+    (
+     match (typeOf env e1) , (typeOf env e2) with 
+             RivInt, RivInt -> RivInt 
+                    |_ -> raise TypeError
+    )
+
+  |RmDivide(e1,e2) -> 
+    (
+     match (typeOf env e1) , (typeOf env e2) with 
+             RivInt, RivInt -> RivInt 
+                    |_ -> raise TypeError
+    )
+
+
+  |RmLessThan (e1,e2) -> 
+    ( match (typeOf env e1) , (typeOf env e2) with 
+        RivInt, RivInt -> RivInt
+      | _ -> raise TypeError
+    )
+
+  |RmGreaterThan (e1,e2) -> 
+    ( match (typeOf env e1) , (typeOf env e2) with 
+        RivInt, RivInt -> RivInt
+      | _ -> raise TypeError
+    )
+
+  |RmGreaterEqualTo (e1,e2) -> 
+    ( match (typeOf env e1) , (typeOf env e2) with 
+        RivInt, RivInt -> RivInt
+      | _ -> raise TypeError
+    )
+
+  |RmLessEqualTo (e1,e2) -> 
+    ( match (typeOf env e1) , (typeOf env e2) with 
+        RivInt, RivInt -> RivBool
+      | _ -> raise TypeError
+    )
+
+  |RmNotEqualTo (e1,e2) -> 
+    ( match (typeOf env e1) , (typeOf env e2) with 
+        RivInt, RivInt -> RivBool
+      | _ -> raise TypeError
+    )
+
+  |RmEqualTo (e1,e2) -> 
+    ( match (typeOf env e1) , (typeOf env e2) with 
+        RivInt, RivInt -> RivBool
+      | _ -> raise TypeError
+    )
+
+
+  |RmCons(e1,e2) -> 
+    (
+     match (typeOf env e1) , (typeOf env e2) with 
+             RivInt, RivInt -> RivInt 
+                    |_ -> raise TypeError
+    )
+
+  |RmAppend(e1,e2) -> 
+    (
+     match (typeOf env e1) , (typeOf env e2) with 
+             RivInt, RivInt -> RivInt 
+                    |_ -> raise TypeError
+    )
+
+
+  |RmIndex(e1,e2) -> 
+    ( let ty1 = typeOf env e1 in
+      let ty2 = typeOf env e2 in
+             match ty1 with RivInt
+
+, RivInt -> RivInt 
+                    |_ -> raise TypeError
+    )
+
+
+  |RmIf (e1,e2,e3) -> (
+    let ty1 = typeOf env e1 in 
+      match ty1 with 
+         RivBool -> (
+                  let ty1 = typeOf env e2 in 
+		  let ty2 = typeOf env e3 in 
+		   (match (ty1=ty2) with 
+		      true -> ty1 
+		     |false -> raise TypeError 
+		   )
+	)
+       |_ -> raise TypeError 
+  )
+
+  |RmLet (x, tT, e1, e2) -> 
+    (
+      let ty1 = typeOf env e1 in
+      let ty2 = typeOf (addBinding env x tT) e2 in 
+         (match (ty1 = tT) with 
+            true -> ty2
+	         |false -> raise TypeError
+	 )
+    )
+
+  |RmApp (e1,e2) -> 
+    ( let ty1 = typeOf env e1 in 
+      let ty2 = typeOf env e2 in 
+       ( 
+        match ty1 with 
+         RivFun(tT,tU) ->  
+            (
+	     match tT = ty2 with
+             true -> tT 
+            |false -> raise TypeError
+	    )
+	| _ -> raise TypeError 
+       )
+    )
+
+  |RmAbs (x,tT,e) ->  RivFun(tT, typeOf (addBinding env x tT) e) 
+
+let typeProg e = typeOf (Env []) e ;;
+
 (* Return True if the variable x is used in e *)
 let rec free e x = match e with
   RmVar(y) -> (x=y)
@@ -145,7 +291,6 @@ let rec eval1S e = match e with
   | (RmGreaterThan(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmGreaterThan(RmNum(n),e2')
   | (RmGreaterThan(e1, e2))            -> let e1' = (eval1S e1) in RmGreaterThan(e1',e2)
 
-
   | (RmGreaterEqualTo(RmNum(n),RmNum(m))) -> if n>=m then RmNum(1) else RmNum(0);
   | (RmGreaterEqualTo(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmGreaterEqualTo(RmNum(n),e2')
   | (RmGreaterEqualTo(e1, e2))            -> let e1' = (eval1S e1) in RmGreaterEqualTo(e1',e2)
@@ -178,9 +323,7 @@ let rec eval1S e = match e with
   | (RmUMinus(RmNum(n))) -> RmNum(-n)
   | (RmUMinus(e1))      -> let e1' = (eval1S e1) in RmUMinus(e1')
 
- (*TODO (Lloyd) MAKE EVERYTHING RETURN VALUES*)
-
- (* TODO eval A or B (not both) *)
+  (* Tenary *)
   | (RmIf(RmNum(n),e2,e3))        -> print_string "IF TEST: "; if n = 0 then e3 else e2
   | (RmIf(e1,e2,e3))              -> print_string "IF SIMPLIFY\n"; let e1' = (eval1S e1) in RmIf(e1',e2,e3)
 
@@ -207,6 +350,6 @@ let rec type_to_string tT = match tT with
 
 let print_res res = match res with
   | (RmNum i) -> print_int i ; print_string " : Int"
-  (* | (RmLbd(rT,tT,x,e)) -> print_string("Function : " ^ type_to_string( typeProg (res) )) *)
+  | (RmLbd(rT,tT,x,e)) -> print_string("Function : " ^ type_to_string( typeProg (res) ))
   | _ -> raise NonBaseTypeResult
 ;;

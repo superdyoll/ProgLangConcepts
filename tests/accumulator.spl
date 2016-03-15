@@ -13,6 +13,9 @@ def  accumulator-acc  = int lambda (int a, int pointer){
 let (
     stream<int> input = read();
     int a = input[0];
+    int lambda(int lambda(int)) accumulator-acc = (int lambda (int)) lambda (int a){lambda(int pointer){}}
 ){
+let(
+    (accumulator-acc(a))(b)
     print(accumulator(a));
 }
