@@ -6,18 +6,19 @@ exception StuckTerm ;;
 exception NonBaseTypeResult;;
 
 open Printf;;
-(* 
-type 'a stream = Stream of 'a * ( () -> 'a stream)
-let hd : 'a stream -> 'a = function Stream (a, _) -> a
-let tl : 'a stream -> 'a stream = function Stream (_, s) -> s ()
-let add : 'a stream = function Stream () *)
+
+(* Stream implementation *)
+type 'a stream = Stream of 'a * (unit -> 'a stream) | StreamEnd of 'a;;
+let hd : 'a stream -> 'a = function Stream (a, _) -> a;;
+let tl : 'a stream -> 'a stream = function Stream (_, s) -> s ();;
+
 
 (* Types of the language *)
 type rivType =  RivInt | RivBool | RivFun of rivType * rivType | RivStream of rivType 
 
 (* Grammar of the language *)
 type rivTerm =
-    RmNum of int
+    RmNum of int stream
   | RmVar of string
   | RmUMinus of rivTerm
   | RmMinus of rivTerm * rivTerm
@@ -43,8 +44,8 @@ type rivTerm =
   (* Lambda: Return Type * Parameter Type * Parameter Name * Expression *)
   | RmLbd of rivType * rivType * string * rivTerm
 
-let rec isValue e = match e with
-  | RmNum(n) -> true
+let rec isValue e = print_string "isValue called\n"; match e with
+  | RmNum(s) -> true
   | RmLbd(rT,tT,x,e') -> true
   | _ -> false
 ;;
@@ -72,7 +73,7 @@ Env(gs) -> Env ( (str, thing) :: gs ) ;;
 (* Return True if the variable x is used in e *)
 let rec free e x = match e with
   RmVar(y) -> (x=y)
-  |RmNum(n) -> false
+  |RmNum(s) -> false
   |RmIf(t1,t2,t3) -> (free t1 x) || (free t2 x) || (free t3 x)
   |RmLessThan(e1,e2) -> (free e1 x) || (free e2 x)
   |RmLessEqualTo(e1,e2) -> (free e1 x) || (free e2 x)
@@ -95,9 +96,9 @@ let rename (s:string) = s^"'";;
 
 (* Substitute e1 as 'x' in e2 *)
 let rec subst e1 x e2 = match e2 with
-  RmVar(y) when (x=y) -> e1
+  | RmVar(y) when (x=y) -> e1
   | RmVar(y) -> RmVar(y)
-  | RmNum(n) -> RmNum(n)
+  | RmNum(s) -> RmNum(s)
   (* Substitute all the parameters *)
   | RmIf(b,e21,e22) -> RmIf( (subst e1 x b) , (subst e1 x e21) , (subst e1 x e22) )
   | RmLessThan(e21, e22) -> RmLessThan( (subst e1 x e21) , (subst e1 x e22) )
@@ -129,59 +130,67 @@ let rec subst e1 x e2 = match e2 with
 
 let rec eval1S e = match e with
   | (RmVar x) -> print_string "VARIABLE: "; print_string x; print_string "\n"; raise Terminated
-  | (RmNum n) -> print_string "NUMBER: "; print_int n; print_string "\n"; raise Terminated
+  | RmNum(Stream(n,_)) -> print_string "NUMBER: "; print_int n; print_string "\n"; raise Terminated
+  | RmNum(StreamEnd(n)) -> print_string "END: "; print_int n; print_string "\n"; raise Terminated
   | (RmLbd(rT,tT,y,e')) -> raise Terminated
 
   (* Conditionals *)
-  | (RmLessThan(RmNum(n),RmNum(m))) -> if n<m then RmNum(1) else RmNum(0);
-  | (RmLessThan(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmLessThan(RmNum(n),e2')
+  (* TODO Implement streams properly!*)
+  | (RmLessThan(RmNum(Stream(n,_)),RmNum(Stream(m,_)))) -> if n<m then RmNum(StreamEnd(1)) else RmNum(StreamEnd(0))
+  | (RmLessThan(RmNum(Stream(n,m)), e2))      -> let e2' = (eval1S e2) in RmLessThan(RmNum(Stream(n,m)),e2')
   | (RmLessThan(e1, e2))            -> let e1' = (eval1S e1) in RmLessThan(e1',e2)
 
-  | (RmLessEqualTo(RmNum(n),RmNum(m))) -> if n<=m then RmNum(1) else RmNum(0);
-  | (RmLessEqualTo(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmLessEqualTo(RmNum(n),e2')
+  (* TODO Implement streams properly!*)
+  | (RmLessEqualTo(RmNum(Stream(n,_)),RmNum(Stream(m,_)))) -> if n<=m then RmNum(StreamEnd(1)) else RmNum(StreamEnd(0));
+  | (RmLessEqualTo(RmNum(s), e2))      -> let e2' = (eval1S e2) in RmLessEqualTo(RmNum(s),e2')
   | (RmLessEqualTo(e1, e2))            -> let e1' = (eval1S e1) in RmLessEqualTo(e1',e2)
 
-  | (RmGreaterThan(RmNum(n),RmNum(m))) -> if n>m then RmNum(1) else RmNum(0);
-  | (RmGreaterThan(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmGreaterThan(RmNum(n),e2')
+  (* TODO Implement streams properly!*)
+  | (RmGreaterThan(RmNum(Stream(n,_)),RmNum(Stream(m,_)))) -> if n>m then RmNum(StreamEnd(1)) else RmNum(StreamEnd(0));
+  | (RmGreaterThan(RmNum(s), e2))      -> let e2' = (eval1S e2) in RmGreaterThan(RmNum(s),e2')
   | (RmGreaterThan(e1, e2))            -> let e1' = (eval1S e1) in RmGreaterThan(e1',e2)
 
-
-  | (RmGreaterEqualTo(RmNum(n),RmNum(m))) -> if n>=m then RmNum(1) else RmNum(0);
-  | (RmGreaterEqualTo(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmGreaterEqualTo(RmNum(n),e2')
+  (* TODO Implement streams properly!*)
+  | (RmGreaterEqualTo(RmNum(Stream(n,_)),RmNum(Stream(m,_)))) -> if n>=m then RmNum(StreamEnd(1)) else RmNum(StreamEnd(0));
+  | (RmGreaterEqualTo(RmNum(s), e2))      -> let e2' = (eval1S e2) in RmGreaterEqualTo(RmNum(s),e2')
   | (RmGreaterEqualTo(e1, e2))            -> let e1' = (eval1S e1) in RmGreaterEqualTo(e1',e2)
  
-  | (RmEqualTo(RmNum(n),RmNum(m))) -> print_string "EQUAL TO IS TOTALLY RUNNING\n"; if n=m then RmNum(1) else RmNum(0);
-  | (RmEqualTo(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmEqualTo(RmNum(n),e2')
+  (* TODO Implement streams properly!*)
+  | (RmEqualTo(RmNum(Stream(n,_)),RmNum(Stream(m,_)))) -> print_string "EQUAL TO IS TOTALLY RUNNING\n"; if n=m then RmNum(StreamEnd(1)) else RmNum(StreamEnd(0));
+  | (RmEqualTo(RmNum(s), e2))      -> let e2' = (eval1S e2) in RmEqualTo(RmNum(s),e2')
   | (RmEqualTo(e1, e2))            -> let e1' = (eval1S e1) in RmEqualTo(e1',e2) 
 
-  | (RmNotEqualTo(RmNum(n),RmNum(m))) -> if n<>m then RmNum(1) else RmNum(0);
-  | (RmNotEqualTo(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmNotEqualTo(RmNum(n),e2')
+  (* TODO Implement streams properly!*)
+  | (RmNotEqualTo(RmNum(Stream(n,_)),RmNum(Stream(m,_)))) -> if n<>m then RmNum(StreamEnd(1)) else RmNum(StreamEnd(0));
+  | (RmNotEqualTo(RmNum(s), e2))      -> let e2' = (eval1S e2) in RmNotEqualTo(RmNum(s),e2')
   | (RmNotEqualTo(e1, e2))            -> let e1' = (eval1S e1) in RmNotEqualTo(e1',e2)
 
   (* Operators *)
-  | (RmPlus(RmNum(n),RmNum(m))) -> RmNum(n+m)
-  | (RmPlus(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmPlus(RmNum(n),e2')
+  (* TODO Implement streams properly!*)
+  | (RmPlus(RmNum(Stream(n,_)),RmNum(Stream(m,_)))) -> RmNum(StreamEnd(n+m))
+  | (RmPlus(RmNum(Stream(n,_)), e2))      -> let e2' = (eval1S e2) in RmPlus(RmNum(StreamEnd(n)),e2')
   | (RmPlus(e1, e2))            -> let e1' = (eval1S e1) in RmPlus(e1', e2)
 
-  | (RmMinus(RmNum(n),RmNum(m))) -> RmNum(n-m)
-  | (RmMinus(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmMinus(RmNum(n),e2')
+  (* TODO Implement streams properly!*)
+  | (RmMinus(RmNum(Stream(n,_)),RmNum(Stream(m,_)))) -> RmNum(StreamEnd(n-m))
+  | (RmMinus(RmNum(Stream(n,_)), e2))      -> let e2' = (eval1S e2) in RmMinus(RmNum(StreamEnd(n)),e2')
   | (RmMinus(e1, e2))            -> let e1' = (eval1S e1) in RmMinus(e1', e2)
 
-  | (RmMultiply(RmNum(n),RmNum(m))) -> RmNum(n*m)
-  | (RmMultiply(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmMultiply(RmNum(n),e2')
+  (* TODO Implement streams properly!*)
+  | (RmMultiply(RmNum(Stream(n,_)),RmNum(Stream(m,_)))) -> RmNum(StreamEnd(n*m))
+  | (RmMultiply(RmNum(Stream(n,_)), e2))      -> let e2' = (eval1S e2) in RmMultiply(RmNum(StreamEnd(n)),e2')
   | (RmMultiply(e1, e2))            -> let e1' = (eval1S e1) in RmMultiply(e1', e2)
 
-  | (RmDivide(RmNum(n),RmNum(m))) -> RmNum(n/m)
-  | (RmDivide(RmNum(n), e2))      -> let e2' = (eval1S e2) in RmDivide(RmNum(n),e2')
+  (* TODO Implement streams properly!*)
+  | (RmDivide(RmNum(Stream(n,_)),RmNum(Stream(m,_)))) -> RmNum(StreamEnd(n/m))
+  | (RmDivide(RmNum(Stream(n,_)), e2))      -> let e2' = (eval1S e2) in RmDivide(RmNum(StreamEnd(n)),e2')
   | (RmDivide(e1, e2))            -> let e1' = (eval1S e1) in RmDivide(e1', e2)
 
-  | (RmUMinus(RmNum(n))) -> RmNum(-n)
+  (* TODO Implement streams properly!*)
+  | (RmUMinus(RmNum(Stream(n,_)))) -> RmNum(StreamEnd(-n))
   | (RmUMinus(e1))      -> let e1' = (eval1S e1) in RmUMinus(e1')
 
- (*TODO (Lloyd) MAKE EVERYTHING RETURN VALUES*)
-
- (* TODO eval A or B (not both) *)
-  | (RmIf(RmNum(n),e2,e3))        -> print_string "IF TEST: "; if n = 0 then e3 else e2
+  | (RmIf(RmNum(Stream(n,_)),e2,e3))        -> print_string "IF TEST: "; if n = 0 then e3 else e2
   | (RmIf(e1,e2,e3))              -> print_string "IF SIMPLIFY\n"; let e1' = (eval1S e1) in RmIf(e1',e2,e3)
 
   | (RmLet(tT,x,e1,e2)) when (isValue(e1)) -> subst e1 x e2
@@ -189,7 +198,7 @@ let rec eval1S e = match e with
 
   | (RmApp(RmLbd(rT,tT,x,e), e2)) when (isValue(e2)) -> subst e2 x e
   | (RmApp(RmLbd(rT,tT,x,e), e2))                    -> let e2' = (eval1S e2) in RmApp( RmLbd(rT,tT,x,e) , e2')
-  | (RmApp(e1,e2))                                -> let e1' = (eval1S e1) in RmApp(e1',e2) 
+  | (RmApp(e1,e2))                                -> let e1' = (eval1S e1) in RmApp(e1',e2)
 
   | _ -> print_string "NO MATCH, RAISING TERMINATED\n";raise Terminated ;;
 
@@ -206,7 +215,7 @@ let rec type_to_string tT = match tT with
 (* FIXME When type checker working make this print out streams *)
 
 let print_res res = match res with
-  | (RmNum i) -> print_int i ; print_string " : Int"
+  | RmNum (Stream(i,_)) -> print_int i ; print_string " : Int"
   (* | (RmLbd(rT,tT,x,e)) -> print_string("Function : " ^ type_to_string( typeProg (res) )) *)
   | _ -> raise NonBaseTypeResult
 ;;
