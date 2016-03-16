@@ -162,15 +162,15 @@ let rec typeOf env e = match e with
                     |_ -> raise TypeError
     )
 
-
+(*
   |RmIndex(e1,e2) -> 
     ( let ty1 = typeOf env e1 in
       let ty2 = typeOf env e2 in
              match ty1 with RivInt
-
 , RivInt -> RivInt 
                     |_ -> raise TypeError
-
+    )
+*)
   |RmIf (e1,e2,e3) -> (
     let ty1 = typeOf env e1 in 
       match ty1 with 
@@ -210,7 +210,7 @@ let rec typeOf env e = match e with
        )
     )
 
-  |RmAbs (x,tT,e) ->  RivFun(tT, typeOf (addBinding env x tT) e) 
+  |RmLbd (x,tT,y,e) ->  RivFun(tT, typeOf (addBinding env x tT) e) 
 
 let typeProg e = typeOf (Env []) e ;;
 
