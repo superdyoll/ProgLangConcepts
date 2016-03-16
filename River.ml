@@ -171,6 +171,50 @@ let rec typeOf env e = match e with
 , RivInt -> RivInt 
                     |_ -> raise TypeError
 
+  |RmIf (e1,e2,e3) -> (
+    let ty1 = typeOf env e1 in 
+      match ty1 with 
+         RivBool -> (
+                  let ty1 = typeOf env e2 in 
+		  let ty2 = typeOf env e3 in 
+		   (match (ty1=ty2) with 
+		      true -> ty1 
+		     |false -> raise TypeError 
+		   )
+	)
+       |_ -> raise TypeError 
+  )
+
+  |RmLet (x, tT, e1, e2) -> 
+    (
+      let ty1 = typeOf env e1 in
+      let ty2 = typeOf (addBinding env x tT) e2 in 
+         (match (ty1 = tT) with 
+            true -> ty2
+	         |false -> raise TypeError
+	 )
+    )
+
+  |RmApp (e1,e2) -> 
+    ( let ty1 = typeOf env e1 in 
+      let ty2 = typeOf env e2 in 
+       ( 
+        match ty1 with 
+         RivFun(tT,tU) ->  
+            (
+	     match tT = ty2 with
+             true -> tT 
+            |false -> raise TypeError
+	    )
+	| _ -> raise TypeError 
+       )
+    )
+
+  |RmAbs (x,tT,e) ->  RivFun(tT, typeOf (addBinding env x tT) e) 
+
+let typeProg e = typeOf (Env []) e ;;
+
+
 (* Return True if the variable x is used in e *)
 let rec free e x = match e with
   RmVar(y) -> (x=y)
