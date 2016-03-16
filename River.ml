@@ -14,12 +14,13 @@ let tl : 'a stream -> 'a stream = function Stream (_, s) -> s ();;
 
 
 (* Types of the language *)
-type rivType =  RivInt | RivBool | RivFun of rivType * rivType | RivStream of rivType 
+type rivType =  RivUnit | RivInt | RivBool | RivFun of rivType * rivType | RivStream of rivType 
 
 (* Grammar of the language *)
 type rivTerm =
     RmNum of int
   | RmVar of string
+  | RmUnit of unit
   | RmUMinus of rivTerm
   | RmMinus of rivTerm * rivTerm
   | RmApp of rivTerm * rivTerm
@@ -43,10 +44,14 @@ type rivTerm =
   | RmLet of rivType * string * rivTerm * rivTerm
   (* Lambda: Return Type * Parameter Type * Parameter Name * Expression *)
   | RmLbd of rivType * rivType * string * rivTerm
+  (* Empty Lambda: Return Type * Expression *)
+  | RmLbdEmpty of rivType * rivTerm
 
 let rec isValue e = print_string "isValue called\n"; match e with
   | RmNum(s) -> true
+  | RmUnit() -> true
   | RmLbd(rT,tT,x,e') -> true
+  | RmLbdEmpty(rT,e') -> true
   | _ -> false
 ;;
 
@@ -72,7 +77,9 @@ Env(gs) -> Env ( (str, thing) :: gs ) ;;
 
 (* The type checking function itself *) 
 let rec typeOf env e = match e with 
-   RmNum (n) -> RivInt
+   RmUnit () -> RivUnit
+
+  |RmNum (n) -> RivInt
 
   |RmVar (x) ->  (try lookup env x with LookupError -> raise TypeError)
 
@@ -210,16 +217,19 @@ let rec typeOf env e = match e with
        )
     )
 
-  |RmLbd (rT,tT,x,e) ->  RivFun(tT, typeOf (addBinding env x tT) e) 
+  |RmLbd (rT,tT,x,e) ->  RivFun(rT, typeOf (addBinding env x tT) e)
+  |RmLbdEmpty (rT,e) ->  RivFun(rT, typeOf env e) 
 
 let typeProg e = typeOf (Env []) e ;;
 
 let rename (s:string) = s^"'";;
 
 let rec eval1M env e = match e with
+  | (RmUnit()) -> print_string "UNIT \n"; raise Terminated
   | (RmVar x) -> print_string "VARIABLE: "; print_string x; print_string "\n"; (try ((lookup env x), env) with LookupError -> raise UnboundVariableError)
   | (RmNum n) -> print_string "NUMBER: "; print_int n; print_string "\n"; raise Terminated
   | (RmLbd(rT,tT,y,e')) -> raise Terminated
+  | (RmLbdEmpty(rT,e')) -> raise Terminated
 
   (* Conditionals *)
   | (RmLessThan(RmNum(n),RmNum(m))) -> ((if n<m then RmNum(1) else RmNum(0)), env)
@@ -274,8 +284,13 @@ let rec eval1M env e = match e with
   | (RmLet(tT,x,e1,e2)) when (isValue(e1)) -> (e2, addBinding env x e1)
   | (RmLet(tT,x,e1,e2))                    -> let (e1', env') = (eval1M (addBinding env x e1) e1) in (RmLet(tT,x,e1',e2), env')
 
+  (* Application *)
   | (RmApp(RmLbd(rT,tT,x,e), e2)) when (isValue(e2)) -> (e, addBinding env x e2)
   | (RmApp(RmLbd(rT,tT,x,e), e2))                    -> let (e2',env') = (eval1M env e2) in (RmApp( RmLbd(rT,tT,x,e) , e2'), env')
+
+  | (RmApp(RmLbdEmpty(rT,e), e2)) when (isValue(e2)) -> (e, env)
+  | (RmApp(RmLbdEmpty(rT,e), e2))                    -> let (e2',env') = (eval1M env e2) in (RmApp(RmLbdEmpty(rT,e),e2'), env')
+
   | (RmApp(e1,e2))                                -> let (e1',env') = (eval1M env e1) in (RmApp(e1',e2), env') 
 
   | _ -> print_string "NO MATCH, RAISING TERMINATED\n";raise Terminated ;;
@@ -286,6 +301,7 @@ let evalProg e = evalloop (Env[]) e ;;
 
 
 let rec type_to_string tT = match tT with
+  | RivUnit -> "Unit"
   | RivInt -> "Int"
   | RivFun(tT1,tT2) -> "( "^type_to_string(tT1)^" -> "^type_to_string(tT2)^" )" 
 ;;
@@ -294,6 +310,7 @@ let rec type_to_string tT = match tT with
 
 let print_res res = match res with
   | RmNum (i) -> print_int i ; print_string " : Int"
+  | RmUnit () -> print_string " Unit"
   (* | (RmLbd(rT,tT,x,e)) -> print_string("Function : " ^ type_to_string( typeProg (res) )) *)
   | _ -> raise NonBaseTypeResult
 ;;

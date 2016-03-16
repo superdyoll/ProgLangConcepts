@@ -43,11 +43,13 @@ parser_main: line EOF { $1 };
 
 line: expr SEMICOLON { $1 };
 
-type_spec: 
+type_spec:
+    | LPAREN RPAREN { RivUnit } 
     | ITYPE { RivInt }
-    | STYPE LT type_spec GT {RivStream($3)}
+    | STYPE LT type_spec GT { RivStream($3) }
     | type_spec LTYPE LPAREN type_spec RPAREN { RivFun($1, $4) }
-    | LPAREN type_spec RPAREN {$2}
+    | type_spec LTYPE LPAREN RPAREN { RivFun($1, RivUnit) }
+    | LPAREN type_spec RPAREN { $2 }
 ;
 
 expr: 
@@ -57,6 +59,7 @@ expr:
  | IF LPAREN expr RPAREN LBRACE expr RBRACE ELSE LBRACE expr RBRACE  { RmIf ($3, $6, $10) }
  /* Lambdas */
  | type_spec LTYPE LPAREN type_spec IDENT RPAREN LBRACE expr RBRACE {RmLbd ($1, $4, $5, $8) }
+ | type_spec LTYPE LPAREN RPAREN LBRACE expr RBRACE { RmLbdEmpty($1,$6) }
 /* Sections */
 | IDENT LSQ COLON expr RSQ     { RmSectionStart($1, $4) }
  | IDENT LSQ expr COLON expr RSQ { RmSection($1, $3, $5) }
@@ -64,6 +67,7 @@ expr:
  | IDENT LSQ expr RSQ          { RmIndex($1, $3) }
 /* Apply */
  | expr LPAREN expr RPAREN     { RmApp ($1, $3) }
+ | expr LPAREN RPAREN          { RmApp ($1, RmUnit())}
  | expr PLUS expr              { RmPlus ($1, $3) }
  | expr MINUS expr             { RmMinus ($1, $3) }
  | expr MULTIPLY expr          { RmMultiply ($1, $3) }
