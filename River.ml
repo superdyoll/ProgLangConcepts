@@ -70,6 +70,57 @@ let rec lookup env str = match env with
 let addBinding env str thing = match env with
 Env(gs) -> Env ( (str, thing) :: gs ) ;;
 
+(* The type checking function itself *) 
+let rec typeOf env e = match e with 
+   RmNum (n) -> RivInt
+
+  |RmVar (x) ->  (try lookup env x with LookupError -> raise TypeError)
+
+  |RmUMinus (e1) -> 
+    ( match (typeOf env e1) with
+	RivInt -> RivInt
+      | _ -> raise TypeError
+    )
+
+  |RmMinus(e1,e2) -> 
+    (
+     match (typeOf env e1) , (typeOf env e2) with 
+             RivInt, RivInt -> RivInt 
+                    |_ -> raise TypeError
+    )
+
+  |RmPlus(e1,e2) -> 
+    (
+     match (typeOf env e1) , (typeOf env e2) with 
+             RivInt, RivInt -> RivInt 
+                    |_ -> raise TypeError
+    )
+
+  |RmMultiply(e1,e2) -> 
+    (
+     match (typeOf env e1) , (typeOf env e2) with 
+             RivInt, RivInt -> RivInt 
+                    |_ -> raise TypeError
+    )
+
+  |RmDivide(e1,e2) -> 
+    (
+     match (typeOf env e1) , (typeOf env e2) with 
+             RivInt, RivInt -> RivInt 
+                    |_ -> raise TypeError
+    )
+
+
+  |RmLessThan (e1,e2) -> 
+    ( match (typeOf env e1) , (typeOf env e2) with 
+        RivInt, RivInt -> RivInt
+      | _ -> raise TypeError
+    )
+
+  |RmGreaterThan (e1,e2) -> 
+    ( match (typeOf env e1) , (typeOf env e2) with 
+        RivInt, RivInt -> RivInt
+
 (* Return True if the variable x is used in e *)
 let rec free e x = match e with
   RmVar(y) -> (x=y)
