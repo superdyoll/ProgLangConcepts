@@ -214,29 +214,6 @@ let rec typeOf env e = match e with
 
 let typeProg e = typeOf (Env []) e ;;
 
-
-(* Return True if the variable x is used in e *)
-let rec free e x = match e with
-  RmVar(y) -> (x=y)
-  |RmNum(s) -> false
-  |RmIf(t1,t2,t3) -> (free t1 x) || (free t2 x) || (free t3 x)
-  |RmLessThan(e1,e2) -> (free e1 x) || (free e2 x)
-  |RmLessEqualTo(e1,e2) -> (free e1 x) || (free e2 x)
-  |RmGreaterThan(e1,e2) -> (free e1 x) || (free e2 x)
-  |RmGreaterEqualTo(e1,e2) -> (free e1 x) || (free e2 x)
-  |RmEqualTo(e1,e2) -> (free e1 x) || (free e2 x)
-  |RmPlus(e1,e2) -> (free e1 x) || (free e2 x)
-  |RmMinus(e1,e2) -> (free e1 x) || (free e2 x)
-  |RmMultiply(e1,e2) -> (free e1 x) || (free e2 x)
-  |RmDivide(e1,e2) -> (free e1 x) || (free e2 x)
-  |RmUMinus(e1) -> (free e1 x)
-  |RmApp(e1,e2) -> (free e1 x) || (free e2 x)
-  |RmLbd(rT,tT,y,e1) when (x=y) -> false
-  |RmLbd(rT,tT,y,e1)            -> (free e1 x)
-  |RmLet(tT,y,e1,e2) when (x=y) -> (free e1 x) 
-  |RmLet(tT,y,e1,e2)            -> (free e1 x) || (free e2 x)
-;;
-
 let rename (s:string) = s^"'";;
 
 let rec eval1M env e = match e with
