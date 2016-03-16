@@ -8,17 +8,18 @@ exception NonBaseTypeResult;;
 open Printf;;
 
 (* Stream implementation *)
-type 'a stream = Stream of 'a * (unit -> 'a stream) | StreamEnd of 'a;;
+type 'a stream = Stream of 'a * (unit -> 'a stream) | StreamEnd;;
 let hd : 'a stream -> 'a = function Stream (a, _) -> a;;
 let tl : 'a stream -> 'a stream = function Stream (_, s) -> s ();;
 
 
 (* Types of the language *)
-type rivType =  RivUnit | RivInt | RivBool | RivFun of rivType * rivType | RivStream of rivType 
+type rivType =  RivUnit | RivInt | RivBool | RivFun of rivType * rivType | RivStream of rivType
 
 (* Grammar of the language *)
 type rivTerm =
-    RmNum of int
+  | RmNum of int
+  | RmStream of rivTerm stream
   | RmVar of string
   | RmUnit of unit
   | RmUMinus of rivTerm
@@ -228,9 +229,11 @@ let rec eval1M env e = match e with
   | (RmUnit()) -> print_string "UNIT \n"; raise Terminated
   | (RmVar x) -> print_string "VARIABLE: "; print_string x; print_string "\n"; (try ((lookup env x), env) with LookupError -> raise UnboundVariableError)
   | (RmNum n) -> print_string "NUMBER: "; print_int n; print_string "\n"; raise Terminated
-  | (RmLbd(rT,tT,y,e')) -> raise Terminated
-  | (RmLbdEmpty(rT,e')) -> raise Terminated
+  | (RmLbd(rT,tT,y,e')) -> print_string "LAMBDA"; raise Terminated
+  | (RmLbdEmpty(rT,e')) -> print_string "EMPTY LAMBDA"; raise Terminated
 
+  (* If we're evaluating a stream, return its first value as a number *)
+  | (RmStream Stream(n,_)) -> print_string "Parsing stream"; (n, env)
   (* Conditionals *)
   | (RmLessThan(RmNum(n),RmNum(m))) -> ((if n<m then RmNum(1) else RmNum(0)), env)
   | (RmLessThan(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmLessThan(RmNum(n),e2'),env')
@@ -276,7 +279,7 @@ let rec eval1M env e = match e with
   | (RmUMinus(RmNum(n))) -> (RmNum(-n), env)
   | (RmUMinus(e1))      -> let (e1',env') = (eval1M env e1) in (RmUMinus(e1'), env')
 
-  (* Tenary *)
+  (* Ternary *)
   | (RmIf(RmNum(1),e1,e2))        -> (e1, env)
   | (RmIf(RmNum(0),e1,e2))        -> (e2, env)
   | (RmIf(b,e1,e2))               -> let (b',env') = (eval1M env b) in (RmIf(b',e1,e2), env')
