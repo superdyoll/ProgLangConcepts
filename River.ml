@@ -185,7 +185,7 @@ let rec typeOf env e = match e with
        |_ -> raise TypeError 
   )
 
-  |RmLet (x, tT, e1, e2) -> 
+  |RmLet (tT, x, e1, e2) -> 
     (
       let ty1 = typeOf env e1 in
       let ty2 = typeOf (addBinding env x tT) e2 in 
@@ -210,7 +210,7 @@ let rec typeOf env e = match e with
        )
     )
 
-  |RmLbd (x,tT,y,e) ->  RivFun(tT, typeOf (addBinding env x tT) e) 
+  |RmLbd (rT,tT,x,e) ->  RivFun(tT, typeOf (addBinding env x tT) e) 
 
 let typeProg e = typeOf (Env []) e ;;
 
