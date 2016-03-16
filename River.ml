@@ -94,40 +94,6 @@ let rec free e x = match e with
 
 let rename (s:string) = s^"'";;
 
-(* Substitute e1 as 'x' in e2 *)
-let rec subst e1 x e2 = match e2 with
-  | RmVar(y) when (x=y) -> e1
-  | RmVar(y) -> RmVar(y)
-  | RmNum(s) -> RmNum(s)
-  (* Substitute all the parameters *)
-  | RmIf(b,e21,e22) -> RmIf( (subst e1 x b) , (subst e1 x e21) , (subst e1 x e22) )
-  | RmLessThan(e21, e22) -> RmLessThan( (subst e1 x e21) , (subst e1 x e22) )
-  | RmLessEqualTo(e21, e22) -> RmLessEqualTo( (subst e1 x e21) , (subst e1 x e22) )
-  | RmGreaterThan(e21, e22) -> RmGreaterThan( (subst e1 x e21) , (subst e1 x e22) )
-  | RmGreaterEqualTo(e21, e22) -> RmLessEqualTo( (subst e1 x e21) , (subst e1 x e22) )
-  | RmEqualTo(e21, e22) -> RmEqualTo( (subst e1 x e21) , (subst e1 x e22) )
-  | RmNotEqualTo(e21, e22) -> RmNotEqualTo( (subst e1 x e21) , (subst e1 x e22) )
-  | RmPlus(e21, e22) -> RmPlus( (subst e1 x e21) , (subst e1 x e22) )
-  | RmMinus(e21, e22) -> RmMinus( (subst e1 x e21) , (subst e1 x e22) )
-  | RmMultiply(e21, e22) -> RmMultiply( (subst e1 x e21) , (subst e1 x e22) )
-  | RmDivide(e21, e22) -> RmDivide( (subst e1 x e21) , (subst e1 x e22) )
-  | RmUMinus(e21) -> RmUMinus( (subst e1 x e21) )
-  | RmApp(e21, e22) -> RmApp( (subst e1 x e21) , (subst e1 x e22) )
-
-  | RmLbd(rT,tT,y,e21) when (x=y) -> RmLbd(rT,tT,y,e21)
-
-  (*if the variable passed into the lambda is the value, substitute it*)
-  | RmLbd(rT,tT,y,e21) when (not (free e1 y)) -> RmLbd(rT,tT,y,subst e1 x e21)
-
-  (* Rename if it isn't free *)
-  | RmLbd(rT,tT,y,e21) when (free e1 y) -> let yy = rename y in subst e1 x (RmLbd(rT, tT, yy, (subst (RmVar(yy)) y e21)))
-
-  | RmLet(tT,y,e21,e22) when (x=y) -> RmLet(tT,y,e21,e22)
-  | RmLet(tT,y,e21,e22) when (not(free e1 y)) -> RmLet(tT, y, subst e1 x e21 , subst e1 x e22)
-  (* Rename a variable if it isn't free *)
-  | RmLet(tT,y,e21,e22) when ((free e1 y)) -> let yy = rename y in subst e1 x ( RmLet(tT, yy, subst (RmVar(yy)) y e21 , subst (RmVar(yy)) y e22) )
-;;
-
 let rec eval1M env e = match e with
   | (RmVar x) -> print_string "VARIABLE: "; print_string x; print_string "\n"; (try ((lookup env x), env) with LookupError -> raise UnboundVariableError)
   | (RmNum n) -> print_string "NUMBER: "; print_int n; print_string "\n"; raise Terminated
