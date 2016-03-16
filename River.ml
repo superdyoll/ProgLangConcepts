@@ -229,8 +229,8 @@ let rename (s:string) = s^"'";;
 let rec print_res res = match res with
   | RmNum (i) -> print_int i ; print_string " : Int "
   | RmUnit () -> print_string " : Unit "
-  | RmStream (Stream(n,e)) -> print_res n; match e() with Stream(m,me) -> print_res print_string " : Stream"
-  | RmStream (StreamEnd()) -> print_string " : StreamEnd"
+  | RmStream (Stream(n,e)) -> print_res n; match e() with Stream(m,me) -> print_res m; print_string " : Stream"
+  | StreamEnd() -> print_string " : StreamEnd"
   (* | (RmLbd(rT,tT,x,e)) -> print_string("Function : " ^ type_to_string( typeProg (res) )) *)
   | _ -> raise NonBaseTypeResult
 ;;
@@ -275,16 +275,16 @@ let rec eval1M env e = match e with
   (* Operators *)
   | (RmPlus(RmNum(n),RmNum(m))) -> (RmNum(n+m) , env)
   | (RmPlus(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmPlus(RmNum(n),e2'), env')
-  | (RmPlus(RmStream(Stream(n,ne)), RmStream(Stream(m,me)))) -> 
+  | (RmPlus(RmStream(n), RmStream(m))) -> 
   let rec recurse x y = match (x,y) with 
     | (Stream(a,ae),Stream(b,be)) -> 
        Stream(
         (let (e,_) = (eval1M env (RmPlus(a,b))) in e),
         function () -> recurse (ae()) (be())
       )
-    | (StreamEnd(),_) 
+    | (StreamEnd(),_)
     | (_,StreamEnd()) -> StreamEnd()
-  in (RmStream(recurse (ne()) (me())), env)
+  in (RmStream(recurse n m), env)
   | (RmPlus(RmStream(s), e2)) -> let (e2',env') = (eval1M env e2) in (RmPlus(RmStream(s),e2'), env')
   | (RmPlus(e1, e2))            -> let (e1',env') = (eval1M env e1) in (RmPlus(e1', e2), env')
 
@@ -330,7 +330,7 @@ let evalProg e = evalloop (Env[]) e ;;
 let rec type_to_string tT = match tT with
   | RivUnit -> "Unit"
   | RivInt -> "Int"
-  | RivFun(tT1,tT2) -> "( "^type_to_string(tT1)^" -> "^type_to_string(tT2)^" )" 
+  | RivFun(tT1,tT2) -> "( "^type_to_string(tT1)^" -> "^type_to_string(tT2)^" )"
 ;;
 
 (* FIXME When type checker working make this print out streams *)
