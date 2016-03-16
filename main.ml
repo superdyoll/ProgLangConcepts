@@ -18,8 +18,8 @@ parse [] setProg usage ;
 let parsedProg = parseProgram !arg in
 print_string "Program Parsed" ; print_newline();
 (* Run Type Checker *)
-(* let _ = typeProg parsedProg in
-let () = print_string "Program Type Checked" ; print_newline() in *)
+let _ = typeProg parsedProg in
+let () = print_string "Program Type Checked" ; print_newline() in
 let result1 = evalProg parsedProg in 
 print_string "Program Evaluated using substitution semantics to ==> " ; print_res result1 ; print_newline();
 flush stdout

@@ -82,7 +82,7 @@ expr:
  | expr DOT expr               { RmAppend($1, $3) } /* . (INT * INT -> INT) */
  | LPAREN expr RPAREN          { $2 }
  | IDENT                       { RmVar $1 }
- | INT                         { RmStream(Stream(RmNum($1), function () -> StreamEnd)) }
+ | INT                         { RmStream(RivInt,Stream(RmNum($1), function () -> StreamEnd)) }
  | LPAREN RPAREN               { RmUnit() }
  | MINUS expr                  { RmUMinus ($2) }
 ;

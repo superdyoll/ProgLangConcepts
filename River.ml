@@ -1,9 +1,9 @@
-exception LookupError ;;
-exception TypeError ;;
-exception UnboundVariableError;;
-exception Terminated ;;
-exception StuckTerm ;;
-exception NonBaseTypeResult;;
+exception LookupError of string ;;
+exception TypeError of string;;
+exception UnboundVariableError of string;;
+exception Terminated of string;;
+exception StuckTerm of string;;
+exception NonBaseTypeResult of string;;
 
 open Printf;;
 
@@ -18,7 +18,7 @@ type rivType =  RivUnit | RivInt | RivFun of rivType * rivType | RivStream of ri
 (* Grammar of the language *)
 type rivTerm =
   | RmNum of int
-  | RmStream of rivTerm stream
+  | RmStream of rivType * rivTerm stream
   | RmVar of string
   | RmUnit of unit
   | RmUMinus of rivTerm
@@ -62,7 +62,7 @@ type valContext = rivTerm context
 
 (* Function to look up the type of a string name variable in a type environment *)
 let rec lookup env str = match env with
-   Env [] -> raise LookupError
+   Env [] -> raise (LookupError "Empty Environment")
   |Env ((name,thing) :: gs) ->
   (
     match (name = str) with
@@ -81,77 +81,84 @@ let rec typeOf env e = match e with
 
   |RmNum (n) -> RivInt
 
-  |RmVar (x) ->  (try lookup env x with LookupError -> raise TypeError)
+  |RmVar (x) ->  (try lookup env x with LookupError _ -> raise (TypeError "Variable"))
+
+  |RmStream (tT, Stream(e,_)) ->
+    ( match (typeOf env e) with
+        RivInt -> RivInt
+      | RivStream(tT) -> RivStream(tT)
+      | _ -> raise (TypeError "Stream")
+    )
 
   |RmUMinus (e1) -> 
     ( match (typeOf env e1) with
 	RivInt -> RivInt
-      | _ -> raise TypeError
+      | _ -> raise (TypeError "UMinus")
     )
 
   |RmMinus(e1,e2) -> 
     (
      match (typeOf env e1) , (typeOf env e2) with 
              RivInt, RivInt -> RivInt 
-                    |_ -> raise TypeError
+                    |_ -> raise (TypeError "Minus")
     )
 
   |RmPlus(e1,e2) -> 
     (
      match (typeOf env e1) , (typeOf env e2) with 
              RivInt, RivInt -> RivInt 
-                    |_ -> raise TypeError
+                    |_ -> raise (TypeError "Plus")
     )
 
   |RmMultiply(e1,e2) -> 
     (
      match (typeOf env e1) , (typeOf env e2) with 
              RivInt, RivInt -> RivInt 
-                    |_ -> raise TypeError
+                    |_ -> raise (TypeError "Multiply")
     )
 
   |RmDivide(e1,e2) -> 
     (
      match (typeOf env e1) , (typeOf env e2) with 
              RivInt, RivInt -> RivInt 
-                    |_ -> raise TypeError
+                    |_ -> raise (TypeError "Divide")
     )
 
 
   |RmLessThan (e1,e2) -> 
     ( match (typeOf env e1) , (typeOf env e2) with 
         RivInt, RivInt -> RivInt
-      | _ -> raise TypeError
+      | _ -> raise (TypeError "Less Than")
     )
 
   |RmGreaterThan (e1,e2) -> 
     ( match (typeOf env e1) , (typeOf env e2) with 
         RivInt, RivInt -> RivInt
-      | _ -> raise TypeError
+      | _ -> raise (TypeError "Greater Than")
     )
 
   |RmGreaterEqualTo (e1,e2) -> 
     ( match (typeOf env e1) , (typeOf env e2) with 
         RivInt, RivInt -> RivInt
-      | _ -> raise TypeError
+      | _ -> raise (TypeError "Greater Equal To")
     )
 
   |RmLessEqualTo (e1,e2) -> 
     ( match (typeOf env e1) , (typeOf env e2) with 
         RivInt, RivInt -> RivInt
-      | _ -> raise TypeError
+      | _ -> raise (TypeError "Less Equal To")
     )
 
   |RmNotEqualTo (e1,e2) -> 
     ( match (typeOf env e1) , (typeOf env e2) with 
         RivInt, RivInt -> RivInt
-      | _ -> raise TypeError
+      | _ -> raise (TypeError "Not Equal To")
     )
 
   |RmEqualTo (e1,e2) -> 
     ( match (typeOf env e1) , (typeOf env e2) with 
         RivInt, RivInt -> RivInt
-      | _ -> raise TypeError
+      | _ -> raise (TypeError "Equal To")
     )
 
 
@@ -159,14 +166,14 @@ let rec typeOf env e = match e with
     (
      match (typeOf env e1) , (typeOf env e2) with 
              RivInt, RivInt -> RivInt 
-                    |_ -> raise TypeError
+                    |_ -> raise (TypeError "Cons")
     )
 
   |RmAppend(e1,e2) -> 
     (
      match (typeOf env e1) , (typeOf env e2) with 
              RivInt, RivInt -> RivInt 
-                    |_ -> raise TypeError
+                    |_ -> raise (TypeError "Append")
     )
 
 (*
@@ -186,10 +193,10 @@ let rec typeOf env e = match e with
 		  let ty2 = typeOf env e3 in 
 		   (match (ty1=ty2) with 
 		      true -> ty1 
-		     |false -> raise TypeError 
+		     |false -> raise (TypeError "If: Return expressions not of same type")
 		   )
 	)
-       |_ -> raise TypeError 
+       |_ -> raise (TypeError "If:Conditional not of type RivInt") 
   )
 
   |RmLet (tT, x, e1, e2) -> 
@@ -198,7 +205,7 @@ let rec typeOf env e = match e with
       let ty2 = typeOf (addBinding env x tT) e2 in 
          (match (ty1 = tT) with 
             true -> ty2
-	         |false -> raise TypeError
+	         |false -> raise (TypeError "Let")
 	 )
     )
 
@@ -211,9 +218,9 @@ let rec typeOf env e = match e with
             (
 	     match tT = ty2 with
              true -> tT 
-            |false -> raise TypeError
+            |false -> raise (TypeError "Apply: Expressions not of same type")
 	    )
-	| _ -> raise TypeError 
+	| _ -> raise (TypeError "Apply: Not of type function")
        )
     )
 
@@ -225,14 +232,14 @@ let typeProg e = typeOf (Env []) e ;;
 let rename (s:string) = s^"'";;
 
 let rec eval1M env e = match e with
-  | (RmUnit()) -> print_string "UNIT \n"; raise Terminated
-  | (RmVar x) -> print_string "VARIABLE: "; print_string x; print_string "\n"; (try ((lookup env x), env) with LookupError -> raise UnboundVariableError)
-  | (RmNum n) -> print_string "NUMBER: "; print_int n; print_string "\n"; raise Terminated
-  | (RmLbd(rT,tT,y,e')) -> print_string "LAMBDA"; raise Terminated
-  | (RmLbdEmpty(rT,e')) -> print_string "EMPTY LAMBDA"; raise Terminated
+  | (RmUnit()) -> print_string "UNIT \n"; raise (Terminated "Unit")
+  | (RmVar x) -> print_string "VARIABLE: "; print_string x; print_string "\n"; (try ((lookup env x), env) with LookupError _ -> raise (UnboundVariableError "Variable not bound"))
+  | (RmNum n) -> print_string "NUMBER: "; print_int n; print_string "\n"; raise (Terminated "Number")
+  | (RmLbd(rT,tT,y,e')) -> print_string "LAMBDA"; raise (Terminated "Lambda")
+  | (RmLbdEmpty(rT,e')) -> print_string "EMPTY LAMBDA"; raise (Terminated "Unit Lambda")
 
   (* If we're evaluating a stream, return its first value as a number *)
-  | (RmStream Stream(n,_)) -> print_string "Parsing stream"; (n, env)
+  | (RmStream (tT, Stream(n,_))) -> print_string "Parsing stream"; (n, env)
   (* Conditionals *)
   | (RmLessThan(RmNum(n),RmNum(m))) -> ((if n<m then RmNum(1) else RmNum(0)), env)
   | (RmLessThan(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmLessThan(RmNum(n),e2'),env')
@@ -295,10 +302,10 @@ let rec eval1M env e = match e with
 
   | (RmApp(e1,e2))                                -> let (e1',env') = (eval1M env e1) in (RmApp(e1',e2), env') 
 
-  | _ -> print_string "NO MATCH, RAISING TERMINATED\n";raise Terminated ;;
+  | _ -> print_string "NO MATCH, RAISING TERMINATED\n";raise (Terminated "No match");;
 
 
-let rec evalloop env e = try ( let (e',env') = (eval1M env e) in (evalloop env' e')) with Terminated -> if (isValue e) then e else raise StuckTerm ;;
+let rec evalloop env e = try ( let (e',env') = (eval1M env e) in (evalloop env' e')) with Terminated _ -> if (isValue e) then e else raise (StuckTerm "Eval loop stuck on term") ;;
 let evalProg e = evalloop (Env[]) e ;;
 
 
@@ -313,6 +320,6 @@ let rec type_to_string tT = match tT with
 let print_res res = match res with
   | RmNum (i) -> print_int i ; print_string " : Int"
   | RmUnit () -> print_string " Unit"
-  (* | (RmLbd(rT,tT,x,e)) -> print_string("Function : " ^ type_to_string( typeProg (res) )) *)
-  | _ -> raise NonBaseTypeResult
+  | (RmLbd(rT,tT,x,e)) -> print_string("Function : " ^ type_to_string( typeProg (res) ))
+  | _ -> raise (NonBaseTypeResult "Not able to output result as string")
 ;;
