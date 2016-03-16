@@ -272,7 +272,7 @@ let rec eval1M env e = match e with
   | (RmIf(b,e1,e2))               -> let (b',env') = (eval1M env b) in (RmIf(b',e1,e2), env')
 
   | (RmLet(tT,x,e1,e2)) when (isValue(e1)) -> (e2, addBinding env x e1)
-  | (RmLet(tT,x,e1,e2))                    -> let (e1', env') = (eval1M env e1) in (RmLet(tT,x,e1',e2), env')
+  | (RmLet(tT,x,e1,e2))                    -> let (e1', env') = (eval1M (addBinding env x e1) e1) in (RmLet(tT,x,e1',e2), env')
 
   | (RmApp(RmLbd(rT,tT,x,e), e2)) when (isValue(e2)) -> (e, addBinding env x e2)
   | (RmApp(RmLbd(rT,tT,x,e), e2))                    -> let (e2',env') = (eval1M env e2) in (RmApp( RmLbd(rT,tT,x,e) , e2'), env')
