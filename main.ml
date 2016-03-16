@@ -21,5 +21,5 @@ print_string "Program Parsed" ; print_newline();
 (* let _ = typeProg parsedProg in
 let () = print_string "Program Type Checked" ; print_newline() in *)
 let result1 = evalProg parsedProg in 
-print_string "Program Evaluated using substitution semantics to ==> " ; print_res result1 ; print_newline();
+print_string "Program Evaluated using Machine semantics to ==> " ; print_res result1 ; print_newline();
 flush stdout

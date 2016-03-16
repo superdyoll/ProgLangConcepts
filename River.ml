@@ -8,7 +8,7 @@ exception NonBaseTypeResult;;
 open Printf;;
 
 (* Stream implementation *)
-type 'a stream = Stream of 'a * (unit -> 'a stream) | StreamEnd;;
+type 'a stream = Stream of 'a * (unit -> 'a stream) | StreamEnd of unit;;
 let hd : 'a stream -> 'a = function Stream (a, _) -> a;;
 let tl : 'a stream -> 'a stream = function Stream (_, s) -> s ();;
 
@@ -51,6 +51,7 @@ type rivTerm =
 let rec isValue e = print_string "isValue called\n"; match e with
   | RmNum(s) -> true
   | RmUnit() -> true
+  | RmStream(s) -> true
   | RmLbd(rT,tT,x,e') -> true
   | RmLbdEmpty(rT,e') -> true
   | _ -> false
@@ -225,15 +226,27 @@ let typeProg e = typeOf (Env []) e ;;
 
 let rename (s:string) = s^"'";;
 
+let rec print_res res = match res with
+  | RmNum (i) -> print_int i ; print_string " : Int "
+  | RmUnit () -> print_string " : Unit "
+  | RmStream (Stream(n,e)) -> print_res n; match e() with Stream(m,me) -> print_res print_string " : Stream"
+  | RmStream (StreamEnd()) -> print_string " : StreamEnd"
+  (* | (RmLbd(rT,tT,x,e)) -> print_string("Function : " ^ type_to_string( typeProg (res) )) *)
+  | _ -> raise NonBaseTypeResult
+;;
+
+
 let rec eval1M env e = match e with
   | (RmUnit()) -> print_string "UNIT \n"; raise Terminated
   | (RmVar x) -> print_string "VARIABLE: "; print_string x; print_string "\n"; (try ((lookup env x), env) with LookupError -> raise UnboundVariableError)
-  | (RmNum n) -> print_string "NUMBER: "; print_int n; print_string "\n"; raise Terminated
-  | (RmLbd(rT,tT,y,e')) -> print_string "LAMBDA"; raise Terminated
-  | (RmLbdEmpty(rT,e')) -> print_string "EMPTY LAMBDA"; raise Terminated
-
   (* If we're evaluating a stream, return its first value as a number *)
-  | (RmStream Stream(n,_)) -> print_string "Parsing stream"; (n, env)
+  | (RmStream Stream(_,_)) ->print_string "terminating on Stream\n"; raise Terminated
+  | (RmStream StreamEnd()) -> print_string "terminating on StreamEnd\n";  raise Terminated
+
+  | (RmNum n) -> print_string "NUMBER: "; print_int n; print_string "\n"; raise Terminated
+  | (RmLbd(rT,tT,y,e')) -> print_string "LAMBDA\n"; raise Terminated
+  | (RmLbdEmpty(rT,e')) -> print_string "EMPTY LAMBDA\n"; raise Terminated
+
   (* Conditionals *)
   | (RmLessThan(RmNum(n),RmNum(m))) -> ((if n<m then RmNum(1) else RmNum(0)), env)
   | (RmLessThan(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmLessThan(RmNum(n),e2'),env')
@@ -262,6 +275,17 @@ let rec eval1M env e = match e with
   (* Operators *)
   | (RmPlus(RmNum(n),RmNum(m))) -> (RmNum(n+m) , env)
   | (RmPlus(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmPlus(RmNum(n),e2'), env')
+  | (RmPlus(RmStream(Stream(n,ne)), RmStream(Stream(m,me)))) -> 
+  let rec recurse x y = match (x,y) with 
+    | (Stream(a,ae),Stream(b,be)) -> 
+       Stream(
+        (let (e,_) = (eval1M env (RmPlus(a,b))) in e),
+        function () -> recurse (ae()) (be())
+      )
+    | (StreamEnd(),_) 
+    | (_,StreamEnd()) -> StreamEnd()
+  in (RmStream(recurse (ne()) (me())), env)
+  | (RmPlus(RmStream(s), e2)) -> let (e2',env') = (eval1M env e2) in (RmPlus(RmStream(s),e2'), env')
   | (RmPlus(e1, e2))            -> let (e1',env') = (eval1M env e1) in (RmPlus(e1', e2), env')
 
   | (RmMinus(RmNum(n),RmNum(m))) -> (RmNum(n-m) , env)
@@ -311,9 +335,3 @@ let rec type_to_string tT = match tT with
 
 (* FIXME When type checker working make this print out streams *)
 
-let print_res res = match res with
-  | RmNum (i) -> print_int i ; print_string " : Int"
-  | RmUnit () -> print_string " Unit"
-  (* | (RmLbd(rT,tT,x,e)) -> print_string("Function : " ^ type_to_string( typeProg (res) )) *)
-  | _ -> raise NonBaseTypeResult
-;;
