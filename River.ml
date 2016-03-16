@@ -120,6 +120,56 @@ let rec typeOf env e = match e with
   |RmGreaterThan (e1,e2) -> 
     ( match (typeOf env e1) , (typeOf env e2) with 
         RivInt, RivInt -> RivInt
+      | _ -> raise TypeError
+    )
+
+  |RmGreaterEqualTo (e1,e2) -> 
+    ( match (typeOf env e1) , (typeOf env e2) with 
+        RivInt, RivInt -> RivInt
+      | _ -> raise TypeError
+    )
+
+  |RmLessEqualTo (e1,e2) -> 
+    ( match (typeOf env e1) , (typeOf env e2) with 
+        RivInt, RivInt -> RivBool
+      | _ -> raise TypeError
+    )
+
+  |RmNotEqualTo (e1,e2) -> 
+    ( match (typeOf env e1) , (typeOf env e2) with 
+        RivInt, RivInt -> RivBool
+      | _ -> raise TypeError
+    )
+
+  |RmEqualTo (e1,e2) -> 
+    ( match (typeOf env e1) , (typeOf env e2) with 
+        RivInt, RivInt -> RivBool
+      | _ -> raise TypeError
+    )
+
+
+  |RmCons(e1,e2) -> 
+    (
+     match (typeOf env e1) , (typeOf env e2) with 
+             RivInt, RivInt -> RivInt 
+                    |_ -> raise TypeError
+    )
+
+  |RmAppend(e1,e2) -> 
+    (
+     match (typeOf env e1) , (typeOf env e2) with 
+             RivInt, RivInt -> RivInt 
+                    |_ -> raise TypeError
+    )
+
+
+  |RmIndex(e1,e2) -> 
+    ( let ty1 = typeOf env e1 in
+      let ty2 = typeOf env e2 in
+             match ty1 with RivInt
+
+, RivInt -> RivInt 
+                    |_ -> raise TypeError
 
 (* Return True if the variable x is used in e *)
 let rec free e x = match e with
