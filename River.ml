@@ -12,9 +12,8 @@ type 'a stream = Stream of 'a * (unit -> 'a stream) | StreamEnd;;
 let hd : 'a stream -> 'a = function Stream (a, _) -> a;;
 let tl : 'a stream -> 'a stream = function Stream (_, s) -> s ();;
 
-
 (* Types of the language *)
-type rivType =  RivUnit | RivInt | RivBool | RivFun of rivType * rivType | RivStream of rivType
+type rivType =  RivUnit | RivInt | RivFun of rivType * rivType | RivStream of rivType
 
 (* Grammar of the language *)
 type rivTerm =
@@ -139,19 +138,19 @@ let rec typeOf env e = match e with
 
   |RmLessEqualTo (e1,e2) -> 
     ( match (typeOf env e1) , (typeOf env e2) with 
-        RivInt, RivInt -> RivBool
+        RivInt, RivInt -> RivInt
       | _ -> raise TypeError
     )
 
   |RmNotEqualTo (e1,e2) -> 
     ( match (typeOf env e1) , (typeOf env e2) with 
-        RivInt, RivInt -> RivBool
+        RivInt, RivInt -> RivInt
       | _ -> raise TypeError
     )
 
   |RmEqualTo (e1,e2) -> 
     ( match (typeOf env e1) , (typeOf env e2) with 
-        RivInt, RivInt -> RivBool
+        RivInt, RivInt -> RivInt
       | _ -> raise TypeError
     )
 
@@ -182,7 +181,7 @@ let rec typeOf env e = match e with
   |RmIf (e1,e2,e3) -> (
     let ty1 = typeOf env e1 in 
       match ty1 with 
-         RivBool -> (
+         RivInt -> (
                   let ty1 = typeOf env e2 in 
 		  let ty2 = typeOf env e3 in 
 		   (match (ty1=ty2) with 
