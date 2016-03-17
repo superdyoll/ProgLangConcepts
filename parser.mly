@@ -47,8 +47,8 @@ type_spec:
     | LPAREN RPAREN { RivUnit } 
     | ITYPE { RivInt }
     | STYPE LT type_spec GT { RivStream($3) }
-    | type_spec LTYPE LPAREN type_spec RPAREN { RivFun($1, $4) }
-    | type_spec LTYPE LPAREN RPAREN { RivFun($1, RivUnit) }
+    | type_spec LTYPE LPAREN type_spec RPAREN { RivFun($4, $1) }
+    | type_spec LTYPE LPAREN RPAREN { RivFun(RivUnit, $1) }
     | LPAREN type_spec RPAREN { $2 }
 ;
 

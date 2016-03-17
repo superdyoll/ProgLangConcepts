@@ -72,6 +72,12 @@ let rec lookup env str = match env with
   )
 ;;
 
+let rec type_to_string tT = match tT with
+  | RivUnit -> "Unit"
+  | RivInt -> "Int"
+  | RivFun(tT1,tT2) -> "( "^type_to_string(tT1)^" -> "^type_to_string(tT2)^" )"
+;;
+
 (* Function to add an extra entry in to an environment *)
 let addBinding env str thing = match env with
 Env(gs) -> Env ( (str, thing) :: gs ) ;;
@@ -204,6 +210,8 @@ let rec typeOf env e = match e with
     (
       let ty1 = typeOf env e1 in
       let ty2 = typeOf (addBinding env x tT) e2 in 
+         print_string "Letting To be "; print_string (type_to_string ty1); print_string "\n";
+         print_string "Defined as type "; print_string (type_to_string tT); print_string "\n";
          (match (ty1 = tT) with 
             true -> ty2
 	         |false -> raise (TypeError "Let")
@@ -214,8 +222,12 @@ let rec typeOf env e = match e with
     ( let ty1 = typeOf env e1 in 
       let ty2 = typeOf env e2 in 
        ( 
-        match ty1 with 
-         RivFun(tT,tU) ->  
+        match ty1 with
+         RivFun(tT,tU) -> 
+         print_string "Function: "; print_string (type_to_string ty1); print_string "\n";
+         print_string "Function: From "; print_string (type_to_string tT); print_string "\n";
+         print_string "Function: To "; print_string (type_to_string tU); print_string "\n";
+         print_string "Applying to: "; print_string (type_to_string ty2); print_string "\n";
             (
 	     match tT = ty2 with
              true -> tT 
@@ -225,8 +237,8 @@ let rec typeOf env e = match e with
        )
     )
 
-  |RmLbd (rT,tT,x,e) ->  RivFun(rT, typeOf (addBinding env x tT) e)
-  |RmLbdEmpty (rT,e) ->  RivFun(rT, typeOf env e) 
+  |RmLbd (rT,tT,x,e) ->  RivFun(typeOf (addBinding env x tT) e, rT)
+  |RmLbdEmpty (rT,e) ->  RivFun(RivUnit, rT) 
 
 let typeProg e = typeOf (Env []) e ;;
 
@@ -283,24 +295,70 @@ let rec eval1M env e = match e with
   | (RmPlus(RmStream(tT, s), e2)) -> let (e2',env') = (eval1M env e2) in (RmPlus(RmStream(tT, s),e2'), env')
   | (RmPlus(e1, e2))            -> let (e1',env') = (eval1M env e1) in (RmPlus(e1', e2), env')
 
+  (* Minus *)
   | (RmMinus(RmNum(n),RmNum(m))) -> (RmNum(n-m) , env)
   | (RmMinus(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmMinus(RmNum(n),e2'), env')
+  | (RmMinus(RmStream(tT,n), RmStream(_,m))) -> 
+  let rec recurse x y = match (x,y) with 
+    | (Stream(a,ae),Stream(b,be)) -> 
+       Stream(
+        (let (e,_) = (eval1M env (RmMinus(a,b))) in e),
+        function () -> recurse (ae()) (be())
+      )
+    | (StreamEnd(),_)
+    | (_,StreamEnd()) -> StreamEnd()
+  in (RmStream(tT, recurse n m), env)
+  | (RmMinus(RmStream(tT, s), e2)) -> let (e2',env') = (eval1M env e2) in (RmMinus(RmStream(tT, s),e2'), env')
   | (RmMinus(e1, e2))            -> let (e1',env') = (eval1M env e1) in (RmMinus(e1', e2), env')
 
+  (* Multiply *)
   | (RmMultiply(RmNum(n),RmNum(m))) -> (RmNum(n*m) , env)
   | (RmMultiply(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmMultiply(RmNum(n),e2'), env')
+  | (RmMultiply(RmStream(tT,n), RmStream(_,m))) -> 
+  let rec recurse x y = match (x,y) with 
+    | (Stream(a,ae),Stream(b,be)) -> 
+       Stream(
+        (let (e,_) = (eval1M env (RmMultiply(a,b))) in e),
+        function () -> recurse (ae()) (be())
+      )
+    | (StreamEnd(),_)
+    | (_,StreamEnd()) -> StreamEnd()
+  in (RmStream(tT, recurse n m), env)
+  | (RmMultiply(RmStream(tT, s), e2)) -> let (e2',env') = (eval1M env e2) in (RmMultiply(RmStream(tT, s),e2'), env')  
   | (RmMultiply(e1, e2))            -> let (e1',env') = (eval1M env e1) in (RmMultiply(e1', e2), env')
 
+  (* Divide *)
   | (RmDivide(RmNum(n),RmNum(m))) -> (RmNum(n/m) , env)
   | (RmDivide(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmDivide(RmNum(n),e2'), env')
+  | (RmDivide(RmStream(tT,n), RmStream(_,m))) -> 
+  let rec recurse x y = match (x,y) with 
+    | (Stream(a,ae),Stream(b,be)) -> 
+       Stream(
+        (let (e,_) = (eval1M env (RmDivide(a,b))) in e),
+        function () -> recurse (ae()) (be())
+      )
+    | (StreamEnd(),_)
+    | (_,StreamEnd()) -> StreamEnd()
+  in (RmStream(tT, recurse n m), env)
+  | (RmDivide(RmStream(tT, s), e2)) -> let (e2',env') = (eval1M env e2) in (RmDivide(RmStream(tT, s),e2'), env')  
   | (RmDivide(e1, e2))            -> let (e1',env') = (eval1M env e1) in (RmDivide(e1', e2), env')
 
   | (RmUMinus(RmNum(n))) -> (RmNum(-n), env)
+  | (RmUMinus(RmStream(tT,n))) -> 
+  let rec recurse x = match x with 
+    | Stream(a,ae)-> 
+       Stream(
+        (let (e,_) = (eval1M env (RmUMinus(a))) in e),
+        function () -> recurse (ae())
+      )
+    | StreamEnd() -> StreamEnd()
+  in (RmStream(tT, recurse n), env)
   | (RmUMinus(e1))      -> let (e1',env') = (eval1M env e1) in (RmUMinus(e1'), env')
 
   (* Ternary *)
-  | (RmIf(RmNum(1),e1,e2))        -> (e1, env)
   | (RmIf(RmNum(0),e1,e2))        -> (e2, env)
+  | (RmIf(RmNum(_),e1,e2))        -> (e1, env)
+  | (RmIf(RmStream(tT,Stream(n,_)),e1,e2)) -> (RmIf(n,e1,e2), env)
   | (RmIf(b,e1,e2))               -> let (b',env') = (eval1M env b) in (RmIf(b',e1,e2), env')
 
   | (RmLet(tT,x,e1,e2)) when (isValue(e1)) -> (e2, addBinding env x e1)
@@ -321,12 +379,6 @@ let rec eval1M env e = match e with
 let rec evalloop env e = try ( let (e',env') = (eval1M env e) in (evalloop env' e')) with Terminated _ -> if (isValue e) then e else raise (StuckTerm "Eval loop stuck on term") ;;
 let evalProg e = evalloop (Env[]) e ;;
 
-
-let rec type_to_string tT = match tT with
-  | RivUnit -> "Unit"
-  | RivInt -> "Int"
-  | RivFun(tT1,tT2) -> "( "^type_to_string(tT1)^" -> "^type_to_string(tT2)^" )"
-;;
 
 (* FIXME When type checker working make this print out streams *)
 
