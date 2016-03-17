@@ -8,7 +8,7 @@ exception NonBaseTypeResult of string;;
 open Printf;;
 
 (* Stream implementation *)
-type 'a stream = Stream of 'a * (unit -> 'a stream) | StreamEnd;;
+type 'a stream = Stream of 'a * (unit -> 'a stream) | StreamEnd of unit;;
 let hd : 'a stream -> 'a = function Stream (a, _) -> a;;
 let tl : 'a stream -> 'a stream = function Stream (_, s) -> s ();;
 
@@ -50,6 +50,7 @@ type rivTerm =
 let rec isValue e = print_string "isValue called\n"; match e with
   | RmNum(s) -> true
   | RmUnit() -> true
+  | RmStream(tT,s) -> true
   | RmLbd(rT,tT,x,e') -> true
   | RmLbdEmpty(rT,e') -> true
   | _ -> false
@@ -238,8 +239,9 @@ let rec eval1M env e = match e with
   | (RmLbd(rT,tT,y,e')) -> print_string "LAMBDA"; raise (Terminated "Lambda")
   | (RmLbdEmpty(rT,e')) -> print_string "EMPTY LAMBDA"; raise (Terminated "Unit Lambda")
 
-  (* If we're evaluating a stream, return its first value as a number *)
-  | (RmStream (tT, Stream(n,_))) -> print_string "Parsing stream"; (n, env)
+  | (RmStream (tT, Stream(_,_))) -> print_string "terminating on Stream\n"; raise (Terminated "Stream")
+  | (RmStream (tT, StreamEnd())) -> print_string "terminating on StreamEnd\n";  raise (Terminated "StreamEnd")
+
   (* Conditionals *)
   | (RmLessThan(RmNum(n),RmNum(m))) -> ((if n<m then RmNum(1) else RmNum(0)), env)
   | (RmLessThan(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmLessThan(RmNum(n),e2'),env')
@@ -268,6 +270,17 @@ let rec eval1M env e = match e with
   (* Operators *)
   | (RmPlus(RmNum(n),RmNum(m))) -> (RmNum(n+m) , env)
   | (RmPlus(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmPlus(RmNum(n),e2'), env')
+  | (RmPlus(RmStream(tT,n), RmStream(_,m))) -> 
+  let rec recurse x y = match (x,y) with 
+    | (Stream(a,ae),Stream(b,be)) -> 
+       Stream(
+        (let (e,_) = (eval1M env (RmPlus(a,b))) in e),
+        function () -> recurse (ae()) (be())
+      )
+    | (StreamEnd(),_)
+    | (_,StreamEnd()) -> StreamEnd()
+  in (RmStream(tT, recurse n m), env)
+  | (RmPlus(RmStream(tT, s), e2)) -> let (e2',env') = (eval1M env e2) in (RmPlus(RmStream(tT, s),e2'), env')
   | (RmPlus(e1, e2))            -> let (e1',env') = (eval1M env e1) in (RmPlus(e1', e2), env')
 
   | (RmMinus(RmNum(n),RmNum(m))) -> (RmNum(n-m) , env)
@@ -312,14 +325,15 @@ let evalProg e = evalloop (Env[]) e ;;
 let rec type_to_string tT = match tT with
   | RivUnit -> "Unit"
   | RivInt -> "Int"
-  | RivFun(tT1,tT2) -> "( "^type_to_string(tT1)^" -> "^type_to_string(tT2)^" )" 
+  | RivFun(tT1,tT2) -> "( "^type_to_string(tT1)^" -> "^type_to_string(tT2)^" )"
 ;;
 
 (* FIXME When type checker working make this print out streams *)
 
-let print_res res = match res with
-  | RmNum (i) -> print_int i ; print_string " : Int"
+let rec print_res res = match res with
+  | RmNum (i) -> print_int i ; print_string " : Int "
   | RmUnit () -> print_string " Unit"
-  | (RmLbd(rT,tT,x,e)) -> print_string("Function : " ^ type_to_string( typeProg (res) ))
+  | RmStream (tT, Stream(n,e)) -> print_res n; (match e() with Stream(m,me) -> print_res m | StreamEnd() -> print_string "END"); print_string " : Stream";
+  | RmLbd(rT,tT,x,e) -> print_string("Function : " ^ type_to_string( typeProg (res) ))
   | _ -> raise (NonBaseTypeResult "Not able to output result as string")
 ;;
