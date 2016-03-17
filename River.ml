@@ -22,15 +22,15 @@ type rivTerm =
   | RmVar of string
   | RmUnit of unit
   | RmUMinus of rivTerm
-  | RmMinus of rivTerm * rivTerm
   | RmApp of rivTerm * rivTerm
+  | RmMinus of rivTerm * rivTerm
   | RmPlus of rivTerm * rivTerm
   | RmMultiply of rivTerm * rivTerm
   | RmDivide of rivTerm * rivTerm 
   | RmLessThan of rivTerm * rivTerm
+  | RmLessEqualTo of rivTerm * rivTerm
   | RmGreaterThan of rivTerm * rivTerm
   | RmGreaterEqualTo of rivTerm * rivTerm
-  | RmLessEqualTo of rivTerm * rivTerm
   | RmNotEqualTo of rivTerm * rivTerm
   | RmEqualTo of rivTerm * rivTerm
   | RmCons of rivTerm  * rivTerm
@@ -142,7 +142,7 @@ let rec typeOf env e = match e with
       | _ -> raise (TypeError "Less Than")
     )
 
-  |RmGreaterThan (e1,e2) -> 
+  |RmLessEqualTo (e1,e2) -> 
     ( match (typeOf env e1) , (typeOf env e2) with 
         RivInt, RivInt -> RivInt
       | _ -> raise (TypeError "Greater Than")
@@ -283,26 +283,92 @@ let rec eval1M env e = match e with
   (* Conditionals *)
   | (RmLessThan(RmNum(n),RmNum(m))) -> ((if n<m then RmNum(1) else RmNum(0)), env)
   | (RmLessThan(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmLessThan(RmNum(n),e2'),env')
+  | (RmLessThan(RmStream(tT,n), RmStream(_,m))) -> 
+      let rec recurse x y = match (x,y) with 
+        | (Stream(a,ae),Stream(b,be)) -> 
+           Stream(
+            (let (e,_) = (eval1M env (RmLessThan(a,b))) in e),
+            function () -> recurse (ae()) (be())
+          )
+        | (StreamEnd(),_)
+        | (_,StreamEnd()) -> StreamEnd()
+      in (RmStream(tT, recurse n m), env)
+  | (RmLessThan(RmStream(tT, s), e2)) -> let (e2',env') = (eval1M env e2) in (RmLessThan(RmStream(tT, s),e2'), env')
   | (RmLessThan(e1, e2))            -> let (e1',env') = (eval1M env e1) in (RmLessThan(e1',e2),env')
 
   | (RmLessEqualTo(RmNum(n),RmNum(m))) -> ((if n<=m then RmNum(1) else RmNum(0)), env)
   | (RmLessEqualTo(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmLessEqualTo(RmNum(n),e2'),env')
+  | (RmLessEqualTo(RmStream(tT,n), RmStream(_,m))) -> 
+      let rec recurse x y = match (x,y) with 
+        | (Stream(a,ae),Stream(b,be)) -> 
+           Stream(
+            (let (e,_) = (eval1M env (RmLessEqualTo(a,b))) in e),
+            function () -> recurse (ae()) (be())
+          )
+        | (StreamEnd(),_)
+        | (_,StreamEnd()) -> StreamEnd()
+      in (RmStream(tT, recurse n m), env)
+  | (RmLessEqualTo(RmStream(tT, s), e2)) -> let (e2',env') = (eval1M env e2) in (RmLessEqualTo(RmStream(tT, s),e2'), env')
   | (RmLessEqualTo(e1, e2))            -> let (e1',env') = (eval1M env e1) in (RmLessEqualTo(e1',e2),env')
 
   | (RmGreaterThan(RmNum(n),RmNum(m))) -> ((if n>m then RmNum(1) else RmNum(0)), env)
   | (RmGreaterThan(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmGreaterThan(RmNum(n),e2'),env')
+  | (RmGreaterThan(RmStream(tT,n), RmStream(_,m))) -> 
+      let rec recurse x y = match (x,y) with 
+        | (Stream(a,ae),Stream(b,be)) -> 
+           Stream(
+            (let (e,_) = (eval1M env (RmGreaterThan(a,b))) in e),
+            function () -> recurse (ae()) (be())
+          )
+        | (StreamEnd(),_)
+        | (_,StreamEnd()) -> StreamEnd()
+      in (RmStream(tT, recurse n m), env)
+  | (RmGreaterThan(RmStream(tT, s), e2)) -> let (e2',env') = (eval1M env e2) in (RmGreaterThan(RmStream(tT, s),e2'), env')
   | (RmGreaterThan(e1, e2))            -> let (e1',env') = (eval1M env e1) in (RmGreaterThan(e1',e2),env')
 
   | (RmGreaterEqualTo(RmNum(n),RmNum(m))) -> ((if n>m then RmNum(1) else RmNum(0)), env)
   | (RmGreaterEqualTo(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmGreaterEqualTo(RmNum(n),e2'),env')
+  | (RmGreaterEqualTo(RmStream(tT,n), RmStream(_,m))) -> 
+    let rec recurse x y = match (x,y) with 
+      | (Stream(a,ae),Stream(b,be)) -> 
+         Stream(
+          (let (e,_) = (eval1M env (RmGreaterEqualTo(a,b))) in e),
+          function () -> recurse (ae()) (be())
+        )
+      | (StreamEnd(),_)
+      | (_,StreamEnd()) -> StreamEnd()
+    in (RmStream(tT, recurse n m), env)
+    | (RmGreaterEqualTo(RmStream(tT, s), e2)) -> let (e2',env') = (eval1M env e2) in (RmGreaterEqualTo(RmStream(tT, s),e2'), env')
   | (RmGreaterEqualTo(e1, e2))            -> let (e1',env') = (eval1M env e1) in (RmGreaterEqualTo(e1',e2),env')
 
   | (RmEqualTo(RmNum(n),RmNum(m))) -> ((if n=m then RmNum(1) else RmNum(0)), env)
   | (RmEqualTo(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmEqualTo(RmNum(n),e2'),env')
+  | (RmEqualTo(RmStream(tT,n), RmStream(_,m))) -> 
+    let rec recurse x y = match (x,y) with 
+      | (Stream(a,ae),Stream(b,be)) -> 
+         Stream(
+          (let (e,_) = (eval1M env (RmEqualTo(a,b))) in e),
+          function () -> recurse (ae()) (be())
+        )
+      | (StreamEnd(),_)
+      | (_,StreamEnd()) -> StreamEnd()
+    in (RmStream(tT, recurse n m), env)
+    | (RmEqualTo(RmStream(tT, s), e2)) -> let (e2',env') = (eval1M env e2) in (RmEqualTo(RmStream(tT, s),e2'), env')
   | (RmEqualTo(e1, e2))            -> let (e1',env') = (eval1M env e1) in (RmEqualTo(e1',e2),env')
 
   | (RmNotEqualTo(RmNum(n),RmNum(m))) -> ((if n<>m then RmNum(1) else RmNum(0)), env)
   | (RmNotEqualTo(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmNotEqualTo(RmNum(n),e2'),env')
+  | (RmNotEqualTo(RmStream(tT,n), RmStream(_,m))) -> 
+  let rec recurse x y = match (x,y) with 
+    | (Stream(a,ae),Stream(b,be)) -> 
+       Stream(
+        (let (e,_) = (eval1M env (RmNotEqualTo(a,b))) in e),
+        function () -> recurse (ae()) (be())
+      )
+    | (StreamEnd(),_)
+    | (_,StreamEnd()) -> StreamEnd()
+  in (RmStream(tT, recurse n m), env)
+  | (RmNotEqualTo(RmStream(tT, s), e2)) -> let (e2',env') = (eval1M env e2) in (RmNotEqualTo(RmStream(tT, s),e2'), env')
   | (RmNotEqualTo(e1, e2))            -> let (e1',env') = (eval1M env e1) in (RmNotEqualTo(e1',e2),env')
 
   (* Operators *)
