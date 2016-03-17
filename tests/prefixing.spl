@@ -1,21 +1,15 @@
-def prefix = int lambda (int a){
-  0 . a;
-}
-
 let
 (
-    stream<int> input = read();
-    int a = input[0];
+    int add = 1.2.3.4.5.6.7
 )
 {
-    // Tests!
-    // [0] -> [7 0]
-    prefix(7);
+    let(
+        int lambda(int) prefix = int lambda (int a){
+            0.a
+        }
+    ){
+    prefix(add)
+    }
+};
 
-    // [1 2 3 4] -> [0 1 2 3 4]
-    prefix(1 . 2 . 3 . 4);
-
-    //Program
-    prefix(a);
-}
 
