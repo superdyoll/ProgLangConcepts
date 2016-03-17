@@ -508,13 +508,24 @@ let rec evalloop inStreams env e = try ( let (e',env') = (eval1M inStreams env e
 
 let evalProg inputBuffer e = evalloop (RmStream(RivStream(RivInt), (convertToStream (List.rev inputBuffer)))) (Env[]) e ;;
 
-let rec printStream stream = match stream with
-  | Stream(n,e) -> print_res n; print_string ", "; printStream (e())
-  | StreamEnd() -> print_string "() : StreamEnd"
+let rec count_streams streams acc = match streams with
+  | Stream(n,e) -> count_streams (e()) (acc + 1)
+  | StreamEnd() -> acc
+
+let rec print_streams_rec streams no_streams pos = match streams with 
+  | Stream(n,Stream(e, eR)) -> 
+      match n with
+         | Stream(f,r) -> print_int f; if (pos mod no_streams) = 0 then print_string "\n"; print_streams_rec (Stream(e(), (function() -> r))) no_streams (pos + 1)
+         | StreamEnd() -> unit
+  | StreamEnd() -> unit
+
+let rec print_streams stream = 
+   (print_streams_rec streams (count_streams stream))
+
 and print_res res = match res with
-  | RmNum (i) -> print_int i ; print_string " : Int"
-  | RmUnit () -> print_string " Unit"
-  | RmStream (tT, Stream(n,e)) ->print_string "["; printStream(Stream(n,e)); print_string "] : Stream";
+  | RmNum (i) -> print_int i
+  | RmUnit () -> print_string "() "
+  | RmStream (tT, Stream(n,e)) ->print_stream(Stream(n,e))
   | RmLbd(rT,tT,x,e) -> print_string("Function : " ^ type_to_string( typeProg (res) ))
   | _ -> raise (NonBaseTypeResult "Not able to output result as string")
 ;;
