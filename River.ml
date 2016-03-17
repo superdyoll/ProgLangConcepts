@@ -382,6 +382,8 @@ let rec eval1M env e = match e with
 
   | (RmCons(RmStream(nT,n), RmStream(mT,m))) ->
        (RmStream(RivStream(nT), Stream(RmStream(nT,n), function() -> Stream(RmStream(mT,m), function() -> StreamEnd()))), env)
+  | (RmCons(RmStream(nT,s), e2))              -> let(e2',env') = (eval1M env e2) in (RmCons(RmStream(nT,s),e2'), env')
+  | (RmCons(e1,e2))                          -> let(e1',env') = (eval1M env e1) in (RmCons(e1', e2), env')
 
   | (RmAppend(RmStream(nT,n), RmStream(mT,m))) ->
       let rec recurse x y = match (x,y) with
@@ -389,7 +391,9 @@ let rec eval1M env e = match e with
            Stream(a, function() -> (recurse (ae()) b))
         | (StreamEnd(),b) -> b
         | (_,StreamEnd()) -> StreamEnd()
-      in (RmStream(nT,(recurse n m)) ,env)
+     in (RmStream(nT,(recurse n m)) ,env)
+  | (RmAppend(RmStream(nT,s), e2))              -> let(e2',env') = (eval1M env e2) in (RmAppend(RmStream(nT,s),e2'), env')
+  | (RmAppend(e1,e2))                          -> let(e1',env') = (eval1M env e1) in (RmAppend(e1', e2), env')
 
   (* Operators *)
 
