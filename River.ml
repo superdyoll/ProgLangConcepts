@@ -46,6 +46,8 @@ type rivTerm =
   | RmLbd of rivType * rivType * string * rivTerm
   (* Empty Lambda: Return Type * Expression *)
   | RmLbdEmpty of rivType * rivTerm
+  | RmRead of unit
+
 
 let rec isValue e = print_string "isValue called\n"; match e with
   | RmNum(s) -> true
@@ -53,6 +55,7 @@ let rec isValue e = print_string "isValue called\n"; match e with
   | RmStream(tT,s) -> true
   | RmLbd(rT,tT,x,e') -> true
   | RmLbdEmpty(rT,e') -> true
+  | RmRead() -> true
   | _ -> false
 ;;
 
@@ -232,15 +235,39 @@ let rec typeOf env e = match e with
 	     match tT = ty2 with
              true -> tT 
             |false -> raise (TypeError "Apply: Expressions not of same type")
-	    )
-	| _ -> raise (TypeError "Apply: Not of type function")
-       )
-    )
 
-  |RmLbd (rT,tT,x,e) ->  RivFun(typeOf (addBinding env x tT) e, rT)
+            )
+        | _ -> raise (TypeError "Apply: Not of type function")
+        )
+    )
+  |RmRead () -> RivStream(RivStream(RivInt))
+
+  |RmLbd(rT,tT,x,e) ->  RivFun(typeOf (addBinding env x tT) e, rT)
   |RmLbdEmpty (rT,e) ->  RivFun(RivUnit, rT) 
+  
+	
 
 let typeProg e = typeOf (Env []) e ;;
+
+let rename (s:string) = s^"'";;
+
+let rec convert_to_stream str = 
+    let tokens = (Str.split (Str.regexp "[ \t]+") str) in
+   	let rec convert s = match s with
+      | [] -> StreamEnd()
+      | h :: t -> Stream(
+        RmNum(int_of_string(h)),
+        function () -> convert(t)
+      )
+    in match tokens with 
+    | [] -> StreamEnd()
+    | h :: t  -> Stream(RmNum(int_of_string (h)), function () -> convert (t))
+
+let rec read_stream () =
+    Stream(RmStream(RivStream(RivInt),
+      (try (convert_to_stream(input_line stdin)) with End_of_file -> StreamEnd())),
+      function () -> read_stream()
+    )
 
 let rec eval1M env e = match e with
   | (RmUnit()) -> print_string "UNIT \n"; raise (Terminated "Unit")
@@ -371,19 +398,30 @@ let rec eval1M env e = match e with
 
   | (RmApp(e1,e2))                                -> let (e1',env') = (eval1M env e1) in (RmApp(e1',e2), env') 
 
+  | (RmRead()) -> 
+      (
+      RmStream(
+        RivStream(RivStream(RivInt)),
+        read_stream()
+      ), env)
+
   | _ -> print_string "NO MATCH, RAISING TERMINATED\n";raise (Terminated "No match");;
 
-
 let rec evalloop env e = try ( let (e',env') = (eval1M env e) in (evalloop env' e')) with Terminated _ -> if (isValue e) then e else raise (StuckTerm "Eval loop stuck on term") ;;
+
 let evalProg e = evalloop (Env[]) e ;;
 
-
 (* FIXME When type checker working make this print out streams *)
+let rec type_to_string tT = match tT with
+  | RivUnit -> "Unit"
+  | RivInt -> "Int"
+  | RivFun(tT1,tT2) -> "( "^type_to_string(tT1)^" -> "^type_to_string(tT2)^" )"
+;;
 
 let rec print_res res = match res with
   | RmNum (i) -> print_int i ; print_string " : Int "
   | RmUnit () -> print_string " Unit"
-  | RmStream (tT, Stream(n,e)) -> print_res n; (match e() with Stream(m,me) -> print_res m | StreamEnd() -> print_string "END"); print_string " : Stream";
+  | RmStream (tT, Stream(n,e)) -> print_string "["; print_res n; print_string " - "; (match e() with Stream(m,me) -> print_res m | StreamEnd() -> print_string "END"); print_string "] : Stream";
   | RmLbd(rT,tT,x,e) -> print_string("Function : " ^ type_to_string( typeProg (res) ))
   | _ -> raise (NonBaseTypeResult "Not able to output result as string")
 ;;

@@ -85,4 +85,5 @@ expr:
  | INT                         { RmStream(RivInt,Stream(RmNum($1), function () -> StreamEnd())) }
  | LPAREN RPAREN               { RmUnit() }
  | MINUS expr                  { RmUMinus ($2) }
+ | READ LPAREN RPAREN          { RmRead() }
 ;
