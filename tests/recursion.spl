@@ -1,0 +1,5 @@
+let(int lambda (int) a = int lambda (int q) {
+	if(q>0) {a(q-1)} else {0}
+}){
+	a(2)
+};
