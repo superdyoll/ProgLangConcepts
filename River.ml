@@ -79,6 +79,7 @@ let rec type_to_string tT = match tT with
   | RivUnit -> "Unit"
   | RivInt -> "Int"
   | RivFun(tT1,tT2) -> "( "^type_to_string(tT1)^" -> "^type_to_string(tT2)^" )"
+  | RivStream(tT) -> type_to_string(tT) ^ " stream"
 ;;
 
 (* Function to add an extra entry in to an environment *)
@@ -410,13 +411,6 @@ let rec eval1M env e = match e with
 let rec evalloop env e = try ( let (e',env') = (eval1M env e) in (evalloop env' e')) with Terminated _ -> if (isValue e) then e else raise (StuckTerm "Eval loop stuck on term") ;;
 
 let evalProg e = evalloop (Env[]) e ;;
-
-(* FIXME When type checker working make this print out streams *)
-let rec type_to_string tT = match tT with
-  | RivUnit -> "Unit"
-  | RivInt -> "Int"
-  | RivFun(tT1,tT2) -> "( "^type_to_string(tT1)^" -> "^type_to_string(tT2)^" )"
-;;
 
 let rec print_res res = match res with
   | RmNum (i) -> print_int i ; print_string " : Int "
