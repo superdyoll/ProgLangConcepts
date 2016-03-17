@@ -31,15 +31,15 @@ include .depend
 # Build an executable typechecker
 main: $(OBJS) main.cmo 
 	@echo Linking $@
-	ocamlc -o $@ $(COMMONOBJS) $(OBJS) 
+	ocamlc -g -o $@ $(COMMONOBJS) $(OBJS) 
 
 # Compile an ML module interface
 %.cmi : %.mli
-	ocamlc -c $<
+	ocamlc -c -g $<
 
 # Compile an ML module implementation
 %.cmo : %.ml
-	ocamlc -c $<
+	ocamlc -c -g $<
 
 # Generate ML files from a parser definition file
 parser.ml parser.mli: parser.mly

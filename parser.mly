@@ -31,9 +31,12 @@
 %nonassoc DEFINE
 %nonassoc IF
 %nonassoc ELSE
+%left LSQ RSQ
 %left PLUS MINUS
 %left MULTIPLY DIVIDE
 %right LT GT GEQ LEQ NEQ EQ
+%right COLON
+%right DOT
 /* Highest Precedence */
 %start parser_main
 %type <River.rivTerm> parser_main

@@ -91,7 +91,7 @@ Env(gs) -> Env ( (str, thing) :: gs ) ;;
 
 (* The type checking function itself *) 
 let rec typeOf env e = match e with 
-   RmUnit () -> RivUnit
+  | RmUnit () -> RivUnit
 
   |RmVar (x) ->  (try lookup env x with LookupError _ -> raise (TypeError "Variable"))
 
@@ -200,8 +200,8 @@ let rec typeOf env e = match e with
   |RmIndex(e1,e2) -> 
     ( let ty1 = typeOf env e1 in
       let ty2 = typeOf env e2 in
-             match ty1 with RivInt
-              | RivInt -> RivInt 
+             match ty2 with 
+              | RivStream(RivInt) -> ty1
               |_ -> raise (TypeError "Index")
     )
 
@@ -268,6 +268,14 @@ let rec convertLineToStream tokens =
         function () -> convertLineToStream(t)
       )
 ;;
+
+let rec followNSteps stream steps = 
+  if steps > 0 then (
+    match stream with
+    | Stream(_,x) -> followNSteps (x()) (steps - 1)
+    | StreamEnd() -> StreamEnd()
+  )
+  else stream
 
 let rec convertToStream strList = 
   match strList with
@@ -393,7 +401,6 @@ let rec eval1M inStreams env e = match e with
         | (Stream(a,ae), b) -> 
            Stream(a, function() -> (recurse (ae()) b))
         | (StreamEnd(),b) -> b
-        | (_,StreamEnd()) -> StreamEnd()
      in (RmStream(nT,(recurse n m)) ,env)
   | (RmAppend(RmStream(nT,s), e2))              -> let(e2',env') = (eval1M inStreams env e2) in (RmAppend(RmStream(nT,s),e2'), env')
   | (RmAppend(e1,e2))                          -> let(e1',env') = (eval1M inStreams env e1) in (RmAppend(e1', e2), env')
@@ -494,15 +501,17 @@ let rec eval1M inStreams env e = match e with
 
   | (RmApp(e1,e2))                                -> let (e1',env') = (eval1M inStreams env e1) in (RmApp(e1',e2), env') 
 
-  (* (* Indexing *)
-  | (RmIndex(RmStream(tT,s), RmNum(n))) -> (e
-    (* match s with 
-    | Stream(v,n) -> s *)
-  , env) *)
+  (* Indexing *)
+  | (RmIndex(RmStream(tT,s), RmStream(_,Stream(RmNum(n),_)))) -> 
+    (
+      RmStream(tT,(followNSteps s n)),
+       env
+     )
+  | (RmIndex(RmStream(tT,s), _)) -> (RmStream(tT, StreamEnd()),env)
+  | (RmIndex(e, v)) -> let (e',env') = (eval1M inStreams env e) in ((RmIndex(e',v)), env')
 
   | (RmRead()) -> (inStreams , env)
-
-  | _ -> print_string "NO MATCH, RAISING TERMINATED\n"; raise (Terminated "No match");;
+  | _ -> print_string "NO MATCH, RAISING TERMINATED\n"; raise (Terminated "No match");; 
 
 let rec evalloop inStreams env e = try ( let (e',env') = (eval1M inStreams env e) in (evalloop inStreams env' e')) with Terminated _ -> if (isValue e) then e else raise (StuckTerm "Eval loop stuck on term") ;;
 
@@ -515,6 +524,7 @@ and print_res res = match res with
   | RmNum (i) -> print_int i ; print_string " : Int"
   | RmUnit () -> print_string " Unit"
   | RmStream (tT, Stream(n,e)) ->print_string "["; printStream(Stream(n,e)); print_string "] : Stream";
+  | RmStream (tT, StreamEnd()) ->print_string "[] : Stream";
   | RmLbd(rT,tT,x,e) -> print_string("Function : " ^ type_to_string( typeProg (res) ))
   | _ -> raise (NonBaseTypeResult "Not able to output result as string")
 ;;
