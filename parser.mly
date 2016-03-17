@@ -61,10 +61,10 @@ expr:
  | type_spec LTYPE LPAREN type_spec IDENT RPAREN LBRACE expr RBRACE {RmLbd ($1, $4, $5, $8) }
  | type_spec LTYPE LPAREN RPAREN LBRACE expr RBRACE { RmLbdEmpty($1,$6) }
 /* Sections */
-| IDENT LSQ COLON expr RSQ     { RmSectionStart($1, $4) }
- | IDENT LSQ expr COLON expr RSQ { RmSection($1, $3, $5) }
- | IDENT LSQ expr COLON RSQ     { RmSectionEnd($1, $3) }
- | IDENT LSQ expr RSQ          { RmIndex($1, $3) }
+| expr LSQ COLON expr RSQ     { RmSectionStart($1, $4) }
+ | expr LSQ expr COLON expr RSQ { RmSection($1, $3, $5) }
+ | expr LSQ expr COLON RSQ     { RmSectionEnd($1, $3) }
+ | expr LSQ expr RSQ          { RmIndex($1, $3) }
 /* Apply */
  | expr LPAREN expr RPAREN     { RmApp ($1, $3) }
  | expr LPAREN RPAREN          { RmApp ($1, RmUnit())}

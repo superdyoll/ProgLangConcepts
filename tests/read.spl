@@ -1,5 +1,1 @@
-let (stream<int> a = read()){
- let (int lambda(stream<int>) b = int lambda (stream<int> c){c}){
-   b(a)
- }
-};
+read();
