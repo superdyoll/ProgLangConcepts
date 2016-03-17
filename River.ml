@@ -33,7 +33,9 @@ type rivTerm =
   | RmGreaterEqualTo of rivTerm * rivTerm
   | RmNotEqualTo of rivTerm * rivTerm
   | RmEqualTo of rivTerm * rivTerm
+  (* Cons: int * int -> stream<int>*)
   | RmCons of rivTerm  * rivTerm
+  (* Append: int * int -> int *)
   | RmAppend of rivTerm * rivTerm
   | RmIndex of string * rivTerm
   | RmSection of string * rivTerm * rivTerm
@@ -90,8 +92,6 @@ Env(gs) -> Env ( (str, thing) :: gs ) ;;
 let rec typeOf env e = match e with 
    RmUnit () -> RivUnit
 
-  |RmNum (n) -> RivInt
-
   |RmVar (x) ->  (try lookup env x with LookupError _ -> raise (TypeError "Variable"))
 
   |RmStream (tT, Stream(e,_)) ->
@@ -100,91 +100,99 @@ let rec typeOf env e = match e with
       | RivStream(tT) -> RivStream(tT)
       | _ -> raise (TypeError "Stream")
     )
+  
+  |RmNum (n) -> RivStream(RivInt)
 
   |RmUMinus (e1) -> 
     ( match (typeOf env e1) with
-	RivInt -> RivInt
+	RivStream(RivInt) -> RivStream(RivInt)
       | _ -> raise (TypeError "UMinus")
     )
 
   |RmMinus(e1,e2) -> 
     (
      match (typeOf env e1) , (typeOf env e2) with 
-             RivInt, RivInt -> RivInt 
+             RivStream(RivInt), RivStream(RivInt) -> RivStream(RivInt) 
                     |_ -> raise (TypeError "Minus")
     )
 
   |RmPlus(e1,e2) -> 
     (
      match (typeOf env e1) , (typeOf env e2) with 
-             RivInt, RivInt -> RivInt 
+             RivStream(RivInt), RivStream(RivInt) -> RivStream(RivInt) 
                     |_ -> raise (TypeError "Plus")
     )
 
   |RmMultiply(e1,e2) -> 
     (
      match (typeOf env e1) , (typeOf env e2) with 
-             RivInt, RivInt -> RivInt 
+             RivStream(RivInt), RivStream(RivInt) -> RivStream(RivInt) 
                     |_ -> raise (TypeError "Multiply")
     )
 
   |RmDivide(e1,e2) -> 
     (
      match (typeOf env e1) , (typeOf env e2) with 
-             RivInt, RivInt -> RivInt 
+             RivStream(RivInt), RivStream(RivInt) -> RivStream(RivInt) 
                     |_ -> raise (TypeError "Divide")
     )
 
 
   |RmLessThan (e1,e2) -> 
     ( match (typeOf env e1) , (typeOf env e2) with 
-        RivInt, RivInt -> RivInt
+        RivStream(RivInt), RivStream(RivInt) -> RivStream(RivInt)
       | _ -> raise (TypeError "Less Than")
     )
 
-  |RmLessEqualTo (e1,e2) -> 
+  |RmGreaterThan (e1,e2) -> 
     ( match (typeOf env e1) , (typeOf env e2) with 
-        RivInt, RivInt -> RivInt
+        RivStream(RivInt), RivStream(RivInt) -> RivStream(RivInt)
       | _ -> raise (TypeError "Greater Than")
     )
 
   |RmGreaterEqualTo (e1,e2) -> 
     ( match (typeOf env e1) , (typeOf env e2) with 
-        RivInt, RivInt -> RivInt
+        RivStream(RivInt), RivStream(RivInt) -> RivStream(RivInt)
       | _ -> raise (TypeError "Greater Equal To")
     )
 
   |RmLessEqualTo (e1,e2) -> 
     ( match (typeOf env e1) , (typeOf env e2) with 
-        RivInt, RivInt -> RivInt
+        RivStream(RivInt), RivStream(RivInt) -> RivStream(RivInt)
       | _ -> raise (TypeError "Less Equal To")
     )
 
   |RmNotEqualTo (e1,e2) -> 
     ( match (typeOf env e1) , (typeOf env e2) with 
-        RivInt, RivInt -> RivInt
+        RivStream(RivInt), RivStream(RivInt) -> RivStream(RivInt)
       | _ -> raise (TypeError "Not Equal To")
     )
 
   |RmEqualTo (e1,e2) -> 
     ( match (typeOf env e1) , (typeOf env e2) with 
-        RivInt, RivInt -> RivInt
+        RivStream(RivInt), RivStream(RivInt) -> RivStream(RivInt)
       | _ -> raise (TypeError "Equal To")
     )
 
 
   |RmCons(e1,e2) -> 
-    (
-     match (typeOf env e1) , (typeOf env e2) with 
-             RivInt, RivInt -> RivInt 
-                    |_ -> raise (TypeError "Cons")
+    (let ty1 = typeOf env e1 in
+     let ty2 = typeOf env e2 in
+      (if (ty1 = ty2) then
+        RivStream(ty1) 
+      else
+        raise (TypeError "Cons: Types of streams don't match")
+      )
     )
 
   |RmAppend(e1,e2) -> 
-    (
-     match (typeOf env e1) , (typeOf env e2) with 
-             RivInt, RivInt -> RivInt 
-                    |_ -> raise (TypeError "Append")
+    (let ty1 = typeOf env e1 in
+     let ty2 = typeOf env e2 in
+      (if (ty1 = ty2) then
+        ty1
+      else
+        raise (TypeError "Append: Types of streams don't match")
+      )
     )
 
 (*
@@ -199,7 +207,7 @@ let rec typeOf env e = match e with
   |RmIf (e1,e2,e3) -> (
     let ty1 = typeOf env e1 in 
       match ty1 with 
-         RivInt -> (
+         RivStream(RivInt) -> (
                   let ty1 = typeOf env e2 in 
 		  let ty2 = typeOf env e3 in 
 		   (match (ty1=ty2) with 
@@ -236,7 +244,6 @@ let rec typeOf env e = match e with
 	     match tT = ty2 with
              true -> tT 
             |false -> raise (TypeError "Apply: Expressions not of same type")
-
             )
         | _ -> raise (TypeError "Apply: Not of type function")
         )
@@ -273,7 +280,7 @@ let rec read_stream () =
 let rec eval1M env e = match e with
   | (RmUnit()) -> print_string "UNIT \n"; raise (Terminated "Unit")
   | (RmVar x) -> print_string "VARIABLE: "; print_string x; print_string "\n"; (try ((lookup env x), env) with LookupError _ -> raise (UnboundVariableError "Variable not bound"))
-  | (RmNum n) -> print_string "NUMBER: "; print_int n; print_string "\n"; raise (Terminated "Number")
+  | (RmNum n) -> (*print_string "NUMBER: "; print_int n; print_string "\n"; *) raise (Terminated "Number")
   | (RmLbd(rT,tT,y,e')) -> print_string "LAMBDA"; raise (Terminated "Lambda")
   | (RmLbdEmpty(rT,e')) -> print_string "EMPTY LAMBDA"; raise (Terminated "Unit Lambda")
 
@@ -371,7 +378,13 @@ let rec eval1M env e = match e with
   | (RmNotEqualTo(RmStream(tT, s), e2)) -> let (e2',env') = (eval1M env e2) in (RmNotEqualTo(RmStream(tT, s),e2'), env')
   | (RmNotEqualTo(e1, e2))            -> let (e1',env') = (eval1M env e1) in (RmNotEqualTo(e1',e2),env')
 
+  (* Constructors *)
+
+  | (RmCons(RmStream(nT,n), RmStream(mT,m))) ->
+       (RmStream(RivStream(nT), Stream(RmStream(nT,n), function() -> Stream(RmStream(mT,m))), env)
+
   (* Operators *)
+
   | (RmPlus(RmNum(n),RmNum(m))) -> (RmNum(n+m) , env)
   | (RmPlus(RmNum(n), e2))      -> let (e2',env') = (eval1M env e2) in (RmPlus(RmNum(n),e2'), env')
   | (RmPlus(RmStream(tT,n), RmStream(_,m))) -> 
@@ -472,8 +485,8 @@ let rec eval1M env e = match e with
         read_stream()
       ), env)
 
-  | _ -> print_string "NO MATCH, RAISING TERMINATED\n";raise (Terminated "No match");;
-
+(*  | _ -> print_string "NO MATCH, RAISING TERMINATED\n";raise (Terminated "No match");;
+*)
 let rec evalloop env e = try ( let (e',env') = (eval1M env e) in (evalloop env' e')) with Terminated _ -> if (isValue e) then e else raise (StuckTerm "Eval loop stuck on term") ;;
 
 let evalProg e = evalloop (Env[]) e ;;
