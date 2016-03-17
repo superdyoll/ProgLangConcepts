@@ -381,7 +381,15 @@ let rec eval1M env e = match e with
   (* Constructors *)
 
   | (RmCons(RmStream(nT,n), RmStream(mT,m))) ->
-       (RmStream(RivStream(nT), Stream(RmStream(nT,n), function() -> Stream(RmStream(mT,m))), env)
+       (RmStream(RivStream(nT), Stream(RmStream(nT,n), function() -> Stream(RmStream(mT,m), function() -> StreamEnd()))), env)
+
+  | (RmAppend(RmStream(nT,n), RmStream(mT,m))) ->
+      let rec recurse x y = match (x,y) with
+        | (Stream(a,ae), b) -> 
+           Stream(a, function() -> (recurse (ae()) b))
+        | (StreamEnd(),b) -> b
+        | (_,StreamEnd()) -> StreamEnd()
+      in (RmStream(nT,(recurse n m)) ,env)
 
   (* Operators *)
 
@@ -485,8 +493,8 @@ let rec eval1M env e = match e with
         read_stream()
       ), env)
 
-(*  | _ -> print_string "NO MATCH, RAISING TERMINATED\n";raise (Terminated "No match");;
-*)
+  | _ -> print_string "NO MATCH, RAISING TERMINATED\n"; raise (Terminated "No match");;
+
 let rec evalloop env e = try ( let (e',env') = (eval1M env e) in (evalloop env' e')) with Terminated _ -> if (isValue e) then e else raise (StuckTerm "Eval loop stuck on term") ;;
 
 let evalProg e = evalloop (Env[]) e ;;
