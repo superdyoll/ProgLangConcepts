@@ -47,11 +47,11 @@ parser_main: line EOF { $1 };
 line: expr SEMICOLON { $1 };
 
 type_spec:
-    | LPAREN RPAREN { RivUnit } 
+    | LPAREN RPAREN { RivStream(RivInt) } 
     | ITYPE { RivStream(RivInt) }
     | STYPE LT type_spec GT { RivStream($3) }
     | type_spec LTYPE LPAREN type_spec RPAREN { RivFun($4, $1) }
-    | type_spec LTYPE LPAREN RPAREN { RivFun(RivUnit, $1) }
+    | type_spec LTYPE LPAREN RPAREN { RivFun(RivInt, $1) }
     | LPAREN type_spec RPAREN { $2 }
 ;
 
