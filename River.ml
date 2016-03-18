@@ -249,7 +249,7 @@ let rec typeOf env e = match e with
 
   |RmLet (tT, x, e1, e2) -> 
     (
-      let ty1 = typeOf env e1 in
+      let ty1 = typeOf (addBinding env x tT) e1 in
       let ty2 = typeOf (addBinding env x tT) e2 in 
          print_string "Letting To be "; print_string (type_to_string ty1); print_string "\n";
          print_string "Defined as type "; print_string (type_to_string tT); print_string "\n";
