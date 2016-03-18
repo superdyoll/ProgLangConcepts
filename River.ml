@@ -1,5 +1,6 @@
 exception LookupError of string ;;
 exception TypeError of string;;
+exception RuntimeError of string;;
 exception UnboundVariableError of string;;
 exception Terminated of string;;
 exception StuckTerm of string;;
@@ -205,6 +206,32 @@ let rec typeOf env e = match e with
               |_ -> raise (TypeError "Index")
     )
 
+  |RmSectionStart(e1,e2) -> 
+    ( let ty1 = typeOf env e1 in
+      let ty2 = typeOf env e2 in
+             match ty2 with 
+              | RivStream(RivInt) -> ty1
+              |_ -> raise (TypeError "SectionStart")
+    )
+
+
+  |RmSectionEnd(e1,e2) -> 
+    ( let ty1 = typeOf env e1 in
+      let ty2 = typeOf env e2 in
+             match ty2 with 
+              | RivStream(RivInt) -> ty1
+              |_ -> raise (TypeError "SectionEnd")
+    )
+
+  |RmSection(e1,e2,e3) -> 
+      ( let ty1 = typeOf env e1 in
+        let ty2 = typeOf env e2 in
+        let ty3 = typeOf env e3 in
+               match ty2, ty3 with 
+                | (RivStream(RivInt),RivStream(RivInt)) -> ty1
+                | (_,_) -> raise (TypeError "Section")
+      )
+
 
   |RmIf (e1,e2,e3) -> (
     let ty1 = typeOf env e1 in 
@@ -269,6 +296,7 @@ let rec convertLineToStream tokens =
       )
 ;;
 
+(* Helper functions for indexing *)
 let rec followNSteps stream steps = 
   if steps > 0 then (
     match stream with
@@ -276,6 +304,14 @@ let rec followNSteps stream steps =
     | StreamEnd() -> StreamEnd()
   )
   else stream
+
+let rec endAtN stream steps = 
+  if steps > 0 then (
+    match stream with
+    | Stream(n,x) -> Stream(n,function () -> (endAtN (x()) (steps - 1)))
+  )
+  else StreamEnd()
+  (* End of Helper functions for indexing *)
 
 let rec convertToStream strList = 
   match strList with
@@ -501,14 +537,49 @@ let rec eval1M inStreams env e = match e with
 
   | (RmApp(e1,e2))                                -> let (e1',env') = (eval1M inStreams env e1) in (RmApp(e1',e2), env') 
 
+  (* TODO: make indexing only return 1 value *)
   (* Indexing *)
   | (RmIndex(RmStream(tT,s), RmStream(_,Stream(RmNum(n),_)))) -> 
+    (RmStream(tT,(match (followNSteps s n) with 
+      | Stream(x,n) -> Stream(x,function () -> StreamEnd())
+      | StreamEnd() -> StreamEnd())),
+       env
+     )
+  | (RmIndex(RmStream(tT,s), e)) -> let (e',env') = (eval1M inStreams env e) in ((RmIndex(RmStream(tT,s),e')), env')
+  | (RmIndex(e, v)) -> let (e',env') = (eval1M inStreams env e) in ((RmIndex(e',v)), env')
+
+  (* Section End *)
+  | (RmSectionEnd(RmStream(tT,s), RmStream(_,Stream(RmNum(n),_)))) -> 
     (
       RmStream(tT,(followNSteps s n)),
        env
      )
-  | (RmIndex(RmStream(tT,s), _)) -> (RmStream(tT, StreamEnd()),env)
-  | (RmIndex(e, v)) -> let (e',env') = (eval1M inStreams env e) in ((RmIndex(e',v)), env')
+  | (RmSectionEnd(RmStream(tT,s), e)) -> let (e',env') = (eval1M inStreams env e) in ((RmSectionEnd(RmStream(tT,s),e')), env')
+  | (RmSectionEnd(e, v)) -> let (e',env') = (eval1M inStreams env e) in ((RmSectionEnd(e',v)), env')
+
+(* Section Start *)
+  | (RmSectionStart(RmStream(tT,s), RmStream(_,Stream(RmNum(n),_)))) -> 
+    (
+      RmStream(tT,(endAtN s n)),
+       env
+     )
+  | (RmSectionStart(RmStream(tT,s), e)) -> let (e',env') = (eval1M inStreams env e) in ((RmSectionStart(RmStream(tT,s),e')), env')
+  | (RmSectionStart(e, v)) -> let (e',env') = (eval1M inStreams env e) in ((RmSectionStart(e',v)), env')
+
+  (* Sections *)
+  | (RmSection(RmStream(tT,s), RmStream(_,Stream(RmNum(nFrom),_)), RmStream(_,Stream(RmNum(nTo),_)))) ->
+    let length = (nTo - nFrom) in
+    if  length < 0 then
+      raise (RuntimeError "Splitting 'from' value is greater than 'to' value")
+    else
+      (
+        RmStream(tT,(endAtN (followNSteps s nFrom) length)),
+         env
+      )
+  | (RmSection(RmStream(tT,s), RmStream(tT2,Stream(RmNum(nFrom),n1)), e)) -> let (e',env') = (eval1M inStreams env e) in (
+    (RmSection(RmStream(tT,s), RmStream(tT2,Stream(RmNum(nFrom),n1)), e')), env')
+  | (RmSection(RmStream(tT,s), e, n2)) -> let (e',env') = (eval1M inStreams env e) in ((RmSection(RmStream(tT,s), e', n2)), env')
+  | (RmSection(e, n1, n2)) -> let (e',env') = (eval1M inStreams env e) in ((RmSection(e',n1, n2)), env')
 
   | (RmRead()) -> (inStreams , env)
   | _ -> print_string "NO MATCH, RAISING TERMINATED\n"; raise (Terminated "No match");; 
