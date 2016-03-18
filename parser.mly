@@ -19,7 +19,7 @@
 %token DEFINE
 %token LTYPE
 %token IF ELSE
-%token LOOP PRINT READ
+%token PRINT READ
 %token SEMICOLON
 %token EOF
 %token COMMA

@@ -7,7 +7,6 @@ rule lexer_main = parse
     | ['0'-'9']+ as lxm { INT(int_of_string lxm) }
     | "//" _ +  { COMMENT }
     (* Functions *)
-    | "loop"    { LOOP }
     | "print"    { PRINT }
     | "read"    { READ }
     (* Types *)
@@ -18,7 +17,7 @@ rule lexer_main = parse
     | "def"     { DEFINE }
     | "if"      { IF }
     | "else"    { ELSE }
-    | ['a'-'z'] + as lxm { IDENT(lxm) }
+    | ['a'-'z' '_'] + as lxm { IDENT(lxm) }
     | ';'       { SEMICOLON }
     (* Comparison Operators *)
     | ">="      { GEQ }
