@@ -332,7 +332,8 @@ let rec eval1M inStreams env e = match e with
   | (RmStream (tT, Stream(_,_))) -> print_string "terminating on Stream\n"; raise (Terminated "Stream")
   | (RmStream (tT, StreamEnd())) -> print_string "terminating on StreamEnd\n";  raise (Terminated "StreamEnd")
 
-  (* Conditionals *)
+  (* ==Conditionals== *)
+  (* Less Than *)
   | (RmLessThan(RmNum(n),RmNum(m))) -> ((if n<m then RmNum(1) else RmNum(0)), env)
   | (RmLessThan(RmNum(n), e2))      -> let (e2',env') = (eval1M inStreams env e2) in (RmLessThan(RmNum(n),e2'),env')
   | (RmLessThan(RmStream(tT,n), RmStream(_,m))) -> 
@@ -348,6 +349,7 @@ let rec eval1M inStreams env e = match e with
   | (RmLessThan(RmStream(tT, s), e2)) -> let (e2',env') = (eval1M inStreams  env e2) in (RmLessThan(RmStream(tT, s),e2'), env')
   | (RmLessThan(e1, e2))            -> let (e1',env') = (eval1M inStreams  env e1) in (RmLessThan(e1',e2),env')
 
+  (* Less Equal *)
   | (RmLessEqualTo(RmNum(n),RmNum(m))) -> ((if n<=m then RmNum(1) else RmNum(0)), env)
   | (RmLessEqualTo(RmNum(n), e2))      -> let (e2',env') = (eval1M inStreams  env e2) in (RmLessEqualTo(RmNum(n),e2'),env')
   | (RmLessEqualTo(RmStream(tT,n), RmStream(_,m))) -> 
@@ -364,6 +366,7 @@ let rec eval1M inStreams env e = match e with
   | (RmLessEqualTo(RmStream(tT, s), e2)) -> let (e2',env') = (eval1M inStreams env e2) in (RmLessEqualTo(RmStream(tT, s),e2'), env')
   | (RmLessEqualTo(e1, e2))            -> let (e1',env') = (eval1M inStreams env e1) in (RmLessEqualTo(e1',e2),env')
 
+  (* Greater Than *)
   | (RmGreaterThan(RmNum(n),RmNum(m))) -> ((if n>m then RmNum(1) else RmNum(0)), env)
   | (RmGreaterThan(RmNum(n), e2))      -> let (e2',env') = (eval1M inStreams env e2) in (RmGreaterThan(RmNum(n),e2'),env')
   | (RmGreaterThan(RmStream(tT,n), RmStream(_,m))) -> 
@@ -379,6 +382,7 @@ let rec eval1M inStreams env e = match e with
   | (RmGreaterThan(RmStream(tT, s), e2)) -> let (e2',env') = (eval1M inStreams env e2) in (RmGreaterThan(RmStream(tT, s),e2'), env')
   | (RmGreaterThan(e1, e2))            -> let (e1',env') = (eval1M inStreams env e1) in (RmGreaterThan(e1',e2),env')
 
+  (* Greater Equal *)
   | (RmGreaterEqualTo(RmNum(n),RmNum(m))) -> ((if n>m then RmNum(1) else RmNum(0)), env)
   | (RmGreaterEqualTo(RmNum(n), e2))      -> let (e2',env') = (eval1M inStreams env e2) in (RmGreaterEqualTo(RmNum(n),e2'),env')
   | (RmGreaterEqualTo(RmStream(tT,n), RmStream(_,m))) -> 
@@ -395,6 +399,7 @@ let rec eval1M inStreams env e = match e with
   | (RmGreaterEqualTo(RmStream(tT, s), e2)) -> let (e2',env') = (eval1M inStreams env e2) in (RmGreaterEqualTo(RmStream(tT, s),e2'), env')
   | (RmGreaterEqualTo(e1, e2))            -> let (e1',env') = (eval1M inStreams env e1) in (RmGreaterEqualTo(e1',e2),env')
 
+  (* Not Equal *)
   | (RmEqualTo(RmUnit(),RmUnit())) -> (RmNum(1),env)
   | (RmEqualTo(RmUnit(), e2))      -> let (e2',env') = (eval1M inStreams env e2) in (RmEqualTo(RmUnit(),e2'),env')
   | (RmEqualTo(_,RmUnit()))        -> (RmNum(0), env)
@@ -414,6 +419,7 @@ let rec eval1M inStreams env e = match e with
   | (RmEqualTo(RmStream(tT, s), e2)) -> let (e2',env') = (eval1M inStreams env e2) in (RmEqualTo(RmStream(tT, s),e2'), env')
   | (RmEqualTo(e1, e2))            -> let (e1',env') = (eval1M inStreams env e1) in (RmEqualTo(e1',e2),env')
 
+  (* Not Equal *)
   | (RmNotEqualTo(RmUnit(),RmUnit())) -> (RmNum(0),env)
   | (RmNotEqualTo(RmUnit(), e2))      -> let (e2',env') = (eval1M inStreams env e2) in (RmNotEqualTo(RmUnit(),e2'),env')
   | (RmNotEqualTo(_,RmUnit()))        -> (RmNum(1), env)
@@ -439,6 +445,7 @@ let rec eval1M inStreams env e = match e with
   | (RmCons(RmStream(nT,s), e2))              -> let(e2',env') = (eval1M inStreams env e2) in (RmCons(RmStream(nT,s),e2'), env')
   | (RmCons(e1,e2))                           -> let(e1',env') = (eval1M inStreams env e1) in (RmCons(e1', e2), env')
 
+  (* Append *)
   | (RmAppend(RmStream(nT,n), RmStream(mT,m))) ->
       let rec recurse x y = match (x,y) with
         | (Stream(a,ae), b) -> 
@@ -449,7 +456,6 @@ let rec eval1M inStreams env e = match e with
   | (RmAppend(e1,e2))                          -> let(e1',env') = (eval1M inStreams env e1) in (RmAppend(e1', e2), env')
 
   (* Operators *)
-
   | (RmPlus(RmNum(n),RmNum(m))) -> (RmNum(n+m) , env)
   | (RmPlus(RmNum(n), e2))      -> let (e2',env') = (eval1M inStreams env e2) in (RmPlus(RmNum(n),e2'), env')
   | (RmPlus(RmStream(tT,n), RmStream(_,m))) -> 
@@ -533,6 +539,7 @@ let rec eval1M inStreams env e = match e with
   | (RmIf(RmStream(tT,Stream(n,_)),e1,e2)) -> (RmIf(n,e1,e2), env)
   | (RmIf(b,e1,e2))               -> let (b',env') = (eval1M inStreams env b) in (RmIf(b',e1,e2), env')
 
+  (* Let *)
   | (RmLet(tT,x,e1,e2)) when (isValue(e1)) -> (e2, addBinding env x e1)
   | (RmLet(tT,x,e1,e2))                    -> let (e1', env') = (eval1M inStreams (addBinding env x e1) e1) in (RmLet(tT,x,e1',e2), env')
 
@@ -545,7 +552,6 @@ let rec eval1M inStreams env e = match e with
 
   | (RmApp(e1,e2))                                -> let (e1',env') = (eval1M inStreams env e1) in (RmApp(e1',e2), env') 
 
-  (* TODO: make indexing only return 1 value *)
   (* Indexing *)
   | (RmIndex(RmStream(tT,s), RmStream(_,Stream(RmNum(n),_)))) -> 
     (RmStream(tT,(match (followNSteps s n) with 
