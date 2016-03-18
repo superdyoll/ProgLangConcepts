@@ -32,6 +32,7 @@ rule lexer_main = parse
     | '-'       { MINUS }
     | '*'       { MULTIPLY }
     | '/'       { DIVIDE }
+    | '%'       { MODULUS }
     (* Concatenators *)
     | "::"      { CONS }
     | '.'       { DOT }

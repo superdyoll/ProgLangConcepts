@@ -27,7 +27,8 @@ type rivTerm =
   | RmMinus of rivTerm * rivTerm
   | RmPlus of rivTerm * rivTerm
   | RmMultiply of rivTerm * rivTerm
-  | RmDivide of rivTerm * rivTerm 
+  | RmDivide of rivTerm * rivTerm
+  | RmModulus of rivTerm * rivTerm 
   | RmLessThan of rivTerm * rivTerm
   | RmLessEqualTo of rivTerm * rivTerm
   | RmGreaterThan of rivTerm * rivTerm
@@ -137,6 +138,12 @@ let rec typeOf env e = match e with
                     |_ -> raise (TypeError "Divide")
     )
 
+  |RmModulus(e1,e2) -> 
+    (
+     match (typeOf env e1) , (typeOf env e2) with 
+             RivStream(RivInt), RivStream(RivInt) -> RivStream(RivInt) 
+                    |_ -> raise (TypeError "Modulus")
+    )
 
   |RmLessThan (e1,e2) -> 
     ( match (typeOf env e1) , (typeOf env e2) with 
@@ -519,7 +526,23 @@ let rec eval1M inStreams env e = match e with
   | (RmDivide(RmStream(tT, s), e2)) -> let (e2',env') = (eval1M inStreams env e2) in (RmDivide(RmStream(tT, s),e2'), env')  
   | (RmDivide(e1, e2))            -> let (e1',env') = (eval1M inStreams env e1) in (RmDivide(e1', e2), env')
 
-  (* Unary Minus *)
+  (* Modulus *)
+  | (RmModulus(RmNum(n),RmNum(m))) -> (RmNum(n mod m) , env)
+  | (RmModulus(RmNum(n), e2))      -> let (e2',env') = (eval1M inStreams env e2) in (RmModulus(RmNum(n),e2'), env')
+  | (RmModulus(RmStream(tT,n), RmStream(_,m))) -> 
+  let rec recurse x y = match (x,y) with 
+    | (Stream(a,ae),Stream(b,be)) -> 
+       Stream(
+        (let (e,_) = (eval1M inStreams env(RmModulus(a,b))) in e),
+        function () -> recurse (ae()) (be())
+      )
+    | (StreamEnd(),_)
+    | (_,StreamEnd()) -> StreamEnd()
+  in (RmStream(tT, recurse n m), env)
+  | (RmModulus(RmStream(tT, s), e2)) -> let (e2',env') = (eval1M inStreams env e2) in (RmModulus(RmStream(tT, s),e2'), env')  
+  | (RmModulus(e1, e2))            -> let (e1',env') = (eval1M inStreams env e1) in (RmModulus(e1', e2), env')
+
+ (* Unary Minus *)
   | (RmUMinus(RmNum(n))) -> (RmNum(-n), env)
   | (RmUMinus(RmStream(tT,n))) -> 
   let rec recurse x = match x with 

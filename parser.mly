@@ -7,7 +7,7 @@
 %token <string> IDENT
 %token ITYPE
 %token STYPE
-%token PLUS MINUS MULTIPLY DIVIDE
+%token PLUS MINUS MULTIPLY DIVIDE MODULUS
 %token NOT
 %token LT GT GEQ LEQ NEQ EQ
 %token CONS DOT
@@ -33,7 +33,7 @@
 %nonassoc ELSE
 %left LSQ RSQ
 %left PLUS MINUS
-%left MULTIPLY DIVIDE
+%left MULTIPLY DIVIDE MODULUS
 %right LT GT GEQ LEQ NEQ EQ
 %right COLON
 %right DOT
@@ -75,6 +75,7 @@ expr:
  | expr MINUS expr             { RmMinus ($1, $3) }
  | expr MULTIPLY expr          { RmMultiply ($1, $3) }
  | expr DIVIDE expr            { RmDivide ($1,$3) }
+ | expr MODULUS expr           { RmModulus ($1,$3) }
  | expr LT expr                { RmLessThan ($1, $3) }
  | expr GT expr                { RmGreaterThan ($1, $3) }
  | expr GEQ expr               { RmGreaterEqualTo ($1, $3) }
