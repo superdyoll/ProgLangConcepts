@@ -223,7 +223,7 @@ let rec typeOf env e = match e with
 
   |RmLet (tT, x, e1, e2) -> 
     (
-      let ty1 = typeOf env e1 in
+      let ty1 = typeOf (addBinding env x tT) e1 in
       let ty2 = typeOf (addBinding env x tT) e2 in 
          print_string "Letting To be "; print_string (type_to_string ty1); print_string "\n";
          print_string "Defined as type "; print_string (type_to_string tT); print_string "\n";
@@ -478,8 +478,9 @@ let rec eval1M inStreams env e = match e with
   | (RmUMinus(e1))      -> let (e1',env') = (eval1M inStreams env e1) in (RmUMinus(e1'), env')
 
   (* Ternary *)
-  | (RmIf(RmNum(0),e1,e2))        -> (e2, env)
   | (RmIf(RmNum(_),e1,e2))        -> (e1, env)
+  | (RmIf(RmStream(_,StreamEnd()),e1,e2))
+  | (RmIf(RmNum(0),e1,e2))        -> (e2, env)
   | (RmIf(RmStream(tT,Stream(n,_)),e1,e2)) -> (RmIf(n,e1,e2), env)
   | (RmIf(b,e1,e2))               -> let (b',env') = (eval1M inStreams env b) in (RmIf(b',e1,e2), env')
 
@@ -519,25 +520,42 @@ let rec count_streams streams acc = match streams with
   | Stream(n,e) -> count_streams (e()) (acc + 1)
   | StreamEnd() -> acc
 
-let rec print_streams_rec streams no_streams pos = match streams with 
-  | Stream(RmStream(_,n), e) -> 
-      match n with
-         | Stream(RmNum(nF),nR) -> print_int nF; 
-             if (pos mod no_streams) = 0 
-                 then print_string "\n";
-             (match e() with 
-                | Stream (RmNum(eF), eR) ->
-                    print_streams_rec (Stream(RmNum(eF), (function() -> (append_streams (eR()) (Stream(RmStream(RivInt ,(nR())), function ()-> StreamEnd())))))) no_streams (pos + 1))
+let rec rearrange_stream stream nextValue nextValueType =
+  match stream with 
+    | Stream(RmStream(tT2,Stream(RmNum(n),ne)), nextStream) ->
+            let nextElement = (Stream(RmStream(nextValueType, nextValue), function ()-> StreamEnd())) in
+            let newStream = (append_streams stream nextElement) in
+              newStream
+    | StreamEnd() -> (Stream(RmStream(RivStream(nextValueType),(nextValue)), function () -> StreamEnd()))
+;;
+
+let rec print_streams_rec streams no_streams pos =
+ match streams with 
+  | Stream(RmStream(tT,stream), next) -> 
+      (match stream with
+         | Stream(RmNum(nF),nR) -> 
+            print_int nF; 
+            (if (pos mod no_streams) = 0 
+               then print_string "\n" else print_string " ");
+            let nxt = next() in
+            let nr = nR() in
+            (print_streams_rec 
+              (rearrange_stream nxt nr tT)
+              no_streams
+              (pos+1)
+            )
          | StreamEnd() -> ()
          | _ -> raise (DimensionError "Can only print 2D arrays")
+       )
   | Stream(RmNum(n), e) ->
       print_int n;
-      print_string "\n";
       print_streams_rec (e()) no_streams pos;
   | StreamEnd() -> ()
+;;
+
 
 let rec print_streams stream = 
-   (print_streams_rec stream (count_streams stream 0) 0)
+   (print_streams_rec stream (count_streams stream 0) 1)
 
 and print_res res = match res with
   | RmNum (i) -> print_int i
@@ -546,3 +564,4 @@ and print_res res = match res with
   | RmLbd(rT,tT,x,e) -> print_string("Function : " ^ type_to_string( typeProg (res) ))
   | _ -> raise (NonBaseTypeResult "Not able to output result as string")
 ;;
+
