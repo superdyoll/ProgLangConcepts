@@ -199,7 +199,7 @@ let rec typeOf env e = match e with
       (if (ty1 = ty2) then
         ty1
       else
-        raise (TypeError "Append: Types of streams don't match")
+        raise (TypeError ("Append: Types of streams don't match, Trying to append type '"^(type_to_string ty1)^"' to type '"^(type_to_string ty2)))
       )
     )
 
@@ -207,9 +207,10 @@ let rec typeOf env e = match e with
   |RmIndex(e1,e2) -> 
     ( let ty1 = typeOf env e1 in
       let ty2 = typeOf env e2 in
-             match ty2 with 
-              | RivStream(RivInt) -> ty1
-              |_ -> raise (TypeError "Index")
+             match (ty2,ty1) with 
+              | RivStream(RivInt), RivStream(s) -> s
+              | RivStream(RivInt), _ -> raise (TypeError "You can only index a stream")
+              | _,_ -> raise (TypeError "Index")
     )
 
   |RmSectionStart(e1,e2) -> 
