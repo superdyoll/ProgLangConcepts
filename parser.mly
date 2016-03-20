@@ -31,12 +31,13 @@
 %nonassoc DEFINE
 %nonassoc IF
 %nonassoc ELSE
-%left LSQ RSQ
+%right DOT
 %left PLUS MINUS
 %left MULTIPLY DIVIDE MODULUS
 %right LT GT GEQ LEQ NEQ EQ
 %right COLON
-%right DOT
+%right LSQ RSQ COLON
+%right LPAREN RPAREN
 /* Highest Precedence */
 %start parser_main
 %type <River.rivTerm> parser_main
@@ -63,14 +64,15 @@ expr:
  /* Lambdas */
  | type_spec LTYPE LPAREN type_spec IDENT RPAREN LBRACE expr RBRACE {RmLbd ($1, $4, $5, $8) }
  | type_spec LTYPE LPAREN RPAREN LBRACE expr RBRACE { RmLbdEmpty($1,$6) }
-/* Sections */
+/* Apply */
+ | expr LPAREN expr RPAREN     { RmApp ($1, $3) }
+ | expr LPAREN RPAREN          { RmApp ($1, RmUnit())}
+ /* Sections */
 | expr LSQ COLON expr RSQ     { RmSectionStart($1, $4) }
  | expr LSQ expr COLON expr RSQ { RmSection($1, $3, $5) }
  | expr LSQ expr COLON RSQ     { RmSectionEnd($1, $3) }
  | expr LSQ expr RSQ          { RmIndex($1, $3) }
-/* Apply */
- | expr LPAREN expr RPAREN     { RmApp ($1, $3) }
- | expr LPAREN RPAREN          { RmApp ($1, RmUnit())}
+ /* Operators */
  | expr PLUS expr              { RmPlus ($1, $3) }
  | expr MINUS expr             { RmMinus ($1, $3) }
  | expr MULTIPLY expr          { RmMultiply ($1, $3) }
