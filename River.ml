@@ -390,7 +390,7 @@ let rec convertToStream strList =
 let rec eval1M inStreams env e = match e with
   | (RmUnit()) -> (RmStream(RivInt, StreamEnd()), env)
   | (RmVar x) -> (try ((lookup env x), env) with LookupError _ -> raise (UnboundVariableError "Variable not bound"))
-  | (RmNum n) -> (*print_string "NUMBER: "; print_int n; print_string "\n"; *) raise (Terminated "Number")
+  | (RmNum n) -> (RmStream(RivInt, Stream(RmNum (n),function () -> StreamEnd())), env)
   | (RmLbd(rT,tT,y,e')) -> raise (Terminated "Lambda")
   | (RmLbdEmpty(rT,e')) -> raise (Terminated "Unit Lambda")
 
@@ -742,11 +742,12 @@ let rec print_streams streams =
   | StreamEnd() -> ()
 
 
-and print_res res = match res with
+let rec print_res res = match res with
   | RmNum (i) -> print_int i
   | RmUnit () -> print_string "() "
-  | RmStream (tT, Stream(n,e)) -> print_streams(Stream(n,e))
+  | RmStream (tT, s) -> print_streams(s)
   | RmLbd(rT,tT,x,e) -> print_string("Function : " ^ type_to_string( typeProg (res) ))
+  | RmLbdEmpty(rT,e) -> print_string("Function : " ^ type_to_string( typeProg (res) ))
   | _ -> raise (NonBaseTypeResult "Not able to output result as string")
 ;;
 
