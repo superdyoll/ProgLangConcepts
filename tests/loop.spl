@@ -3,4 +3,4 @@ let(int lambda(int) loop_sec = int lambda(int a){
 }
 ){
     loop_sec(5)
-};
+}
