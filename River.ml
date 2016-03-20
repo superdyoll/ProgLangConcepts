@@ -5,6 +5,7 @@ exception UnboundVariableError of string;;
 exception Terminated of string;;
 exception StuckTerm of string;;
 exception NonBaseTypeResult of string;;
+exception DimensionError of string;;
 
 open Printf;;
 
@@ -286,6 +287,51 @@ let rec typeOf env e = match e with
 
   |RmLbd(rT,tT,x,e) ->  RivFun(typeOf (addBinding env x tT) e, rT)
   |RmLbdEmpty (rT,e) ->  RivFun(RivInt, rT) 
+
+
+
+let rec shave_first_elements_rec streams =
+    match streams with
+    |  Stream(RmStream(tT,stream), nextStream) -> (
+        (* Match the sub-stream *)
+        match stream with
+        | Stream(n,ns) -> 
+            Stream(n,function () -> (shave_first_elements_rec (nextStream())))
+        | StreamEnd() -> 
+          (shave_first_elements_rec (nextStream()))
+    )
+    |  StreamEnd() -> StreamEnd()
+
+
+let rec drop_first_elements_rec streams =
+    match streams with
+    |  Stream(RmStream(tT,stream), nextStream) -> (
+        (* Match the sub-stream *)
+        match stream with
+        | Stream(n,ns) ->
+          let chopStream () = RmStream(tT,(ns())) in
+            Stream((chopStream()),function () -> (drop_first_elements_rec (nextStream())))
+        | StreamEnd() -> 
+          (drop_first_elements_rec (nextStream()))
+    )
+    |  StreamEnd() -> StreamEnd()
+
+let rec shave_first_elements streams =
+    (shave_first_elements_rec streams)
+
+let rec drop_first_elements streams =
+    (drop_first_elements_rec streams)
+
+
+(* Helper function that transposes a stream *)
+let rec transpose streams = 
+    match streams with
+    |  Stream(RmStream(tT,stream),nextStream) -> (
+        let (chopped_streams, new_stream) = ((drop_first_elements streams),(shave_first_elements streams)) in
+          (Stream(RmStream(tT,new_stream), function () -> (transpose chopped_streams)))
+    )
+    | Stream(_,_) -> (raise (DimensionError "Cannot Transpose a 1D stream"))
+    |  StreamEnd() -> (StreamEnd())
 
 
 let typeProg e = typeOf (Env []) e ;;
@@ -623,16 +669,59 @@ let rec eval1M inStreams env e = match e with
 
 let rec evalloop inStreams env e = try ( let (e',env') = (eval1M inStreams env e) in (evalloop inStreams env' e')) with Terminated _ -> if (isValue e) then e else raise (StuckTerm "Eval loop stuck on term") ;;
 
-let evalProg inputBuffer e = evalloop (RmStream(RivStream(RivInt), (convertToStream (List.rev inputBuffer)))) (Env[]) e ;;
+let evalProg inputBuffer e = evalloop (RmStream(RivStream(RivInt), (transpose (convertToStream (List.rev inputBuffer))))) (Env[]) e ;;
 
-let rec printStream stream = match stream with
-  | Stream(n,e) -> print_res n; print_string ", "; printStream (e())
-  | StreamEnd() -> print_string "() : StreamEnd"
+let rec append_streams x y = match (x,y) with
+  | (Stream(a,ae), b) -> 
+           Stream(a, function() -> (append_streams (ae()) b))
+  | (StreamEnd(),b) -> b
+  | (_,StreamEnd()) -> StreamEnd()
+
+let rec count_streams streams acc = match streams with
+  | Stream(n,e) -> count_streams (e()) (acc + 1)
+  | StreamEnd() -> acc
+
+let rec rearrange_stream stream nextValue nextValueType =
+  match stream with 
+    | Stream(RmStream(tT2,Stream(RmNum(n),ne)), nextStream) ->
+            let nextElement = (Stream(RmStream(nextValueType, nextValue), function () -> StreamEnd())) in
+            let newStream = (append_streams stream nextElement) in
+              newStream
+    | StreamEnd() -> (Stream(RmStream(RivStream(nextValueType),(nextValue)), function () -> StreamEnd()))
+;;
+
+let rec print_streams_rec streams =
+ match streams with 
+  | Stream(RmStream(tT,n), e) ->
+  (* Print a single line *)
+    print_streams_rec n; 
+    print_string "\n";
+    print_streams_rec (e());
+  (* Print a single line *)
+  | Stream(RmNum(n), e) ->
+    print_int n;
+    print_string " ";
+    print_streams_rec (e());
+  | StreamEnd() -> ()
+;;
+
+let rec print_streams streams = 
+  match streams with 
+  (* if the stream is 2D, print it transposed *)
+  | Stream(RmStream(_,_), _) ->
+    print_streams_rec (transpose streams);
+  (* Otherwise convert it to a 2D stream and transpose it *)
+  | Stream(RmNum(_), _) ->
+    print_string "Printing single line! \n";
+    print_streams_rec (transpose (Stream(RmStream(RivInt,streams), function () -> StreamEnd())));
+  | StreamEnd() -> ()
+   
+
 and print_res res = match res with
-  | RmNum (i) -> print_int i ; print_string " : Int"
-  | RmUnit () -> print_string " Unit"
-  | RmStream (tT, Stream(n,e)) ->print_string "["; printStream(Stream(n,e)); print_string "] : Stream";
-  | RmStream (tT, StreamEnd()) ->print_string "[] : Stream";
+  | RmNum (i) -> print_int i
+  | RmUnit () -> print_string "() "
+  | RmStream (tT, Stream(n,e)) -> print_streams(Stream(n,e))
   | RmLbd(rT,tT,x,e) -> print_string("Function : " ^ type_to_string( typeProg (res) ))
   | _ -> raise (NonBaseTypeResult "Not able to output result as string")
 ;;
+

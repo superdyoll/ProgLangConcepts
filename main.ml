@@ -31,5 +31,5 @@ let () = print_string "Program Type Checked" ; print_newline() in
 (* Run Evaluator *)
 let readBuffer = readIntoBuffer() in 
 let result1 = evalProg readBuffer parsedProg in 
-print_string "Program Evaluated using Machine semantics to ==> " ; print_res result1 ; print_newline();
+(* print_string "Program Evaluated using Machine semantics to ==> " ;  *)print_res result1 ; print_newline();
 flush stdout
