@@ -511,11 +511,20 @@ let rec eval1M inStreams env e = match e with
   | (RmNotEqualTo(e1, e2))            -> let (e1',env') = (eval1M inStreams env e1) in (RmNotEqualTo(e1',e2),env')
 
   (* Constructors *)
-
-  | (RmCons(RmStream(nT,n), RmStream(mT,m))) ->
-       (RmStream(RivStream(nT), Stream(RmStream(nT,n), function() -> Stream(RmStream(mT,m), function() -> StreamEnd()))), env)
-  | (RmCons(RmStream(nT,s), e2))              -> let(e2',env') = (eval1M inStreams env e2) in (RmCons(RmStream(nT,s),e2'), env')
-  | (RmCons(e1,e2))                           -> let(e1',env') = (eval1M inStreams env e1) in (RmCons(e1', e2), env')
+  | (RmCons(RmStream(nT,s), m)) ->
+      (RmStream(
+        (RivStream(nT)),
+        Stream(
+          RmStream(
+            nT,
+            s
+          ),
+          (function() -> Stream(
+                (evalloop inStreams env m),
+                function() -> StreamEnd()))
+        )
+      ), env)
+  | (RmCons(e1,e2)) -> let(e1',env') = (eval1M inStreams env e1) in (RmCons(e1', e2), env')
 
   (* Append *)
   | (RmAppend(RmStream(nT,n), m)) ->
