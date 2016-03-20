@@ -376,6 +376,18 @@ let rec convertToStream strList =
     Stream( RmStream(RivStream(RivInt), convertLineToStream(tokens)),function () -> convertToStream(t))
 ;;
 
+let rec printStream stream = match stream with
+  | Stream(n,e) -> print_res_old n; print_string ", "; printStream (e())
+  | StreamEnd() -> print_string "() : StreamEnd"
+and print_res_old res = match res with
+  | RmNum (i) -> print_int i ; print_string " : Int"
+  | RmUnit () -> print_string " Unit"
+  | RmStream (tT, Stream(n,e)) ->print_string "["; printStream(Stream(n,e)); print_string "] : Stream";
+  | RmStream (tT, StreamEnd()) ->print_string "[] : Stream";
+  | RmLbd(rT,tT,x,e) -> print_string("Function : " ^ type_to_string( typeProg (res) ))
+  | _ -> raise (NonBaseTypeResult "Not able to output result as string")
+
+
 let rec eval1M inStreams env e = match e with
   | (RmUnit()) -> (RmStream(RivInt, StreamEnd()), env)
   | (RmVar x) -> print_string "VARIABLE: "; print_string x; print_string "\n"; (try ((lookup env x), env) with LookupError _ -> raise (UnboundVariableError "Variable not bound"))
@@ -501,6 +513,13 @@ let rec eval1M inStreams env e = match e with
 
   (* Append *)
   | (RmAppend(RmStream(nT,n), RmStream(mT,m))) ->
+      (* Debug Code *)
+      (* print_string "Appending two streams:\n";
+      print_res_old (RmStream(nT,n));
+      print_string  "\n";
+      print_res_old (RmStream(mT,m));
+      print_string  "\n"; *)
+      (* / Debug Code *)
       let rec recurse x y = match (x,y) with
         | (Stream(a,ae), b) -> 
            Stream(a, function() -> (recurse (ae()) b))
@@ -624,9 +643,9 @@ let rec eval1M inStreams env e = match e with
 
   (* Indexing *)
   | (RmIndex(RmStream(tT,s), RmStream(_,Stream(RmNum(n),_)))) -> 
-    (RmStream(tT,(match (followNSteps s n) with 
-      | Stream(x,n) -> Stream(x,function () -> StreamEnd())
-      | StreamEnd() -> StreamEnd())),
+    ((match (followNSteps s n) with 
+      | Stream(x,n) -> x
+      | StreamEnd() -> RmUnit()),
        env
      )
   | (RmIndex(RmStream(tT,s), e)) -> let (e',env') = (eval1M inStreams env e) in ((RmIndex(RmStream(tT,s),e')), env')
@@ -691,6 +710,7 @@ let rec rearrange_stream stream nextValue nextValueType =
     | StreamEnd() -> (Stream(RmStream(RivStream(nextValueType),(nextValue)), function () -> StreamEnd()))
 ;;
 
+
 let rec print_streams_rec streams =
  match streams with 
   | Stream(RmStream(tT,n), e) ->
@@ -704,19 +724,20 @@ let rec print_streams_rec streams =
     print_string " ";
     print_streams_rec (e());
   | StreamEnd() -> ()
+  | _ -> ()
 ;;
 
 let rec print_streams streams = 
   match streams with 
   (* if the stream is 2D, print it transposed *)
-  | Stream(RmStream(_,_), _) ->
+  | Stream(RmStream(tT,_), _) ->
+    print_res_old (RmStream(tT,streams));
     print_streams_rec (transpose streams);
   (* Otherwise convert it to a 2D stream and transpose it *)
   | Stream(RmNum(_), _) ->
-    print_string "Printing single line! \n";
     print_streams_rec (transpose (Stream(RmStream(RivInt,streams), function () -> StreamEnd())));
   | StreamEnd() -> ()
-   
+
 
 and print_res res = match res with
   | RmNum (i) -> print_int i
