@@ -11,8 +11,8 @@ open Printf;;
 
 (* Stream implementation *)
 type 'a stream = Stream of 'a * (unit -> 'a stream) | StreamEnd of unit;;
-let hd : 'a stream -> 'a = function Stream (a, _) -> a;;
-let tl : 'a stream -> 'a stream = function Stream (_, s) -> s ();;
+let hd : 'a stream -> 'a = function Stream (a, _) -> a | StreamEnd() -> StreamEnd();;
+let tl : 'a stream -> 'a stream = function Stream (_, s) -> s () | StreamEnd() -> StreamEnd();;
 
 (* Types of the language *)
 type rivType =  RivInt | RivFun of rivType * rivType | RivStream of rivType
@@ -53,7 +53,6 @@ type rivTerm =
   | RmLbdEmpty of rivType * rivTerm
   | RmRead of unit
 
-
 let rec type_to_string tT = match tT with
   | RivInt -> "Int"
   | RivFun(tT1,tT2) -> "( "^type_to_string(tT1)^" -> "^type_to_string(tT2)^" )"
@@ -90,7 +89,7 @@ let rec lookup env str = match env with
 
 (* Function to add an extra entry in to an environment *)
 let addBinding env str thing = match env with
-Env(gs) -> Env ( (str, thing) :: gs ) ;;
+   Env(gs) -> Env ((str,thing) :: gs) ;;
 
 (* The type checking function itself *) 
 let rec typeOf env e = match e with 
@@ -98,12 +97,14 @@ let rec typeOf env e = match e with
 
   |RmVar (x) ->  (try lookup env x with LookupError _ -> raise (TypeError "Variable"))
 
+  |RmStream(tT, StreamEnd _) -> RivStream(tT)
   |RmStream (tT, Stream(e,_)) ->
     ( match (typeOf env e) with
         RivInt -> RivInt
       | RivStream(tT) -> RivStream(tT)
       | _ -> raise (TypeError "Stream")
     )
+
   
   |RmNum (n) -> RivStream(RivInt)
 
@@ -377,6 +378,7 @@ let rec endAtN stream steps =
   if steps > 0 then (
     match stream with
     | Stream(n,x) -> Stream(n,function () -> (endAtN (x()) (steps - 1)))
+    | StreamEnd() -> StreamEnd()
   )
   else StreamEnd()
   (* End of Helper functions for indexing *)
@@ -511,7 +513,7 @@ let rec eval1M inStreams env e = match e with
   | (RmNotEqualTo(e1, e2))            -> let (e1',env') = (eval1M inStreams env e1) in (RmNotEqualTo(e1',e2),env')
 
   (* Constructors *)
-  | (RmCons(RmStream(nT,s), m)) ->
+    | (RmCons(RmStream(nT,s), m)) ->
       (RmStream(
         (RivStream(nT)),
         Stream(
@@ -626,7 +628,7 @@ let rec eval1M inStreams env e = match e with
   | (RmModulus(RmStream(tT, s), e2)) -> let (e2',env') = (eval1M inStreams env e2) in (RmModulus(RmStream(tT, s),e2'), env')  
   | (RmModulus(e1, e2))            -> let (e1',env') = (eval1M inStreams env e1) in (RmModulus(e1', e2), env')
 
- (* Unary Minus *)
+  (* Unary Minus *)
   | (RmUMinus(RmNum(n))) -> (RmNum(-n), env)
   | (RmUMinus(RmStream(tT,n))) -> 
   let rec recurse x = match x with 
@@ -678,7 +680,7 @@ let rec eval1M inStreams env e = match e with
   | (RmSectionEnd(RmStream(tT,s), e)) -> let (e',env') = (eval1M inStreams env e) in ((RmSectionEnd(RmStream(tT,s),e')), env')
   | (RmSectionEnd(e, v)) -> let (e',env') = (eval1M inStreams env e) in ((RmSectionEnd(e',v)), env')
 
-(* Section Start *)
+  (* Section Start *)
   | (RmSectionStart(RmStream(tT,s), RmStream(_,Stream(RmNum(n),_)))) -> 
     (
       RmStream(tT,(endAtN s n)),
