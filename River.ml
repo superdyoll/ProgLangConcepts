@@ -257,6 +257,51 @@ let rec typeOf env e = match e with
   |RmLbdEmpty (rT,e) ->  RivFun(RivUnit, rT) 
 
 
+
+let rec shave_first_elements_rec streams =
+    match streams with
+    |  Stream(RmStream(tT,stream), nextStream) -> (
+        (* Match the sub-stream *)
+        match stream with
+        | Stream(n,ns) -> 
+            Stream(n,function () -> (shave_first_elements_rec (nextStream())))
+        | StreamEnd() -> 
+          (shave_first_elements_rec (nextStream()))
+    )
+    |  StreamEnd() -> StreamEnd()
+
+
+let rec drop_first_elements_rec streams =
+    match streams with
+    |  Stream(RmStream(tT,stream), nextStream) -> (
+        (* Match the sub-stream *)
+        match stream with
+        | Stream(n,ns) ->
+          let chopStream () = RmStream(tT,(ns())) in
+            Stream((chopStream()),function () -> (drop_first_elements_rec (nextStream())))
+        | StreamEnd() -> 
+          (drop_first_elements_rec (nextStream()))
+    )
+    |  StreamEnd() -> StreamEnd()
+
+let rec shave_first_elements streams =
+    (shave_first_elements_rec streams)
+
+let rec drop_first_elements streams =
+    (drop_first_elements_rec streams)
+
+
+(* Helper function that transposes a stream *)
+let rec transpose streams = 
+    match streams with
+    |  Stream(RmStream(tT,stream),nextStream) -> (
+        let (chopped_streams, new_stream) = ((drop_first_elements streams),(shave_first_elements streams)) in
+          (Stream(RmStream(tT,new_stream), function () -> (transpose chopped_streams)))
+    )
+    | Stream(_,_) -> (raise (DimensionError "Cannot Transpose a 1D stream"))
+    |  StreamEnd() -> (StreamEnd())
+
+
 let typeProg e = typeOf (Env []) e ;;
 
 let rename (s:string) = s^"'";;
@@ -508,7 +553,7 @@ let rec eval1M inStreams env e = match e with
 
 let rec evalloop inStreams env e = try ( let (e',env') = (eval1M inStreams env e) in (evalloop inStreams env' e')) with Terminated _ -> if (isValue e) then e else raise (StuckTerm "Eval loop stuck on term") ;;
 
-let evalProg inputBuffer e = evalloop (RmStream(RivStream(RivInt), (convertToStream (List.rev inputBuffer)))) (Env[]) e ;;
+let evalProg inputBuffer e = evalloop (RmStream(RivStream(RivInt), (transpose (convertToStream (List.rev inputBuffer))))) (Env[]) e ;;
 
 let rec append_streams x y = match (x,y) with
   | (Stream(a,ae), b) -> 
@@ -523,39 +568,38 @@ let rec count_streams streams acc = match streams with
 let rec rearrange_stream stream nextValue nextValueType =
   match stream with 
     | Stream(RmStream(tT2,Stream(RmNum(n),ne)), nextStream) ->
-            let nextElement = (Stream(RmStream(nextValueType, nextValue), function ()-> StreamEnd())) in
+            let nextElement = (Stream(RmStream(nextValueType, nextValue), function () -> StreamEnd())) in
             let newStream = (append_streams stream nextElement) in
               newStream
     | StreamEnd() -> (Stream(RmStream(RivStream(nextValueType),(nextValue)), function () -> StreamEnd()))
 ;;
 
-let rec print_streams_rec streams no_streams pos =
+let rec print_streams_rec streams =
  match streams with 
-  | Stream(RmStream(tT,stream), next) -> 
-      (match stream with
-         | Stream(RmNum(nF),nR) -> 
-            print_int nF; 
-            (if (pos mod no_streams) = 0 
-               then print_string "\n" else print_string " ");
-            let nxt = next() in
-            let nr = nR() in
-            (print_streams_rec 
-              (rearrange_stream nxt nr tT)
-              no_streams
-              (pos+1)
-            )
-         | StreamEnd() -> ()
-         | _ -> raise (DimensionError "Can only print 2D arrays")
-       )
+  | Stream(RmStream(tT,n), e) ->
+  (* Print a single line *)
+    print_streams_rec n; 
+    print_string "\n";
+    print_streams_rec (e());
+  (* Print a single line *)
   | Stream(RmNum(n), e) ->
-      print_int n;
-      print_streams_rec (e()) no_streams pos;
+    print_int n;
+    print_string " ";
+    print_streams_rec (e());
   | StreamEnd() -> ()
 ;;
 
-
-let rec print_streams stream = 
-   (print_streams_rec stream (count_streams stream 0) 1)
+let rec print_streams streams = 
+  match streams with 
+  (* if the stream is 2D, print it transposed *)
+  | Stream(RmStream(_,_), _) ->
+    print_streams_rec (transpose streams);
+  (* Otherwise convert it to a 2D stream and transpose it *)
+  | Stream(RmNum(_), _) ->
+    print_string "Printing single line! \n";
+    print_streams_rec (transpose (Stream(RmStream(RivInt,streams), function () -> StreamEnd())));
+  | StreamEnd() -> ()
+   
 
 and print_res res = match res with
   | RmNum (i) -> print_int i
