@@ -18,7 +18,6 @@ rule lexer_main = parse
     | "if"      { IF }
     | "else"    { ELSE }
     | ['a'-'z' '_'] + as lxm { IDENT(lxm) }
-    | ';'       { SEMICOLON }
     (* Comparison Operators *)
     | ">="      { GEQ }
     | "<="      { LEQ }

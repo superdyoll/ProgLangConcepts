@@ -20,7 +20,6 @@
 %token LTYPE
 %token IF ELSE
 %token PRINT READ
-%token SEMICOLON
 %token EOF
 %token COMMA
 %token EQUALS
@@ -45,7 +44,7 @@
 %%
 parser_main: line EOF { $1 };
 
-line: expr SEMICOLON { $1 };
+line: expr { $1 };
 
 type_spec:
     | LPAREN RPAREN { RivStream(RivInt) } 

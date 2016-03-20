@@ -1,0 +1,15 @@
+let (int lambda (int) loopit = int lambda (int x) {x . loopit(x)})
+{
+
+let (int lambda (int) accumulator-acc = int lambda (int x) 
+    {
+        
+    })
+{
+let (int lambda (int) accumulator = int lambda (int x) { })
+{
+
+}
+
+}
+}

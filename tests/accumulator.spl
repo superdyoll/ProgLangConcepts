@@ -1,21 +1,29 @@
 def accumulator = int lambda (int a){
-	accumulator-acc(a,0);
+	accumulator-acc(a,0)
 }
 
 def  accumulator-acc  = int lambda (int a, int pointer){
 	if (!endOfStream(a)){
-		addAll(a[:pointer]) :: accumulator(a, pointer++);
+		addAll(a[:pointer]) :: accumulator(a, pointer++)
 	} else {
-		addAll(a);
+		addAll(a)
 	}
 }
 
 let (
-    stream<int> input = read();
-    int a = input[0];
+    stream<int> input = read()
+    int a = input[0]
     int lambda(int lambda(int)) accumulator-acc = (int lambda (int)) lambda (int a){lambda(int pointer){}}
 ){
 let(
     (accumulator-acc(a))(b)
-    print(accumulator(a));
+    print(accumulator(a))
 }
+
+RmStream(stream(
+    RmStream(stream(
+        RmNum(1),
+        ()->StreamEnd())
+    ),
+    ()->StreamEnd())
+)

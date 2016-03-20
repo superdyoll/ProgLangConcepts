@@ -1,14 +1,14 @@
 def arithmetic = int lambda (int a, int b) {
-    a + (loop(3) * b);
+    a + (loop(3) * b)
 }
 
 let (
-    stream<int> input = read();
+    stream<int> input = read()
 ) {
     let (
-        int a = input[0];
-        int b = input[1];
+        int a = input[0]
+        int b = input[1]
     ){
-        print(arithmetic(a,b));
+        print(arithmetic(a,b))
     }
 }

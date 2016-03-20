@@ -1,0 +1,3 @@
+let(stream<stream<int>> x = read()) {
+ x
+}
