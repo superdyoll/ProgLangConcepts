@@ -6,6 +6,7 @@ exception Terminated of string;;
 exception StuckTerm of string;;
 exception NonBaseTypeResult of string;;
 exception DimensionError of string;;
+exception TransposeError of string;;
 
 open Printf;;
 
@@ -309,38 +310,32 @@ and print_res_old res = match res with
   | RmLbd(rT,tT,x,e) -> print_string("Function : " ^ type_to_string( typeProg (res) ))
   | _ -> raise (NonBaseTypeResult "Not able to output result as string")
 
-let rec shave_first_elements_rec streams =
+let rec shave_first_elements streams =
     match streams with
     |  Stream(RmStream(tT,stream), nextStream) -> (
         (* Match the sub-stream *)
         match stream with
         | Stream(n,ns) -> 
-            Stream(n,function () -> (shave_first_elements_rec (nextStream())))
+            Stream(n,function () -> (shave_first_elements (nextStream())))
         | StreamEnd() -> 
-          (shave_first_elements_rec (nextStream()))
+          (shave_first_elements (nextStream()))
     )
     |  StreamEnd() -> StreamEnd()
+    | _ -> raise (TransposeError "Cannot shave first element")
 
-
-let rec drop_first_elements_rec streams =
+let rec drop_first_elements streams =
     match streams with
     |  Stream(RmStream(tT,stream), nextStream) -> (
         (* Match the sub-stream *)
         match stream with
         | Stream(n,ns) ->
           let chopStream () = RmStream(tT,(ns())) in
-            Stream((chopStream()),function () -> (drop_first_elements_rec (nextStream())))
+            Stream((chopStream()),function () -> (drop_first_elements (nextStream())))
         | StreamEnd() -> 
-          (drop_first_elements_rec (nextStream()))
+          (drop_first_elements (nextStream()))
     )
     |  StreamEnd() -> StreamEnd()
-
-let rec shave_first_elements streams =
-    (shave_first_elements_rec streams)
-
-let rec drop_first_elements streams =
-    (drop_first_elements_rec streams)
-
+    | _ -> raise (TransposeError "Cannot drop first element")
 
 (* Helper function that transposes a stream *)
 let rec transpose streams = 
@@ -349,10 +344,8 @@ let rec transpose streams =
         let (chopped_streams, new_stream) = ((drop_first_elements streams),(shave_first_elements streams)) in
           (Stream(RmStream(tT,new_stream), function () -> (transpose chopped_streams)))
     )
-    | Stream(_,_) -> (raise (DimensionError "Cannot Transpose a 1D stream"))
+    | Stream(_,_) -> (raise (TransposeError "Cannot Transpose a 1D stream"))
     |  StreamEnd() -> (StreamEnd())
-
-
 
 let rename (s:string) = s^"'";;
 

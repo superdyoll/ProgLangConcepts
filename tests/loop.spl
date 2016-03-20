@@ -2,5 +2,6 @@ let(int lambda(int) loop_sec = int lambda(int a){
     a.loop_sec(a)
 }
 ){
-    loop_sec(5)
+
+  2+ loop_sec(5)
 };
