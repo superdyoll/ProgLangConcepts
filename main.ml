@@ -18,18 +18,20 @@ let rec readIntoBufferRec s =
 
 let readIntoBuffer () = readIntoBufferRec([]);;
 
-Parsing.set_trace true;;
+(* Parsing.set_trace true;; *)
 let arg = ref stdin in
 let setProg p = arg := open_in p in
 let usage = "./main PROGRAM_FILE" in
 parse [] setProg usage ; 
 let parsedProg = parseProgram !arg in
-print_string "Program Parsed" ; print_newline();
+(* print_string "Program Parsed" ; print_newline(); *)
 (* Run Type Checker *)
 let _ = typeProg parsedProg in
-let () = print_string "Program Type Checked" ; print_newline() in
+let () = 
+(* print_string "Program Type Checked";  *)
+print_newline() in
 (* Run Evaluator *)
 let readBuffer = readIntoBuffer() in 
 let result1 = evalProg readBuffer parsedProg in 
-print_string "Program Evaluated using Machine semantics to ==> " ; print_res result1 ; print_newline();
+(* print_string "Program Evaluated using Machine semantics to ==> " ;  *)print_res result1 ; print_newline();
 flush stdout
