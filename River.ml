@@ -10,8 +10,8 @@ open Printf;;
 
 (* Stream implementation *)
 type 'a stream = Stream of 'a * (unit -> 'a stream) | StreamEnd of unit;;
-let hd : 'a stream -> 'a = function Stream (a, _) -> a;;
-let tl : 'a stream -> 'a stream = function Stream (_, s) -> s ();;
+let hd : 'a stream -> 'a = function Stream (a, _) -> a | StreamEnd() -> StreamEnd();;
+let tl : 'a stream -> 'a stream = function Stream (_, s) -> s () | StreamEnd() -> StreamEnd();;
 
 (* Types of the language *)
 type rivType =  RivInt | RivFun of rivType * rivType | RivStream of rivType
@@ -52,7 +52,6 @@ type rivTerm =
   | RmLbdEmpty of rivType * rivTerm
   | RmRead of unit
 
-
 let rec isValue e = print_string "isValue called\n"; match e with
   | RmNum(s) -> true
   (* Type, String *)
@@ -87,7 +86,7 @@ let rec type_to_string tT = match tT with
 
 (* Function to add an extra entry in to an environment *)
 let addBinding env str thing = match env with
-Env(gs) -> Env ( (str, thing) :: gs ) ;;
+   Env(gs) -> Env ((str,thing) :: gs) ;;
 
 (* The type checking function itself *) 
 let rec typeOf env e = match e with 
@@ -95,12 +94,14 @@ let rec typeOf env e = match e with
 
   |RmVar (x) ->  (try lookup env x with LookupError _ -> raise (TypeError "Variable"))
 
+  |RmStream(tT, StreamEnd _) -> RivStream(tT)
   |RmStream (tT, Stream(e,_)) ->
     ( match (typeOf env e) with
         RivInt -> RivInt
       | RivStream(tT) -> RivStream(tT)
       | _ -> raise (TypeError "Stream")
     )
+
   
   |RmNum (n) -> RivStream(RivInt)
 
@@ -260,7 +261,7 @@ let rec typeOf env e = match e with
          print_string "Defined as type "; print_string (type_to_string tT); print_string "\n";
          (match (ty1 = tT) with 
             true -> ty2
-	         |false -> raise (TypeError "Let")
+	   |false -> raise (TypeError "Let")
 	 )
     )
 
@@ -270,16 +271,16 @@ let rec typeOf env e = match e with
        ( 
         match ty1 with
          RivFun(tT,tU) -> 
-         print_string "Function: "; print_string (type_to_string ty1); print_string "\n";
-         print_string "Function: From "; print_string (type_to_string tT); print_string "\n";
-         print_string "Function: To "; print_string (type_to_string tU); print_string "\n";
-         print_string "Applying to: "; print_string (type_to_string ty2); print_string "\n";
-            (
-	     match tT = ty2 with
-             true -> tT 
-            |false -> raise (TypeError "Apply: Expressions not of same type")
-            )
-        | _ -> raise (TypeError "Apply: Not of type function")
+             print_string "Function: "; print_string (type_to_string ty1); print_string "\n";
+             print_string "Function: From "; print_string (type_to_string tT); print_string "\n";
+             print_string "Function: To "; print_string (type_to_string tU); print_string "\n";
+             print_string "Applying to: "; print_string (type_to_string ty2); print_string "\n";
+                (
+	         match tT = ty2 with
+                   true -> tT 
+                  |false -> raise (TypeError "Apply: Expressions not of same type")
+                )
+         | _ -> raise (TypeError "Apply: Not of type function")
         )
     )
   |RmRead () -> RivStream(RivStream(RivInt))
@@ -314,6 +315,7 @@ let rec endAtN stream steps =
   if steps > 0 then (
     match stream with
     | Stream(n,x) -> Stream(n,function () -> (endAtN (x()) (steps - 1)))
+    | StreamEnd() -> StreamEnd()
   )
   else StreamEnd()
   (* End of Helper functions for indexing *)
@@ -446,7 +448,6 @@ let rec eval1M inStreams env e = match e with
   | (RmNotEqualTo(e1, e2))            -> let (e1',env') = (eval1M inStreams env e1) in (RmNotEqualTo(e1',e2),env')
 
   (* Constructors *)
-
   | (RmCons(RmStream(nT,n), RmStream(mT,m))) ->
        (RmStream(RivStream(nT), Stream(RmStream(nT,n), function() -> Stream(RmStream(mT,m), function() -> StreamEnd()))), env)
   | (RmCons(RmStream(nT,s), e2))              -> let(e2',env') = (eval1M inStreams env e2) in (RmCons(RmStream(nT,s),e2'), env')
@@ -542,7 +543,7 @@ let rec eval1M inStreams env e = match e with
   | (RmModulus(RmStream(tT, s), e2)) -> let (e2',env') = (eval1M inStreams env e2) in (RmModulus(RmStream(tT, s),e2'), env')  
   | (RmModulus(e1, e2))            -> let (e1',env') = (eval1M inStreams env e1) in (RmModulus(e1', e2), env')
 
- (* Unary Minus *)
+  (* Unary Minus *)
   | (RmUMinus(RmNum(n))) -> (RmNum(-n), env)
   | (RmUMinus(RmStream(tT,n))) -> 
   let rec recurse x = match x with 
@@ -594,7 +595,7 @@ let rec eval1M inStreams env e = match e with
   | (RmSectionEnd(RmStream(tT,s), e)) -> let (e',env') = (eval1M inStreams env e) in ((RmSectionEnd(RmStream(tT,s),e')), env')
   | (RmSectionEnd(e, v)) -> let (e',env') = (eval1M inStreams env e) in ((RmSectionEnd(e',v)), env')
 
-(* Section Start *)
+  (* Section Start *)
   | (RmSectionStart(RmStream(tT,s), RmStream(_,Stream(RmNum(n),_)))) -> 
     (
       RmStream(tT,(endAtN s n)),
