@@ -2,7 +2,6 @@
 %{
     open River
 %}
-%token COMMENT
 %token <int> INT
 %token <string> IDENT
 %token ITYPE
