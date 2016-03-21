@@ -1,5 +1,5 @@
 let (
-    int lambda (int) lambda (int) add = int lambda (int) lambda (int b) {
+    int lambda (int) lambda (int) add = (int lambda (int)) lambda (int b) {
         int lambda(int a) {
             a+b
         }
