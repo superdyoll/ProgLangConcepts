@@ -96,7 +96,7 @@ let addBinding env str thing = match env with
 let rec typeOf env e = match e with 
   |RmUnit () -> RivStream(RivInt)
 
-  |RmVar (x) ->  (try lookup env x with LookupError _ -> raise (TypeError "Variable"))
+  |RmVar (x) ->  (try lookup env x with LookupError _ -> raise (TypeError ("Variable name '"^x^"'' doesn't exist in this context ")))
 
   |RmStream(tT, StreamEnd _) -> RivStream(tT)
   |RmStream (tT, Stream(e,_)) ->
@@ -319,7 +319,7 @@ and print_res_old res = match res with
   | RmStream (tT, Stream(n,e)) ->print_string "["; printStream(Stream(n,e)); print_string "] : Stream";
   | RmStream (tT, StreamEnd()) ->print_string "[] : Stream";
   | RmLbd(rT,tT,x,e) -> print_string("Function : " ^ type_to_string( typeProg (res) ))
-  | _ -> raise (NonBaseTypeResult "Not able to output result as string")
+  | _ -> raise (NonBaseTypeResult " ")
 
 let rec shave_first_elements streams =
     match streams with

@@ -22,7 +22,6 @@ IE:
 let (int lambda (int) lambda (int) nextStep = int lambda (int) lambda (int prevPrev) {
     int lambda (int prev) {
         let (int calc  = ((prevPrev.0) + prev).1) {
-            // SOO HACKY!
             ((()::(calc))[1:2]).(nextStep(prev)(calc))
         }
     }
