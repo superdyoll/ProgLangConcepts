@@ -1,5 +1,8 @@
 %YAML 1.2
 ---
+# WHAT IS THIS FILE?
+# It is a syntax highlighter for our language, written for the text editor 'Sublime Text', Enjoy!
+
 name: river
 file_extensions: [spl]
 scope: source.spl
