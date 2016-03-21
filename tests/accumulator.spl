@@ -4,7 +4,7 @@ def accumulator = int lambda (int a){
 
 def  accumulator-acc  = int lambda (int a, int pointer){
 	if (!endOfStream(a)){
-		addAll(a[:pointer]) :: accumulator(a, pointer++)
+		addAll(a[:pointer]) :: accumulator(a, pointer + 1)
 	} else {
 		addAll(a)
 	}
@@ -19,4 +19,3 @@ let(
     (accumulator-acc(a))(b)
     print(accumulator(a))
 }
-

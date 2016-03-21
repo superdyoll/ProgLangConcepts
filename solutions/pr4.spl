@@ -1,4 +1,26 @@
-let (int lambda(int) addAll = int lambda (int a))
+let (int lambda (int) addAll = int lambda (int a)
 {
-    a[0] + addAll(a[:])[0]
+    if (a == ()){
+        0
+    } else {
+        a[0] + addAll(a[1:])
+    }
+})
+{
+    let (
+        (int lambda(int)) lambda(int) accumulator_acc = (int lambda(int)) lambda (int numbers) {
+            int lambda(int pointer) {
+                if (numbers[pointer] == ()) {
+                    addAll(numbers)
+                } else {
+                    addAll(numbers[:pointer]) . (accumulator_acc(numbers)(pointer + 1))
+                }
+            }
+    }) {
+        let (int lambda(int) accumulator = int lambda (int numbers) {
+            accumulator_acc(numbers)(1)
+        }) {
+            accumulator(read()[0])
+        }
+    }
 }

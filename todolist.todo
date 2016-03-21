@@ -13,3 +13,10 @@ BONUS TODOS:
 - Lambdas that take in more than 1 variable
 
 - ORs and ANDS
+
+- Fix the ordering of square brackets
+
+- Remove the redundant RMStream from 2D streams
+- Remove the redundant type declarations for lambdas
+- pause the program and wait for input whenever read is called. 
+- Printing infinite streams

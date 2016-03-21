@@ -1,9 +1,20 @@
-let(int lambda(int) addAll = int lambda(int a){
-    if (a[0] == ()){
+let (int lambda (int) addAll = int lambda (int a)
+{
+    if (a == ()){
         0
-    }else{
+    } else {
         a[0] + addAll(a[1:])
     }
-}){
-    addAll(1)
+})
+{
+let (
+    (int lambda(int)) lambda(int) fibHelp = (int lambda(int)) lambda (int cStream) {
+        int lambda(int reverseFib) {    
+            addAll(reverseFib + cStream) . fibHelp(cStream)(
+                addAll(reverseFib[0:1]) . reverseFib)
+        }
+    }
+){
+  fibHelp(read()[0])(1.0)
+}
 }
