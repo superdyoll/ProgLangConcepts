@@ -34,6 +34,7 @@
 %left PLUS MINUS
 %left MULTIPLY DIVIDE MODULUS
 %right LT GT GEQ LEQ NEQ EQ
+%left CONS
 %right LSQ RSQ COLON
 /* Highest Precedence */
 %start parser_main
@@ -54,38 +55,38 @@ type_spec:
 
 expr: 
 /* Let Statements */
- | LET LPAREN type_spec IDENT ASSIGN expr RPAREN LBRACE expr RBRACE { print_string "RmLet\n"; RmLet ($3, $4, $6, $9) }
+ | LET LPAREN type_spec IDENT ASSIGN expr RPAREN LBRACE expr RBRACE { RmLet ($3, $4, $6, $9) }
 /* If statements */
- | IF LPAREN expr RPAREN LBRACE expr RBRACE ELSE LBRACE expr RBRACE  { print_string "RmIf\n"; RmIf ($3, $6, $10) }
+ | IF LPAREN expr RPAREN LBRACE expr RBRACE ELSE LBRACE expr RBRACE  { RmIf ($3, $6, $10) }
  /* Lambdas */
  | type_spec LTYPE LPAREN type_spec IDENT RPAREN LBRACE expr RBRACE {RmLbd ($1, $4, $5, $8) }
- | type_spec LTYPE LRPAREN LBRACE expr RBRACE { print_string "RmLbdEmpty\n"; RmLbdEmpty($1,$5) }
+ | type_spec LTYPE LRPAREN LBRACE expr RBRACE { RmLbdEmpty($1,$5) }
 /* Apply */
- | READ LRPAREN          { print_string "RmRead\n"; RmRead() }
- | expr LPAREN expr RPAREN     { print_string "RmApp\n"; RmApp ($1, $3) }
- | expr LRPAREN          { print_string "RmApp\n"; RmApp ($1, RmUnit())}
+ | READ LRPAREN          { RmRead() }
+ | expr LPAREN expr RPAREN     { RmApp ($1, $3) }
+ | expr LRPAREN          { RmApp ($1, RmUnit())}
  /* Sections */
-| expr LSQ COLON expr RSQ     { print_string "RmSectionStart\n"; RmSectionStart($1, $4) }
- | expr LSQ expr COLON expr RSQ { print_string "RmSection\n"; RmSection($1, $3, $5) }
- | expr LSQ expr COLON RSQ     { print_string "RmSectionEnd\n"; RmSectionEnd($1, $3) }
- | expr LSQ expr RSQ          { print_string "RmIndex\n"; RmIndex($1, $3) }
+| expr LSQ COLON expr RSQ     { RmSectionStart($1, $4) }
+ | expr LSQ expr COLON expr RSQ { RmSection($1, $3, $5) }
+ | expr LSQ expr COLON RSQ     { RmSectionEnd($1, $3) }
+ | expr LSQ expr RSQ          { RmIndex($1, $3) }
  /* Operators */
- | expr PLUS expr              { print_string "RmPlus\n"; RmPlus ($1, $3) }
- | expr MINUS expr             { print_string "RmMinus\n"; RmMinus ($1, $3) }
- | expr MULTIPLY expr          { print_string "RmMultiply\n"; RmMultiply ($1, $3) }
- | expr DIVIDE expr            { print_string "RmDivide\n"; RmDivide ($1,$3) }
- | expr MODULUS expr           { print_string "RmModulus\n"; RmModulus ($1,$3) }
- | expr LT expr                { print_string "RmLessThan\n"; RmLessThan ($1, $3) }
- | expr GT expr                { print_string "RmGreaterThan\n"; RmGreaterThan ($1, $3) }
- | expr GEQ expr               { print_string "RmGreaterEqualTo\n"; RmGreaterEqualTo ($1, $3) }
- | expr LEQ expr               { print_string "RmLessEqualTo\n"; RmLessEqualTo ($1, $3) }
- | expr NEQ expr               { print_string "RmNotEqualTo\n"; RmNotEqualTo ($1, $3) }
- | expr EQ expr                { print_string "RmEqualTo\n"; RmEqualTo ($1, $3) }
- | expr CONS expr              { print_string "RmCons\n"; RmCons ($1, $3) } /* :: (INT * INT -> STREAM<INT>) */
- | expr DOT expr               { print_string "RmAppend\n"; RmAppend($1, $3) } /* . (INT * INT -> INT) */
- | LPAREN expr RPAREN          { print_string "BRACKETS\n"; $2 }
- | IDENT                       { print_string "RmVar\n"; RmVar $1 }
- | INT                         { print_string "RmInt\n"; RmStream(RivInt,Stream(RmNum($1), function () -> StreamEnd())) }
- | MINUS expr                  { print_string "RmUMinus\n"; RmUMinus ($2) }
- | LRPAREN                     { print_string "RmUnit\n"; RmUnit() }
+ | expr PLUS expr              { RmPlus ($1, $3) }
+ | expr MINUS expr             { RmMinus ($1, $3) }
+ | expr MULTIPLY expr          { RmMultiply ($1, $3) }
+ | expr DIVIDE expr            { RmDivide ($1,$3) }
+ | expr MODULUS expr           { RmModulus ($1,$3) }
+ | expr LT expr                { RmLessThan ($1, $3) }
+ | expr GT expr                { RmGreaterThan ($1, $3) }
+ | expr GEQ expr               { RmGreaterEqualTo ($1, $3) }
+ | expr LEQ expr               { RmLessEqualTo ($1, $3) }
+ | expr NEQ expr               { RmNotEqualTo ($1, $3) }
+ | expr EQ expr                { RmEqualTo ($1, $3) }
+ | expr CONS expr              { RmCons ($1, $3) } /* :: (INT * INT -> STREAM<INT>) */
+ | expr DOT expr               { RmAppend($1, $3) } /* . (INT * INT -> INT) */
+ | LPAREN expr RPAREN          { $2 }
+ | IDENT                       { RmVar $1 }
+ | INT                         { RmStream(RivInt,Stream(RmNum($1), function () -> StreamEnd())) }
+ | MINUS expr                  { RmUMinus ($2) }
+ | LRPAREN                     { RmUnit() }
 ;
