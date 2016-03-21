@@ -1,0 +1,9 @@
+let(int lambda(int) addAll = int lambda(int a){
+    if (a[0] == ()){
+        0
+    }else{
+        a[0] + addAll(a[1:])
+    }
+}){
+    addAll(1)
+}
