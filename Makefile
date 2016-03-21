@@ -22,14 +22,14 @@ DEPEND += lexer.ml parser.ml
 
 # When "make" is invoked with no arguments, we build an executable 
 # typechecker, after building everything that it depends on
-all: $(DEPEND) $(OBJS) main
+all: $(DEPEND) $(OBJS) mysplinterpreter
 
 # Include an automatically generated list of dependencies between source files
 include .depend
 
 
 # Build an executable typechecker
-main: $(OBJS) main.cmo 
+mysplinterpreter: $(OBJS) main.cmo 
 	@echo Linking $@
 	ocamlc -g -o $@ $(COMMONOBJS) $(OBJS) 
 
