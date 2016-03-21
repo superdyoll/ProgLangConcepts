@@ -394,7 +394,7 @@ let rec convertToStream strList =
 
 let rec eval1M inStreams env e = match e with
   | (RmUnit()) -> (RmStream(RivInt, StreamEnd()), env)
-  | (RmVar x) -> (try ((lookup env x), env) with LookupError _ -> raise (UnboundVariableError "Variable not bound"))
+  | (RmVar x) -> (try ((lookup env x), env) with LookupError _ -> raise (UnboundVariableError ("Variable '"^x^"' not bound")))
   | (RmNum n) -> (RmStream(RivInt, Stream(RmNum (n),function () -> StreamEnd())), env)
   | (RmLbd(rT,tT,y,e')) -> raise (Terminated "Lambda")
   | (RmLbdEmpty(rT,e')) -> raise (Terminated "Unit Lambda")
