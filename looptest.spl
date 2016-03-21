@@ -1,7 +1,0 @@
-let (int lambda (int) loopit = int lambda (int x) {
-    x . loopit(x)
-}
-)
-{
-    (1.2.3.4) + loopit(2)
-}
