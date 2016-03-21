@@ -300,7 +300,7 @@ let rec typeOf env e = match e with
   |RmLbd(rT,tT,x,e) -> 
   print_string ("\n Building Lambda:\n "^x^": "^(type_to_string tT)^"-L>"^(type_to_string rT)^"\n");
   RivFun(tT, rT)
-  |RmLbdEmpty (rT,e) ->  RivFun(RivInt, rT)
+  |RmLbdEmpty (rT,e) ->  RivFun(RivStream(RivInt), rT)
 
 let typeProg e = typeOf (Env []) e ;;
 
