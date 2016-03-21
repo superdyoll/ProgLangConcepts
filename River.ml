@@ -582,7 +582,8 @@ let rec eval1M inStreams env e = match e with
         | (StreamEnd(),b) -> 
         (
           match (evalloop inStreams env b) with 
-          |RmStream(tT,o) -> o
+          | RmStream(tT,o) -> o
+          | _ -> raise (RuntimeError "Appending to non stream") 
         )
         )
       in ((RmStream(nT,(recurse n m))), env)
@@ -769,6 +770,7 @@ let rec rearrange_stream stream nextValue nextValueType =
             let newStream = (append_streams stream nextElement) in
               newStream
     | StreamEnd() -> (Stream(RmStream(RivStream(nextValueType),(nextValue)), function () -> StreamEnd()))
+    | _ -> raise (DimensionError "Streams should be two dimensional")
 ;;
 
 
@@ -798,6 +800,7 @@ let rec print_streams streams =
   | Stream(RmNum(_), _) ->
     print_streams_rec (transpose (Stream(RmStream(RivInt,streams), function () -> StreamEnd())));
   | StreamEnd() -> ()
+  | _ -> raise (DimensionError "Input isn't being evaluated as a stream")
 
 
 let rec print_res res = match res with
