@@ -18,7 +18,7 @@ rule lexer_main = parse
     | "def"     { DEFINE }
     | "if"      { IF }
     | "else"    { ELSE }
-    | ['a'-'z' '_'] + as lxm { IDENT(lxm) }
+    | ['a'-'z' 'A'-'Z' '_'] + as lxm { IDENT(lxm) }
     (* Comparison Operators *)
     | ">="      { GEQ }
     | "<="      { LEQ }
