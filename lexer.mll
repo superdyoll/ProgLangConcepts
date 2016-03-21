@@ -3,9 +3,10 @@
 open Parser        (* The type token is defined in parser.mli *)
 }
 rule lexer_main = parse
-      [' ' '\t' '\n']     { lexer_main lexbuf }     (* skip blanks *)
+    | "/*"_*?"*/"  { lexer_main lexbuf }
+    |  [' ' '\t' '\n']     { lexer_main lexbuf }     (* skip blanks *)
+    | "//"[^'\n']*'\n' { lexer_main lexbuf }
     | ['0'-'9']+ as lxm { INT(int_of_string lxm) }
-    | "//" _ +  { COMMENT }
     (* Functions *)
     | "print"    { PRINT }
     | "read"    { READ }
