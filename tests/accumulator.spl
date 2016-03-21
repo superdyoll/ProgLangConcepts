@@ -20,10 +20,3 @@ let(
     print(accumulator(a))
 }
 
-RmStream(stream(
-    RmStream(stream(
-        RmNum(1),
-        ()->StreamEnd())
-    ),
-    ()->StreamEnd())
-)
