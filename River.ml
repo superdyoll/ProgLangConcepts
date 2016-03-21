@@ -124,9 +124,11 @@ let rec typeOf env e = match e with
 
   |RmPlus(e1,e2) -> 
     (
-     match (typeOf env e1) , (typeOf env e2) with 
-             RivStream(RivInt), RivStream(RivInt) -> RivStream(RivInt) 
-                    |_ -> raise (TypeError "Plus")
+     match (typeOf env e1) , (typeOf env e2) with
+                   | RivStream(RivInt), RivStream(RivInt) -> RivStream(RivInt) 
+                   |a,b -> 
+                    print_string ("Type Error from "^(type_to_string a)^" to "^(type_to_string b));
+                    raise (TypeError "Plus")
     )
 
   |RmMultiply(e1,e2) -> 
@@ -263,12 +265,12 @@ let rec typeOf env e = match e with
       let ty1 = typeOf (addBinding env x tT) e1 in
       let ty2 = typeOf (addBinding env x tT) e2 in 
         (* Debug Code *)
-        (* print_string "Letting To be "; print_string (type_to_string ty1); print_string "\n"; *)
-        (* print_string "Defined as type "; print_string (type_to_string tT); print_string "\n"; *)
+        print_string "Letting To be "; print_string (type_to_string ty1);print_string "\n"; 
+        print_string "Defined as type "; print_string (type_to_string tT); print_string "\n"; 
         (* /Debug Code *)
         (match (ty1 = tT) with 
           |true -> ty2
-          |false -> raise (TypeError "Let")
+          |false -> print_string ("!!LET TYPE ERROR!! Calculated type"^(type_to_string ty1)^" Is NOT predetermined type"^(type_to_string tT)^"\n"); raise (TypeError "Let")
 	 )
     )
 
@@ -279,23 +281,25 @@ let rec typeOf env e = match e with
         match ty1 with
          RivFun(tT,tU) -> 
          (* Debug Code *)
-         (* print_string "Function: "; print_string (type_to_string ty1); print_string "\n";
+         print_string "Function: "; print_string (type_to_string ty1); print_string "\n";
          print_string "Function: From "; print_string (type_to_string tT); print_string "\n";
          print_string "Function: To "; print_string (type_to_string tU); print_string "\n";
-         print_string "Applying to: "; print_string (type_to_string ty2); print_string "\n"; *)
+         print_string "Applying to: "; print_string (type_to_string ty2); print_string "\n";
          (* / Debug Code *)
             (
        match tT = ty2 with
-             true -> tT 
+             true -> tU
             |false -> raise (TypeError "Apply: Expressions not of same type")
             )
-        | _ -> raise (TypeError "Apply: Not of type function")
+        | _ -> raise (TypeError ("Apply: Not of type function, type is " ^ (type_to_string ty1)))
         )
     )
   |RmRead () -> RivStream(RivStream(RivInt))
 
-  |RmLbd(rT,tT,x,e) ->  RivFun(typeOf (addBinding env x tT) e, rT)
-  |RmLbdEmpty (rT,e) ->  RivFun(RivInt, rT) 
+  |RmLbd(rT,tT,x,e) -> 
+  print_string ("\n Building Lambda:\n "^x^": "^(type_to_string tT)^"-L>"^(type_to_string rT)^"\n");
+  RivFun(tT, rT)
+  |RmLbdEmpty (rT,e) ->  RivFun(RivInt, rT)
 
 let typeProg e = typeOf (Env []) e ;;
 
