@@ -40,6 +40,7 @@ rule lexer_main = parse
     | '='       { ASSIGN }
     | ','       { COMMA }
     (* Bracketing *)
+    | "()"       { LRPAREN }
     | '('       { LPAREN }
     | ')'       { RPAREN }
     | '{'       { LBRACE }
