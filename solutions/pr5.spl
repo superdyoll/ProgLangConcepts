@@ -1,3 +1,6 @@
+// Fibonacci Calculation
+
+// This function is a helper function for adding
 let (int lambda (int) addAll = int lambda (int a)
 {
     if (a == ()){
@@ -7,14 +10,37 @@ let (int lambda (int) addAll = int lambda (int a)
     }
 })
 {
-let (
-    (int lambda(int)) lambda(int) fibHelp = (int lambda(int)) lambda (int cStream) {
-        int lambda(int reverseFib) {    
-            addAll(reverseFib + cStream) . fibHelp(cStream)(
-                addAll(reverseFib[0:1]) . reverseFib)
+/* This function calculates the fibonacci sequence
+IE:
+1
+11
+21
+321
+531
+...
+*/
+let (int lambda (int) lambda (int) nextStep = int lambda (int) lambda (int prevPrev) {
+    int lambda (int prev) {
+        let (int calc  = ((prevPrev.0) + prev).1) {
+            // SOO HACKY!
+            ((()::(calc))[1:2]).(nextStep(prev)(calc))
         }
     }
+}
 ){
-  fibHelp(read()[0])(1.0)
+    // This function applies read() to each individual step of nextStep
+    let (
+        (int lambda(int)) lambda(int) fib_acc = (int lambda(int)) lambda (int numbers) {
+            int lambda(int pointer) {
+                // As soon as we run out of lines to read
+                if(read()[0][pointer] == ()) {
+                    ()
+                } else {
+                    addAll((numbers[pointer])*(read()[0])) . fib_acc(numbers)(pointer+1)
+                }
+            }
+    }) {
+        fib_acc(nextStep(())(()))(0)
+    }
 }
 }
