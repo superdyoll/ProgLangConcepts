@@ -558,7 +558,7 @@ let rec eval1M inStreams env e = match e with
   | (RmNotEqualTo(RmStream(tT, s), e2)) -> let (e2',env') = (eval1M inStreams env e2) in (RmNotEqualTo(RmStream(tT, s),e2'), env')
   | (RmNotEqualTo(e1, e2))            -> let (e1',env') = (eval1M inStreams env e1) in (RmNotEqualTo(e1',e2),env')
 
-  (* Constructors *)
+  (* Concatenations *)
     | (RmCons(RmStream(nT,s), m)) ->
       (RmStream(
         (RivStream(nT)),
@@ -758,27 +758,6 @@ let rec eval1M inStreams env e = match e with
 and evalloop inStreams env e = try ( let (e',env') = (eval1M inStreams env e) in (evalloop inStreams env' e')) with Terminated _ -> if (isValue e) then e else raise (StuckTerm "Eval loop stuck on term") ;;
 
 let evalProg inputBuffer e = evalloop (RmStream(RivStream(RivInt), (transpose (convertToStream (List.rev inputBuffer))))) (Env[]) e ;;
-
-let rec append_streams x y = match (x,y) with
-  | (Stream(a,ae), b) -> 
-           Stream(a, function() -> (append_streams (ae()) b))
-  | (StreamEnd(),b) -> b
-  | (_,StreamEnd()) -> StreamEnd()
-
-let rec count_streams streams acc = match streams with
-  | Stream(n,e) -> count_streams (e()) (acc + 1)
-  | StreamEnd() -> acc
-
-let rec rearrange_stream stream nextValue nextValueType =
-  match stream with 
-    | Stream(RmStream(tT2,Stream(RmNum(n),ne)), nextStream) ->
-            let nextElement = (Stream(RmStream(nextValueType, nextValue), function () -> StreamEnd())) in
-            let newStream = (append_streams stream nextElement) in
-              newStream
-    | StreamEnd() -> (Stream(RmStream(RivStream(nextValueType),(nextValue)), function () -> StreamEnd()))
-    | _ -> raise (DimensionError "Streams should be two dimensional")
-;;
-
 
 let rec print_streams_rec streams =
  match streams with 
