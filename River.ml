@@ -126,8 +126,7 @@ let rec typeOf env e = match e with
     (
      match (typeOf env e1) , (typeOf env e2) with
                    | RivStream(RivInt), RivStream(RivInt) -> RivStream(RivInt) 
-                   |a,b -> 
-                    print_string ("Type Error from "^(type_to_string a)^" to "^(type_to_string b));
+                   |a,b ->
                     raise (TypeError "Plus")
     )
 
@@ -193,9 +192,12 @@ let rec typeOf env e = match e with
     (let ty1 = typeOf env e1 in
      let ty2 = typeOf env e2 in
       (if (ty1 = ty2) then
-        RivStream(ty1) 
+        RivStream(ty1)
       else
-        raise (TypeError "Cons: Types of streams don't match")
+        (if (ty1 = RivStream(ty2)) then
+          RivStream(ty1)
+        else
+          raise (TypeError "Cons: Types of streams don't match"))
       )
     )
 
@@ -266,12 +268,13 @@ let rec typeOf env e = match e with
       let ty1 = typeOf (addBinding env x tT) e1 in
       let ty2 = typeOf (addBinding env x tT) e2 in 
         (* Debug Code *)
-        print_string "Letting To be "; print_string (type_to_string ty1);print_string "\n"; 
-        print_string "Defined as type "; print_string (type_to_string tT); print_string "\n"; 
+        (* print_string "Letting To be "; print_string (type_to_string ty1);print_string "\n"; 
+        print_string "Defined as type "; print_string (type_to_string tT); print_string "\n";  *)
         (* /Debug Code *)
         (match (ty1 = tT) with 
           |true -> ty2
-          |false -> print_string ("!!LET TYPE ERROR!! Calculated type"^(type_to_string ty1)^" Is NOT predetermined type"^(type_to_string tT)^"\n"); raise (TypeError "Let")
+          (* Todo, make this more informative *)
+          |false -> raise (TypeError "Let: Type error")
 	 )
     )
 
@@ -282,10 +285,10 @@ let rec typeOf env e = match e with
         match ty1 with
          RivFun(tT,tU) -> 
          (* Debug Code *)
-         print_string "Function: "; print_string (type_to_string ty1); print_string "\n";
+         (* print_string "Function: "; print_string (type_to_string ty1); print_string "\n";
          print_string "Function: From "; print_string (type_to_string tT); print_string "\n";
          print_string "Function: To "; print_string (type_to_string tU); print_string "\n";
-         print_string "Applying to: "; print_string (type_to_string ty2); print_string "\n";
+         print_string "Applying to: "; print_string (type_to_string ty2); print_string "\n"; *)
          (* / Debug Code *)
             (
        match tT = ty2 with
@@ -298,12 +301,15 @@ let rec typeOf env e = match e with
   |RmRead () -> RivStream(RivStream(RivInt))
 
   |RmLbd(rT,tT,x,e) -> 
-  print_string ("\n Building Lambda:\n "^x^": "^(type_to_string tT)^"-L>"^(type_to_string rT)^"\n");
-  RivFun(tT, rT)
+    (* Debug Code *)
+    (* print_string ("\n Building Lambda:\n "^x^": "^(type_to_string tT)^"-L>"^(type_to_string rT)^"\n"); *)
+    (* / Debug Code *)
+    RivFun(tT, rT)
   |RmLbdEmpty (rT,e) ->  RivFun(RivStream(RivInt), rT)
 
 let typeProg e = typeOf (Env []) e ;;
 
+(* This print function is only used for debugging to get a better idea of the layout of streams *)
 let rec printStream stream = match stream with
   | Stream(n,e) -> print_res_old n; print_string ", "; printStream (e())
   | StreamEnd() -> print_string "() : StreamEnd"
@@ -747,7 +753,7 @@ let rec eval1M inStreams env e = match e with
   | (RmSection(e, n1, n2)) -> let (e',env') = (eval1M inStreams env e) in ((RmSection(e',n1, n2)), env')
 
   | (RmRead()) -> (inStreams , env)
-  | _ -> print_string "NO MATCH, RAISING TERMINATED\n"; raise (Terminated "No match")
+  | _ -> raise (Terminated "Parsing encountered an unknown type")
 
 and evalloop inStreams env e = try ( let (e',env') = (eval1M inStreams env e) in (evalloop inStreams env' e')) with Terminated _ -> if (isValue e) then e else raise (StuckTerm "Eval loop stuck on term") ;;
 
