@@ -10,15 +10,23 @@ let (int lambda (int) addAll = int lambda (int a)
     }
 })
 {
-// This function calculates the  sequence
-let (int lambda (int) lambda (int) nextStep = int lambda (int) lambda (int prevPrev) {
-    int lambda (int prev) {
-        let (int calc  = ((prevPrev.0) + prev).1) {
-            ((()::(calc))[1:2]).(nextStep(prev)(calc))
-        }
+// Helper function to loop any array endlessly
+let (int lambda (int) loopit = int lambda (int x) {x . loopit(x)}){
+/* This function calculates the reverse natural numbers sequence 
+ie
+1
+2 1
+3 2 1
+4 3 2 1
+*/
+let (int lambda (int) nextStep = int lambda (int prev) {
+    // calculate this step,
+    let( int calc = ((prev.0)+loopit(1))) {
+        // convert the results into a 2D array.
+        ((()::(calc))[1:2]).(nextStep(calc))
     }
-}
-){
+})
+{
     // This function applies read() to each individual step of nextStep
     let (
         (int lambda(int)) lambda(int) nat_acc = (int lambda(int)) lambda (int numbers) {
@@ -31,7 +39,8 @@ let (int lambda (int) lambda (int) nextStep = int lambda (int) lambda (int prevP
                 }
             }
     }) {
-        nat_acc(nextStep(())(()))(0)
+        nat_acc(nextStep(()))(0)
     }
+}
 }
 }
