@@ -1,1 +1,5 @@
-((read()[0])-(read()[1]))::read()[0]
+let(int first = read()[0]){
+    let(int second = read()[1]){
+        (first-second)::first
+    }
+}
