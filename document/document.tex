@@ -1,0 +1,27 @@
+\documentclass[a4paper]{article}
+\usepackage{fontspec}
+\usepackage{minted}
+
+\setsansfont{Arial}
+\setmonofont{Courier New}
+
+\begin{document}
+\renewcommand{\theFancyVerbLine}{
+  \sffamily\textcolor[rgb]{0.5,0.5,0.5}{\scriptsize\arabic{FancyVerbLine}}}
+
+\begin{minted}[linenos,
+               numbersep=5pt,
+               gobble=2,
+               framesep=2mm]{river}
+    /* MULTILINE
+    COMMENTS
+    ARE
+    COOL 
+
+    */
+    let (int lambda (int) loopit = int lambda (int x) {x . loopit(x)})
+    {
+        (read()[0])+(loopit(3)*(read()[1]))
+    }
+\end{minted}
+\end{document}
