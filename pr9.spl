@@ -1,6 +1,6 @@
 // Natural Numbers Calculation
 
-// This function is a helper function for adding
+// This function is a helper function for adding values together
 let (int lambda (int) addAll = int lambda (int a)
 {
     if (a == ()){
