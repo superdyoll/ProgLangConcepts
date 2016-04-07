@@ -1,1 +1,19 @@
-(read()[0].0)::(0.read()[0])
+// Remove the last element of a stream.
+let(int lambda(int) removelast = int lambda(int s) {
+    // Base case for empty streams
+    if(s[0] == ()){
+        ()
+    } else {
+        // if the next value is the end, return nothing
+        if(s[1] == ()) {
+            ()
+        } else {
+            s[0] . removelast(s[1:])
+        }
+    }
+}){
+// in == input
+let(int in = read()[0]){
+    in::(0.removelast(in))
+}
+}
