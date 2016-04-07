@@ -1,8 +1,8 @@
 // Delayed Feedback
 let(
-int lambda (int) delay = int lambda (int a) {
-    a[0].a[1].(a[2:]+delay(a))
-}
+    int lambda (int) delay = int lambda (int a) {
+        a[0].a[1].(a[2:]+delay(a))
+    }
 ){
     delay(read()[0])
 }
